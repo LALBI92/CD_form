@@ -1,0 +1,584 @@
+Début du script PHP
+=== Informations du client ===
+Nom: Faycal Boukhedimi
+Email: bd@growthomodo.com
+Téléphone: 0668110358
+Adresse: 4 RUE PASTEUR
+Raison Sociale: 
+SIRET: 
+Description: 3 box secu
+Étage: RDC
+Ascenseur: non
+Produit généré: etageRDC_none
+=== Vérification des données POST reçues ===
+Clé: type_besoin, Valeur: Ponctuel
+Clé: je_recycle, Valeur: dechets_bureau
+Clé: benne_10m3_cartons_qty, Valeur: 0
+Clé: benne_15m3_cartons_qty, Valeur: 0
+Clé: benne_30m3_cartons_qty, Valeur: 0
+Clé: palette_660l_cartons_qty, Valeur: 0
+Clé: bac_roulant_770l_cartons_qty, Valeur: 0
+Clé: benne_10m3_papiers_qty, Valeur: 0
+Clé: benne_15m3_papiers_qty, Valeur: 0
+Clé: benne_30m3_papiers_qty, Valeur: 0
+Clé: palette_660l_papiers_qty, Valeur: 0
+Clé: bac_roulant_770l_papiers_qty, Valeur: 0
+Clé: benne_10m3_plastiques_qty, Valeur: 0
+Clé: benne_15m3_plastiques_qty, Valeur: 0
+Clé: benne_30m3_plastiques_qty, Valeur: 0
+Clé: palette_660l_plastiques_qty, Valeur: 0
+Clé: bac_roulant_770l_plastiques_qty, Valeur: 0
+Clé: benne_10m3_palettes_qty, Valeur: 0
+Clé: benne_15m3_palettes_qty, Valeur: 0
+Clé: benne_30m3_palettes_qty, Valeur: 0
+Clé: benne_10m3_encombrants_qty, Valeur: 0
+Clé: benne_15m3_encombrants_qty, Valeur: 0
+Clé: benne_30m3_encombrants_qty, Valeur: 0
+Clé: benne_10m3_dib_qty, Valeur: 0
+Clé: benne_15m3_dib_qty, Valeur: 0
+Clé: benne_30m3_dib_qty, Valeur: 0
+Clé: benne_10m3_bois_qty, Valeur: 0
+Clé: benne_15m3_bois_qty, Valeur: 0
+Clé: benne_30m3_bois_qty, Valeur: 0
+Clé: palette_660l_bois_qty, Valeur: 0
+Clé: benne_10m3_ferrailles_qty, Valeur: 0
+Clé: benne_15m3_ferrailles_qty, Valeur: 0
+Clé: benne_30m3_ferrailles_qty, Valeur: 0
+Clé: palette_660l_ferrailles_qty, Valeur: 0
+Clé: benne_10m3_dechets_verts_qty, Valeur: 0
+Clé: benne_15m3_dechets_verts_qty, Valeur: 0
+Clé: benne_30m3_dechets_verts_qty, Valeur: 0
+Clé: big_bag_1m3_dib_chantier_qty, Valeur: 0
+Clé: benne_chaine_3m3_dib_chantier_qty, Valeur: 0
+Clé: benne_chaine_8m3_dib_chantier_qty, Valeur: 0
+Clé: benne_chaine_15m3_dib_chantier_qty, Valeur: 0
+Clé: benne_ampliroll_30m3_dib_chantier_qty, Valeur: 0
+Clé: big_bag_1m3_bois_chantier_qty, Valeur: 0
+Clé: benne_ampliroll_3m3_bois_chantier_qty, Valeur: 0
+Clé: benne_chaine_8m3_bois_chantier_qty, Valeur: 0
+Clé: benne_chaine_15m3_bois_chantier_qty, Valeur: 0
+Clé: benne_ampliroll_30m3_bois_chantier_qty, Valeur: 0
+Clé: big_bag_1m3_platre_chantier_qty, Valeur: 0
+Clé: benne_chaine_8m3_platre_chantier_qty, Valeur: 0
+Clé: big_bag_1m3_gravats_melange_chantier_qty, Valeur: 0
+Clé: benne_ampliroll_3m3_gravats_melange_chantier_qty, Valeur: 0
+Clé: benne_chaine_8m3_gravats_melange_chantier_qty, Valeur: 0
+Clé: big_bag_1m3_gravats_propres_chantier_qty, Valeur: 0
+Clé: benne_ampliroll_3m3_gravats_propres_chantier_qty, Valeur: 0
+Clé: benne_chaine_8m3_gravats_propres_chantier_qty, Valeur: 0
+Clé: box_gobelet_qty, Valeur: 0
+Clé: box_capsule_qty, Valeur: 0
+Clé: box_biodechets_hebdo_qty, Valeur: 0
+Clé: box_biodechets_2semaines_qty, Valeur: 0
+Clé: box_piles_qty, Valeur: 0
+Clé: box_bouteilles_canettes_qty, Valeur: 0
+Clé: box_papier_qty, Valeur: 0
+Clé: lot_5_box_papier_qty, Valeur: 0
+Clé: box_d3e_qty, Valeur: 0
+Clé: box_secure_90_qty, Valeur: 3
+Clé: box_secure_120_qty, Valeur: 0
+Clé: box_secure_240_qty, Valeur: 0
+Clé: box_secure_480_qty, Valeur: 0
+Clé: type_deee, Valeur: 
+Clé: bac_550l_qty, Valeur: 0
+Clé: caisse_palette_qty, Valeur: 0
+Clé: box_cartouche_qty, Valeur: 0
+Clé: bac_550l_cartouche_qty, Valeur: 0
+Clé: bac_pile_6kg_qty, Valeur: 0
+Clé: bac_pile_15kg_qty, Valeur: 0
+Clé: machine_laver_qty, Valeur: 0
+Clé: refrigerateur_qty, Valeur: 0
+Clé: four_qty, Valeur: 0
+Clé: cuisiniere_qty, Valeur: 0
+Clé: box_ampoules_qty, Valeur: 0
+Clé: box_neons_qty, Valeur: 0
+Clé: bac_550l_ampoules_qty, Valeur: 0
+Clé: lieu_archives, Valeur: 
+Clé: box_70L_archives_domicile_qty, Valeur: 0
+Clé: box_130L_archives_domicile_qty, Valeur: 0
+Clé: box_240L_archives_domicile_qty, Valeur: 0
+Clé: box_480L_archives_domicile_qty, Valeur: 0
+Clé: box_70L_archives_depot_qty, Valeur: 0
+Clé: box_130L_archives_depot_qty, Valeur: 0
+Clé: box_240L_archives_depot_qty, Valeur: 0
+Clé: box_480L_archives_depot_qty, Valeur: 0
+Clé: type_benne, Valeur: 
+Clé: benne_8m3_gravats_qty, Valeur: 0
+Clé: benne_8m3_dechets_qty, Valeur: 0
+Clé: benne_10m3_dechets_qty, Valeur: 0
+Clé: benne_15m3_dechets_qty, Valeur: 0
+Clé: benne_30m3_dechets_qty, Valeur: 0
+Clé: camion_selectionne, Valeur: none
+Clé: name, Valeur: Faycal Boukhedimi
+Clé: profession, Valeur: 1
+Clé: siret, Valeur: 
+Clé: raison, Valeur: 
+Clé: email, Valeur: bd@growthomodo.com
+Clé: phone, Valeur: 0668110358
+Clé: add, Valeur: 4 RUE PASTEUR
+Clé: etage, Valeur: RDC
+Clé: ascenseur, Valeur: non
+Clé: hiddenProduitField, Valeur: etageRDC_none
+Clé: description, Valeur: 3 box secu
+Vérification pour le produit: palette_660l_papiers avec champ: palette_660l_papiers_qty
+Quantité reçue pour palette_660l_papiers_qty: 0
+Vérification pour le produit: bac_roulant_770l_papiers avec champ: bac_roulant_770l_papiers_qty
+Quantité reçue pour bac_roulant_770l_papiers_qty: 0
+Vérification pour le produit: benne_10m3_papiers avec champ: benne_10m3_papiers_qty
+Quantité reçue pour benne_10m3_papiers_qty: 0
+Vérification pour le produit: benne_15m3_papiers avec champ: benne_15m3_papiers_qty
+Quantité reçue pour benne_15m3_papiers_qty: 0
+Vérification pour le produit: benne_30m3_papiers avec champ: benne_30m3_papiers_qty
+Quantité reçue pour benne_30m3_papiers_qty: 0
+Vérification pour le produit: palette_660l_cartons avec champ: palette_660l_cartons_qty
+Quantité reçue pour palette_660l_cartons_qty: 0
+Vérification pour le produit: bac_roulant_770l_cartons avec champ: bac_roulant_770l_cartons_qty
+Quantité reçue pour bac_roulant_770l_cartons_qty: 0
+Vérification pour le produit: benne_10m3_cartons avec champ: benne_10m3_cartons_qty
+Quantité reçue pour benne_10m3_cartons_qty: 0
+Vérification pour le produit: benne_15m3_cartons avec champ: benne_15m3_cartons_qty
+Quantité reçue pour benne_15m3_cartons_qty: 0
+Vérification pour le produit: benne_30m3_cartons avec champ: benne_30m3_cartons_qty
+Quantité reçue pour benne_30m3_cartons_qty: 0
+Vérification pour le produit: palette_660l_plastiques avec champ: palette_660l_plastiques_qty
+Quantité reçue pour palette_660l_plastiques_qty: 0
+Vérification pour le produit: bac_roulant_770l_plastiques avec champ: bac_roulant_770l_plastiques_qty
+Quantité reçue pour bac_roulant_770l_plastiques_qty: 0
+Vérification pour le produit: benne_10m3_plastiques avec champ: benne_10m3_plastiques_qty
+Quantité reçue pour benne_10m3_plastiques_qty: 0
+Vérification pour le produit: benne_15m3_plastiques avec champ: benne_15m3_plastiques_qty
+Quantité reçue pour benne_15m3_plastiques_qty: 0
+Vérification pour le produit: benne_30m3_plastiques avec champ: benne_30m3_plastiques_qty
+Quantité reçue pour benne_30m3_plastiques_qty: 0
+Vérification pour le produit: benne_10m3_palettes avec champ: benne_10m3_palettes_qty
+Quantité reçue pour benne_10m3_palettes_qty: 0
+Vérification pour le produit: benne_15m3_palettes avec champ: benne_15m3_palettes_qty
+Quantité reçue pour benne_15m3_palettes_qty: 0
+Vérification pour le produit: benne_30m3_palettes avec champ: benne_30m3_palettes_qty
+Quantité reçue pour benne_30m3_palettes_qty: 0
+Vérification pour le produit: benne_10m3_encombrants avec champ: benne_10m3_encombrants_qty
+Quantité reçue pour benne_10m3_encombrants_qty: 0
+Vérification pour le produit: benne_15m3_encombrants avec champ: benne_15m3_encombrants_qty
+Quantité reçue pour benne_15m3_encombrants_qty: 0
+Vérification pour le produit: benne_30m3_encombrants avec champ: benne_30m3_encombrants_qty
+Quantité reçue pour benne_30m3_encombrants_qty: 0
+Vérification pour le produit: benne_10m3_dib avec champ: benne_10m3_dib_qty
+Quantité reçue pour benne_10m3_dib_qty: 0
+Vérification pour le produit: benne_15m3_dib avec champ: benne_15m3_dib_qty
+Quantité reçue pour benne_15m3_dib_qty: 0
+Vérification pour le produit: benne_30m3_dib avec champ: benne_30m3_dib_qty
+Quantité reçue pour benne_30m3_dib_qty: 0
+Vérification pour le produit: palette_660l_bois avec champ: palette_660l_bois_qty
+Quantité reçue pour palette_660l_bois_qty: 0
+Vérification pour le produit: benne_10m3_bois avec champ: benne_10m3_bois_qty
+Quantité reçue pour benne_10m3_bois_qty: 0
+Vérification pour le produit: benne_15m3_bois avec champ: benne_15m3_bois_qty
+Quantité reçue pour benne_15m3_bois_qty: 0
+Vérification pour le produit: benne_30m3_bois avec champ: benne_30m3_bois_qty
+Quantité reçue pour benne_30m3_bois_qty: 0
+Vérification pour le produit: palette_660l_ferrailles avec champ: palette_660l_ferrailles_qty
+Quantité reçue pour palette_660l_ferrailles_qty: 0
+Vérification pour le produit: benne_10m3_ferrailles avec champ: benne_10m3_ferrailles_qty
+Quantité reçue pour benne_10m3_ferrailles_qty: 0
+Vérification pour le produit: benne_15m3_ferrailles avec champ: benne_15m3_ferrailles_qty
+Quantité reçue pour benne_15m3_ferrailles_qty: 0
+Vérification pour le produit: benne_30m3_ferrailles avec champ: benne_30m3_ferrailles_qty
+Quantité reçue pour benne_30m3_ferrailles_qty: 0
+Vérification pour le produit: benne_10m3_dechets_verts avec champ: benne_10m3_dechets_verts_qty
+Quantité reçue pour benne_10m3_dechets_verts_qty: 0
+Vérification pour le produit: benne_15m3_dechets_verts avec champ: benne_15m3_dechets_verts_qty
+Quantité reçue pour benne_15m3_dechets_verts_qty: 0
+Vérification pour le produit: benne_30m3_dechets_verts avec champ: benne_30m3_dechets_verts_qty
+Quantité reçue pour benne_30m3_dechets_verts_qty: 0
+Vérification pour le produit: big_bag_1m3_dib_chantier avec champ: big_bag_1m3_dib_chantier_qty
+Quantité reçue pour big_bag_1m3_dib_chantier_qty: 0
+Vérification pour le produit: benne_ampliroll_3m3_dib_chantier avec champ: benne_ampliroll_3m3_dib_chantier_qty
+Champ benne_ampliroll_3m3_dib_chantier_qty non trouvé dans les données POST
+Vérification pour le produit: benne_chaine_8m3_dib_chantier avec champ: benne_chaine_8m3_dib_chantier_qty
+Quantité reçue pour benne_chaine_8m3_dib_chantier_qty: 0
+Vérification pour le produit: benne_chaine_15m3_dib_chantier avec champ: benne_chaine_15m3_dib_chantier_qty
+Quantité reçue pour benne_chaine_15m3_dib_chantier_qty: 0
+Vérification pour le produit: benne_ampliroll_30m3_dib_chantier avec champ: benne_ampliroll_30m3_dib_chantier_qty
+Quantité reçue pour benne_ampliroll_30m3_dib_chantier_qty: 0
+Vérification pour le produit: big_bag_1m3_gravats_melange_chantier avec champ: big_bag_1m3_gravats_melange_chantier_qty
+Quantité reçue pour big_bag_1m3_gravats_melange_chantier_qty: 0
+Vérification pour le produit: benne_ampliroll_3m3_gravats_melange_chantier avec champ: benne_ampliroll_3m3_gravats_melange_chantier_qty
+Quantité reçue pour benne_ampliroll_3m3_gravats_melange_chantier_qty: 0
+Vérification pour le produit: benne_chaine_8m3_gravats_melange_chantier avec champ: benne_chaine_8m3_gravats_melange_chantier_qty
+Quantité reçue pour benne_chaine_8m3_gravats_melange_chantier_qty: 0
+Vérification pour le produit: big_bag_1m3_gravats_propres_chantier avec champ: big_bag_1m3_gravats_propres_chantier_qty
+Quantité reçue pour big_bag_1m3_gravats_propres_chantier_qty: 0
+Vérification pour le produit: benne_ampliroll_3m3_gravats_propres_chantier avec champ: benne_ampliroll_3m3_gravats_propres_chantier_qty
+Quantité reçue pour benne_ampliroll_3m3_gravats_propres_chantier_qty: 0
+Vérification pour le produit: benne_chaine_8m3_gravats_propres_chantier avec champ: benne_chaine_8m3_gravats_propres_chantier_qty
+Quantité reçue pour benne_chaine_8m3_gravats_propres_chantier_qty: 0
+Vérification pour le produit: big_bag_1m3_bois_chantier avec champ: big_bag_1m3_bois_chantier_qty
+Quantité reçue pour big_bag_1m3_bois_chantier_qty: 0
+Vérification pour le produit: benne_chaine_3m3_dib_chantier avec champ: benne_chaine_3m3_dib_chantier_qty
+Quantité reçue pour benne_chaine_3m3_dib_chantier_qty: 0
+Vérification pour le produit: benne_chaine_8m3_bois_chantier avec champ: benne_chaine_8m3_bois_chantier_qty
+Quantité reçue pour benne_chaine_8m3_bois_chantier_qty: 0
+Vérification pour le produit: benne_chaine_15m3_bois_chantier avec champ: benne_chaine_15m3_bois_chantier_qty
+Quantité reçue pour benne_chaine_15m3_bois_chantier_qty: 0
+Vérification pour le produit:  avec champ: _qty
+Champ _qty non trouvé dans les données POST
+Vérification pour le produit: benne_ampliroll_30m3_bois_chantier avec champ: benne_ampliroll_30m3_bois_chantier_qty
+Quantité reçue pour benne_ampliroll_30m3_bois_chantier_qty: 0
+Vérification pour le produit: big_bag_1m3_platre_chantier avec champ: big_bag_1m3_platre_chantier_qty
+Quantité reçue pour big_bag_1m3_platre_chantier_qty: 0
+Vérification pour le produit: benne_chaine_8m3_platre_chantier avec champ: benne_chaine_8m3_platre_chantier_qty
+Quantité reçue pour benne_chaine_8m3_platre_chantier_qty: 0
+Vérification pour le produit: box_70L_archives_domicile avec champ: box_70L_archives_domicile_qty
+Quantité reçue pour box_70L_archives_domicile_qty: 0
+Vérification pour le produit: box_240L_archives_domicile avec champ: box_240L_archives_domicile_qty
+Quantité reçue pour box_240L_archives_domicile_qty: 0
+Vérification pour le produit: box_480L_archives_domicile avec champ: box_480L_archives_domicile_qty
+Quantité reçue pour box_480L_archives_domicile_qty: 0
+Vérification pour le produit: benne_8m3_gravats avec champ: benne_8m3_gravats_qty
+Quantité reçue pour benne_8m3_gravats_qty: 0
+Vérification pour le produit: benne_8m3_dechets avec champ: benne_8m3_dechets_qty
+Quantité reçue pour benne_8m3_dechets_qty: 0
+Vérification pour le produit: benne_10m3_dechets avec champ: benne_10m3_dechets_qty
+Quantité reçue pour benne_10m3_dechets_qty: 0
+Vérification pour le produit: benne_15m3_dechets avec champ: benne_15m3_dechets_qty
+Quantité reçue pour benne_15m3_dechets_qty: 0
+Vérification pour le produit: benne_30m3_dechets avec champ: benne_30m3_dechets_qty
+Quantité reçue pour benne_30m3_dechets_qty: 0
+Vérification pour le produit: box_d3e avec champ: box_d3e_qty
+Quantité reçue pour box_d3e_qty: 0
+Vérification pour le produit: caisse_palette avec champ: caisse_palette_qty
+Quantité reçue pour caisse_palette_qty: 0
+Vérification pour le produit: bac_550l avec champ: bac_550l_qty
+Quantité reçue pour bac_550l_qty: 0
+Vérification pour le produit: box_ampoules avec champ: box_ampoules_qty
+Quantité reçue pour box_ampoules_qty: 0
+Vérification pour le produit: box_neons avec champ: box_neons_qty
+Quantité reçue pour box_neons_qty: 0
+Vérification pour le produit: bac_550l_ampoules avec champ: bac_550l_ampoules_qty
+Quantité reçue pour bac_550l_ampoules_qty: 0
+Vérification pour le produit: box_cartouche avec champ: box_cartouche_qty
+Quantité reçue pour box_cartouche_qty: 0
+Vérification pour le produit: bac_550l_cartouche avec champ: bac_550l_cartouche_qty
+Quantité reçue pour bac_550l_cartouche_qty: 0
+Vérification pour le produit: bac_pile_6kg avec champ: bac_pile_6kg_qty
+Quantité reçue pour bac_pile_6kg_qty: 0
+Vérification pour le produit: bac_pile_15kg avec champ: bac_pile_15kg_qty
+Quantité reçue pour bac_pile_15kg_qty: 0
+Vérification pour le produit: box_70L_archives_depot avec champ: box_70L_archives_depot_qty
+Quantité reçue pour box_70L_archives_depot_qty: 0
+Vérification pour le produit: box_240L_archives_depot avec champ: box_240L_archives_depot_qty
+Quantité reçue pour box_240L_archives_depot_qty: 0
+Vérification pour le produit: box_480L_archives_depot avec champ: box_480L_archives_depot_qty
+Quantité reçue pour box_480L_archives_depot_qty: 0
+Vérification pour le produit: machine_laver avec champ: machine_laver_qty
+Quantité reçue pour machine_laver_qty: 0
+Vérification pour le produit: refrigerateur avec champ: refrigerateur_qty
+Quantité reçue pour refrigerateur_qty: 0
+Vérification pour le produit: four avec champ: four_qty
+Quantité reçue pour four_qty: 0
+Vérification pour le produit: cuisiniere avec champ: cuisiniere_qty
+Quantité reçue pour cuisiniere_qty: 0
+Vérification pour le produit: box_130L_archives_depot avec champ: box_130L_archives_depot_qty
+Quantité reçue pour box_130L_archives_depot_qty: 0
+Vérification pour le produit: box_130L_archives_domicile avec champ: box_130L_archives_domicile_qty
+Quantité reçue pour box_130L_archives_domicile_qty: 0
+Vérification pour le produit: etage1_avec_ascenseur_camion1 avec champ: etage1_avec_ascenseur_camion1_qty
+Champ etage1_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_sans_ascenseur_camion1 avec champ: etage1_sans_ascenseur_camion1_qty
+Champ etage1_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_avec_ascenseur_camion2 avec champ: etage1_avec_ascenseur_camion2_qty
+Champ etage1_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_sans_ascenseur_camion2 avec champ: etage1_sans_ascenseur_camion2_qty
+Champ etage1_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_avec_ascenseur_camion3 avec champ: etage1_avec_ascenseur_camion3_qty
+Champ etage1_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_sans_ascenseur_camion3 avec champ: etage1_sans_ascenseur_camion3_qty
+Champ etage1_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_avec_ascenseur_camion4 avec champ: etage1_avec_ascenseur_camion4_qty
+Champ etage1_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_sans_ascenseur_camion4 avec champ: etage1_sans_ascenseur_camion4_qty
+Champ etage1_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_avec_ascenseur_camion5 avec champ: etage1_avec_ascenseur_camion5_qty
+Champ etage1_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_sans_ascenseur_camion5 avec champ: etage1_sans_ascenseur_camion5_qty
+Champ etage1_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_avec_ascenseur_camion6 avec champ: etage1_avec_ascenseur_camion6_qty
+Champ etage1_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage1_sans_ascenseur_camion6 avec champ: etage1_sans_ascenseur_camion6_qty
+Champ etage1_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_avec_ascenseur_camion1 avec champ: etage2_avec_ascenseur_camion1_qty
+Champ etage2_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_sans_ascenseur_camion1 avec champ: etage2_sans_ascenseur_camion1_qty
+Champ etage2_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_avec_ascenseur_camion2 avec champ: etage2_avec_ascenseur_camion2_qty
+Champ etage2_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_sans_ascenseur_camion2 avec champ: etage2_sans_ascenseur_camion2_qty
+Champ etage2_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_avec_ascenseur_camion3 avec champ: etage2_avec_ascenseur_camion3_qty
+Champ etage2_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_sans_ascenseur_camion3 avec champ: etage2_sans_ascenseur_camion3_qty
+Champ etage2_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_avec_ascenseur_camion4 avec champ: etage2_avec_ascenseur_camion4_qty
+Champ etage2_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_sans_ascenseur_camion4 avec champ: etage2_sans_ascenseur_camion4_qty
+Champ etage2_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_avec_ascenseur_camion5 avec champ: etage2_avec_ascenseur_camion5_qty
+Champ etage2_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_sans_ascenseur_camion5 avec champ: etage2_sans_ascenseur_camion5_qty
+Champ etage2_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_avec_ascenseur_camion6 avec champ: etage2_avec_ascenseur_camion6_qty
+Champ etage2_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage2_sans_ascenseur_camion6 avec champ: etage2_sans_ascenseur_camion6_qty
+Champ etage2_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_avec_ascenseur_camion1 avec champ: etage3_avec_ascenseur_camion1_qty
+Champ etage3_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_sans_ascenseur_camion1 avec champ: etage3_sans_ascenseur_camion1_qty
+Champ etage3_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_avec_ascenseur_camion2 avec champ: etage3_avec_ascenseur_camion2_qty
+Champ etage3_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_sans_ascenseur_camion2 avec champ: etage3_sans_ascenseur_camion2_qty
+Champ etage3_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_avec_ascenseur_camion3 avec champ: etage3_avec_ascenseur_camion3_qty
+Champ etage3_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_sans_ascenseur_camion3 avec champ: etage3_sans_ascenseur_camion3_qty
+Champ etage3_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_avec_ascenseur_camion4 avec champ: etage3_avec_ascenseur_camion4_qty
+Champ etage3_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_sans_ascenseur_camion4 avec champ: etage3_sans_ascenseur_camion4_qty
+Champ etage3_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_avec_ascenseur_camion5 avec champ: etage3_avec_ascenseur_camion5_qty
+Champ etage3_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_sans_ascenseur_camion5 avec champ: etage3_sans_ascenseur_camion5_qty
+Champ etage3_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_avec_ascenseur_camion6 avec champ: etage3_avec_ascenseur_camion6_qty
+Champ etage3_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage3_sans_ascenseur_camion6 avec champ: etage3_sans_ascenseur_camion6_qty
+Champ etage3_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_avec_ascenseur_camion1 avec champ: etage4_avec_ascenseur_camion1_qty
+Champ etage4_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_sans_ascenseur_camion1 avec champ: etage4_sans_ascenseur_camion1_qty
+Champ etage4_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_avec_ascenseur_camion2 avec champ: etage4_avec_ascenseur_camion2_qty
+Champ etage4_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_sans_ascenseur_camion2 avec champ: etage4_sans_ascenseur_camion2_qty
+Champ etage4_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_avec_ascenseur_camion3 avec champ: etage4_avec_ascenseur_camion3_qty
+Champ etage4_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_sans_ascenseur_camion3 avec champ: etage4_sans_ascenseur_camion3_qty
+Champ etage4_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_avec_ascenseur_camion4 avec champ: etage4_avec_ascenseur_camion4_qty
+Champ etage4_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_sans_ascenseur_camion4 avec champ: etage4_sans_ascenseur_camion4_qty
+Champ etage4_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_avec_ascenseur_camion5 avec champ: etage4_avec_ascenseur_camion5_qty
+Champ etage4_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_sans_ascenseur_camion5 avec champ: etage4_sans_ascenseur_camion5_qty
+Champ etage4_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_avec_ascenseur_camion6 avec champ: etage4_avec_ascenseur_camion6_qty
+Champ etage4_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage4_sans_ascenseur_camion6 avec champ: etage4_sans_ascenseur_camion6_qty
+Champ etage4_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_avec_ascenseur_camion1 avec champ: etage5_avec_ascenseur_camion1_qty
+Champ etage5_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_sans_ascenseur_camion1 avec champ: etage5_sans_ascenseur_camion1_qty
+Champ etage5_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_avec_ascenseur_camion2 avec champ: etage5_avec_ascenseur_camion2_qty
+Champ etage5_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_sans_ascenseur_camion2 avec champ: etage5_sans_ascenseur_camion2_qty
+Champ etage5_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_avec_ascenseur_camion3 avec champ: etage5_avec_ascenseur_camion3_qty
+Champ etage5_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_sans_ascenseur_camion3 avec champ: etage5_sans_ascenseur_camion3_qty
+Champ etage5_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_avec_ascenseur_camion4 avec champ: etage5_avec_ascenseur_camion4_qty
+Champ etage5_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_sans_ascenseur_camion4 avec champ: etage5_sans_ascenseur_camion4_qty
+Champ etage5_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_avec_ascenseur_camion5 avec champ: etage5_avec_ascenseur_camion5_qty
+Champ etage5_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_sans_ascenseur_camion5 avec champ: etage5_sans_ascenseur_camion5_qty
+Champ etage5_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_avec_ascenseur_camion6 avec champ: etage5_avec_ascenseur_camion6_qty
+Champ etage5_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage5_sans_ascenseur_camion6 avec champ: etage5_sans_ascenseur_camion6_qty
+Champ etage5_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_avec_ascenseur_camion1 avec champ: etage6_avec_ascenseur_camion1_qty
+Champ etage6_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_sans_ascenseur_camion1 avec champ: etage6_sans_ascenseur_camion1_qty
+Champ etage6_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_avec_ascenseur_camion2 avec champ: etage6_avec_ascenseur_camion2_qty
+Champ etage6_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_sans_ascenseur_camion2 avec champ: etage6_sans_ascenseur_camion2_qty
+Champ etage6_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_avec_ascenseur_camion3 avec champ: etage6_avec_ascenseur_camion3_qty
+Champ etage6_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_sans_ascenseur_camion3 avec champ: etage6_sans_ascenseur_camion3_qty
+Champ etage6_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_avec_ascenseur_camion4 avec champ: etage6_avec_ascenseur_camion4_qty
+Champ etage6_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_sans_ascenseur_camion4 avec champ: etage6_sans_ascenseur_camion4_qty
+Champ etage6_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_avec_ascenseur_camion5 avec champ: etage6_avec_ascenseur_camion5_qty
+Champ etage6_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_sans_ascenseur_camion5 avec champ: etage6_sans_ascenseur_camion5_qty
+Champ etage6_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_avec_ascenseur_camion6 avec champ: etage6_avec_ascenseur_camion6_qty
+Champ etage6_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etage6_sans_ascenseur_camion6 avec champ: etage6_sans_ascenseur_camion6_qty
+Champ etage6_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_avec_ascenseur_camion1 avec champ: soussol1_avec_ascenseur_camion1_qty
+Champ soussol1_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_sans_ascenseur_camion1 avec champ: soussol1_sans_ascenseur_camion1_qty
+Champ soussol1_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_avec_ascenseur_camion2 avec champ: soussol1_avec_ascenseur_camion2_qty
+Champ soussol1_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_sans_ascenseur_camion2 avec champ: soussol1_sans_ascenseur_camion2_qty
+Champ soussol1_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_avec_ascenseur_camion3 avec champ: soussol1_avec_ascenseur_camion3_qty
+Champ soussol1_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_sans_ascenseur_camion3 avec champ: soussol1_sans_ascenseur_camion3_qty
+Champ soussol1_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_avec_ascenseur_camion4 avec champ: soussol1_avec_ascenseur_camion4_qty
+Champ soussol1_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_sans_ascenseur_camion4 avec champ: soussol1_sans_ascenseur_camion4_qty
+Champ soussol1_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_avec_ascenseur_camion5 avec champ: soussol1_avec_ascenseur_camion5_qty
+Champ soussol1_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_sans_ascenseur_camion5 avec champ: soussol1_sans_ascenseur_camion5_qty
+Champ soussol1_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_avec_ascenseur_camion6 avec champ: soussol1_avec_ascenseur_camion6_qty
+Champ soussol1_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: soussol1_sans_ascenseur_camion6 avec champ: soussol1_sans_ascenseur_camion6_qty
+Champ soussol1_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_avec_ascenseur_camion1 avec champ: soussol2_avec_ascenseur_camion1_qty
+Champ soussol2_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_sans_ascenseur_camion1 avec champ: soussol2_sans_ascenseur_camion1_qty
+Champ soussol2_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_avec_ascenseur_camion2 avec champ: soussol2_avec_ascenseur_camion2_qty
+Champ soussol2_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_sans_ascenseur_camion2 avec champ: soussol2_sans_ascenseur_camion2_qty
+Champ soussol2_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_avec_ascenseur_camion3 avec champ: soussol2_avec_ascenseur_camion3_qty
+Champ soussol2_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_sans_ascenseur_camion3 avec champ: soussol2_sans_ascenseur_camion3_qty
+Champ soussol2_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_avec_ascenseur_camion4 avec champ: soussol2_avec_ascenseur_camion4_qty
+Champ soussol2_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_sans_ascenseur_camion4 avec champ: soussol2_sans_ascenseur_camion4_qty
+Champ soussol2_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_avec_ascenseur_camion5 avec champ: soussol2_avec_ascenseur_camion5_qty
+Champ soussol2_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_sans_ascenseur_camion5 avec champ: soussol2_sans_ascenseur_camion5_qty
+Champ soussol2_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_avec_ascenseur_camion6 avec champ: soussol2_avec_ascenseur_camion6_qty
+Champ soussol2_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: soussol2_sans_ascenseur_camion6 avec champ: soussol2_sans_ascenseur_camion6_qty
+Champ soussol2_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_avec_ascenseur_camion1 avec champ: etageRDC_avec_ascenseur_camion1_qty
+Champ etageRDC_avec_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_sans_ascenseur_camion1 avec champ: etageRDC_sans_ascenseur_camion1_qty
+Champ etageRDC_sans_ascenseur_camion1_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_avec_ascenseur_camion2 avec champ: etageRDC_avec_ascenseur_camion2_qty
+Champ etageRDC_avec_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_sans_ascenseur_camion2 avec champ: etageRDC_sans_ascenseur_camion2_qty
+Champ etageRDC_sans_ascenseur_camion2_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_avec_ascenseur_camion3 avec champ: etageRDC_avec_ascenseur_camion3_qty
+Champ etageRDC_avec_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_sans_ascenseur_camion3 avec champ: etageRDC_sans_ascenseur_camion3_qty
+Champ etageRDC_sans_ascenseur_camion3_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_avec_ascenseur_camion4 avec champ: etageRDC_avec_ascenseur_camion4_qty
+Champ etageRDC_avec_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_sans_ascenseur_camion4 avec champ: etageRDC_sans_ascenseur_camion4_qty
+Champ etageRDC_sans_ascenseur_camion4_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_avec_ascenseur_camion5 avec champ: etageRDC_avec_ascenseur_camion5_qty
+Champ etageRDC_avec_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_sans_ascenseur_camion5 avec champ: etageRDC_sans_ascenseur_camion5_qty
+Champ etageRDC_sans_ascenseur_camion5_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_avec_ascenseur_camion6 avec champ: etageRDC_avec_ascenseur_camion6_qty
+Champ etageRDC_avec_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: etageRDC_sans_ascenseur_camion6 avec champ: etageRDC_sans_ascenseur_camion6_qty
+Champ etageRDC_sans_ascenseur_camion6_qty non trouvé dans les données POST
+Vérification pour le produit: vrac_domicile_estimer_archives avec champ: vrac_domicile_estimer_archives_qty
+Champ vrac_domicile_estimer_archives_qty non trouvé dans les données POST
+Vérification pour le produit: vrac_entrepot_estimer_archives avec champ: vrac_entrepot_estimer_archives_qty
+Champ vrac_entrepot_estimer_archives_qty non trouvé dans les données POST
+Vérification pour le produit: box_gobelet avec champ: box_gobelet_qty
+Quantité reçue pour box_gobelet_qty: 0
+Vérification pour le produit: box_capsule avec champ: box_capsule_qty
+Quantité reçue pour box_capsule_qty: 0
+Vérification pour le produit: box_bio_dechets_hebdomadaire avec champ: box_bio_dechets_hebdomadaire_qty
+Champ box_bio_dechets_hebdomadaire_qty non trouvé dans les données POST
+Vérification pour le produit: box_bio_dechets_1_semaine_sur_2 avec champ: box_bio_dechets_1_semaine_sur_2_qty
+Champ box_bio_dechets_1_semaine_sur_2_qty non trouvé dans les données POST
+Vérification pour le produit: box_piles avec champ: box_piles_qty
+Quantité reçue pour box_piles_qty: 0
+Vérification pour le produit: box_bouteilles_canettes avec champ: box_bouteilles_canettes_qty
+Quantité reçue pour box_bouteilles_canettes_qty: 0
+Vérification pour le produit: box_papier avec champ: box_papier_qty
+Quantité reçue pour box_papier_qty: 0
+Vérification pour le produit: lot_5_petit_box_papier avec champ: lot_5_petit_box_papier_qty
+Champ lot_5_petit_box_papier_qty non trouvé dans les données POST
+Vérification pour le produit: box_secure_90 avec champ: box_secure_90_qty
+Quantité reçue pour box_secure_90_qty: 3
+Vérification pour le produit: box_secure_120 avec champ: box_secure_120_qty
+Quantité reçue pour box_secure_120_qty: 0
+Vérification pour le produit: box_secure_240 avec champ: box_secure_240_qty
+Quantité reçue pour box_secure_240_qty: 0
+Vérification pour le produit: box_secure_480 avec champ: box_secure_480_qty
+Quantité reçue pour box_secure_480_qty: 0
+Produit généré non trouvé dans le mapping: etageRDC_none
+=== Produits commandés ===
+Produit: box_secure_90, ID: field317, Quantité: 3
+=== Requête de création du client ===
+{
+    "name": "Faycal Boukhedimi",
+    "email": "bd@growthomodo.com",
+    "address1": "4 RUE PASTEUR",
+    "phone": "0668110358",
+    "attention_to": "",
+    "siret": "",
+    "payment_terms": "NET 30",
+    "language": "fr"
+}
+=== Requête de création du devis ===
+{
+    "customer": "CUSTOMER_ID_PLACEHOLDER",
+    "items": [
+        {
+            "catalog_item": "field317",
+            "quantity": 3
+        }
+    ]
+}
+=== Requête d'envoi du devis ===
+{
+    "estimate_id": "ESTIMATE_ID_PLACEHOLDER"
+}
+=== Contenu de l'email généré ===
+
+    <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: auto;'>
+        <h2 style='text-align: center; background-color: #4CAF50; color: #fff; padding: 10px;'>Nouvelle demande de devis</h2>
+        <div style='padding: 20px; border: 1px solid #ddd;'>
+            <h3>Informations Client</h3>
+            <p><strong>Nom :</strong> Faycal Boukhedimi</p>
+            <p><strong>Société :</strong> </p>
+            <p><strong>Email :</strong> <a href='mailto:bd@growthomodo.com'>bd@growthomodo.com</a></p>
+            <p><strong>Téléphone :</strong> <a href='tel:0668110358'>0668110358</a></p>
+            <p><strong>Adresse :</strong> 4 RUE PASTEUR</p>
+            <p><strong>Étage :</strong> RDC</p>
+            <p><strong>Ascenseur :</strong> non</p>
+            <p><strong>Catégorie du produit :</strong> dechets_bureau</p>
+            <p><strong>Description :</strong><br>3 box secu</p><h3>Produits Commandés</h3><table style='width: 100%; border-collapse: collapse;'>
+                        <thead>
+                            <tr>
+                                <th style='border: 1px solid #ddd; padding: 8px; text-align: left;'>Produit</th>
+                                <th style='border: 1px solid #ddd; padding: 8px; text-align: center;'>Quantité</th>
+                            </tr>
+                        </thead>
+                        <tbody><tr>
+                            <td style='border: 1px solid #ddd; padding: 8px;'>box_secure_90</td>
+                            <td style='border: 1px solid #ddd; padding: 8px; text-align: center;'>3</td>
+                         </tr></tbody></table>
+        </div>
+        <p style='text-align: center; margin-top: 20px; color: #666;'>Cet email a été généré automatiquement, merci de ne pas y répondre directement.</p>
+    </div>
