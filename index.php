@@ -6,7 +6,10 @@
     <title>Devis City Debarras</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyk1EQRuIaQDHdXM6c9ZTGeUK8YTttRvg&libraries=places"></script>
+    <?php
+    $config = require_once 'config.php';
+    ?>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $config['google_maps_api_key']; ?>&libraries=places"></script>
     <script src="modal.js"></script>
 </head>
 <body>

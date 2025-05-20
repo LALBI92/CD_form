@@ -1,0 +1,38 @@
+# Fichiers d'environnement
+.env
+.env.*
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Dossiers de dépendances
+/vendor/
+/node_modules/
+
+# Fichiers de logs
+*.log
+logs/
+
+# Fichiers de cache
+*.cache
+.cache/
+
+# Fichiers de configuration locaux
+config.local.php
+*.local.php
+
+# Fichiers d'IDE
+.idea/
+.vscode/
+*.sublime-*
+*.swp
+*.swo
+
+# Fichiers de build
+/build/
+/dist/
+
+# Fichiers temporaires
+*.tmp
+*.temp 
