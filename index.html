@@ -3,17 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire de devis</title>
+    <title>Devis City Debarras</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyk1EQRuIaQDHdXM6c9ZTGeUK8YTttRvg&libraries=places"></script>
+    <script src="modal.js"></script>
 </head>
 <body>
 
-<h2>Formulaire de calcul de devis</h2>
+    <header id="header">
+        <div class="container">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/new-logo-city-debarras.png" alt="City Débarras Logo" class="logo">
+        </div>
+    </header>
+
+
+
+<h2>Recevez immédiatement votre devis en quelques clics</h2>
 
 <form action="invoiced.php" method="POST" enctype="multipart/form-data" id="devisForm">
     <!-- Step 1 -->
 <div id="step-1" class="form-step">
-    <!-- Votre contenu de la première étape ici -->
+
 
     <!-- Champ Type de besoin -->
     <div>
@@ -30,20 +41,22 @@
         <label for="je_recycle">Je recycle</label>
         <select name="je_recycle" id="je_recycle" required>
             <option value="">Choisir le type de déchets</option>
-            <option value="dechets_non_dangereux">Mes déchets non dangereux</option>
-            <option value="dechets_chantiers">Mes déchets de chantiers</option>
+            <option value="destruction_archives">Destruction d'archives / Documents confidentiels</option>
+            <option value="deee">Mes déchets électriques et électroniques DEEE / D3E</option>
             <option value="dechets_bureau">Mes déchets de Bureau / 5 Flux</option>
             <option value="mobilier_bureau">Mes mobiliers de bureau / DEA</option>
-            <option value="deee">Mes déchets électriques et électroniques DEEE / D3E</option>
-            <option value="destruction_archives">Destruction d'archives / Documents confidentiels</option>
             <option value="debarrasser_local">Débarrasser tous types de local</option>
             <option value="louer_benne">Louer une benne</option>
+            <option value="dechets_chantiers">Mes déchets de chantiers</option>
+            <option value="dechets_non_dangereux">Mes déchets non dangereux</option>
+            
+            
         </select>
     </div>
 
     <!-- Champ Déchets Non Dangereux (choix multiples) -->
 <div id="dechets_nd_wrapper" style="display: none;">
-    <label>Déchets Non Dangereux (choix multiples)</label>
+    <label>Déchets Non Dangereux (Benne à Déchet unique)</label>
     <div class="choices-grid">
         <div class="choice" data-value="cartons">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/01/001-box.png" alt="Cartons" width="50">
@@ -144,7 +157,7 @@
                 <button type="button" class="qty-plus" data-target="bac_roulant_770l_cartons_qty">+</button>
             </div>
         </div>
-        
+
     </div>
 </div>
 
@@ -567,7 +580,7 @@
 
 
 
-  
+
 <!-- Champ DC Contenants DIB Chantier (choix multiples) -->
 <div id="dib_chantier_wrapper" style="display: none;">
     <label>DC Contenants DIB Chantier (choix multiples)</label>
@@ -903,21 +916,22 @@
             </div>
         </div>
         <!-- Box D3E -->
-        <div class="benne box-d3e">
+        <div class="benne box_d3e_bureau">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/IMG_20191229_114714-1536x1536.png" alt="Box D3E">
-            <label for="box_d3e">
+            <label for="box_d3e_bureau">
                 <span>Box D3E</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_d3e_qty">-</button>
-                <input type="number" id="box_d3e_qty" name="box_d3e_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="box_d3e_qty">+</button>
+                <button type="button" class="qty-minus" data-target="box_d3e_bureau_qty">-</button>
+                <input type="number" id="box_d3e_bureau_qty" name="box_d3e_bureau_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_d3e_bureau_qty">+</button>
             </div>
         </div>
         <!-- Box Sécurisé 90 -->
         <div class="benne box-secure-90">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/02/70.png" alt="Box sécurisé 90L" width="50">
             <label for="box_secure_90">
-                <span>Box Sécurisé 90</span>
+                <span>Box Sécurisé 90L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_secure_90_qty">-</button>
@@ -927,8 +941,9 @@
         </div>
         <!-- Box Sécurisé 120 -->
         <div class="benne box-secure-120">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/02/70.png" alt="Box sécurisé 120L" width="50">
             <label for="box_secure_120">
-                <span>Box Sécurisé 120</span>
+                <span>Box Sécurisé 120L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_secure_120_qty">-</button>
@@ -938,8 +953,9 @@
         </div>
         <!-- Box Sécurisé 240 -->
         <div class="benne box-secure-240">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/02/241.png" alt="Box sécurisé 240L" width="50">
             <label for="box_secure_240">
-                <span>Box Sécurisé 240</span>
+                <span>Box Sécurisé 240L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_secure_240_qty">-</button>
@@ -949,8 +965,9 @@
         </div>
         <!-- Box Sécurisé 480 -->
         <div class="benne box-secure-480">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/02/415.png" alt="Box roulant sécurisé 480L" width="50">
             <label for="box_secure_480">
-                <span>Box Sécurisé 480</span>
+                <span>Box Sécurisé 480L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_secure_480_qty">-</button>
@@ -965,213 +982,634 @@
 
 <!-- Champ Déchets électriques et électroniques DEEE / D3E -->
 <div id="deee_wrapper" style="display: none;">
-    <label for="type_deee">Type de D3E / DEEE</label>
-    <select name="type_deee" id="deee_select">
-        <option value="">Sélectionnez un type de D3E / DEEE</option>
-        <option value="informatiques_bureautiques">Informatiques / Bureautiques</option>
-        <option value="cartouches_encres_toners">Cartouches d'encres / Toners</option>
-        <option value="accumulateurs_batteries_piles">Accumulateurs / Batteries / Piles</option>
-        <option value="electromenager_chaud_froid">Electroménager chaud / Froid</option>
-        <option value="climatisation_chaud_froid">Climatisation Chaud / Froid</option>
-        <option value="ampoules_lampes_neons">Ampoules / Lampes / Néons</option>
+
+    <label for="lieu_deee">Récupération à domicile</label>
+    <select name="lieu_deee" id="lieu_deee">
+        <option value="">Choisissez le lieu</option>
+        <option value="type_deee_domicile">Oui</option>
+        <option value="type_deee_depot">Non - Dépôt chez City Debarras</option>
     </select>
 </div>
 
+    <div id="type_deee_domicile_wrapper" style="display: none;">
+        <label for="type_deee_domicile">Type de D3E / DEEE (domicile)</label>
+        <select name="type_deee_domicile" id="deee_domicile_select">
+            <option value="">Sélectionnez un type de D3E / DEEE</option>
+            <option value="informatiques_bureautiques_domicile">Informatiques / Bureautiques</option>
+            <option value="cartouches_encres_toners_domicile">Cartouches d'encres / Toners</option>
+            <option value="accumulateurs_batteries_piles_domicile">Accumulateurs / Batteries / Piles</option>
+            <option value="electromenager_chaud_froid_domicile">Electroménager chaud / Froid</option>
+            <option value="climatisation_chaud_froid_domicile">Climatisation Chaud / Froid</option>
+            <option value="ampoules_lampes_neons_domicile">Ampoules / Lampes / Néons</option>
+        </select>
+    </div>
+
+
+
 <!-- Champ Informatiques et Bureautiques (choix multiples) -->
-<div id="informatiques_bureautiques_wrapper" style="display: none;">
+<div id="informatiques_bureautiques_domicile_wrapper" style="display: none;">
     <label>Informatiques et Bureautiques (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box D3E">
-            <label for="box_d3e">
+            <label for="box_d3e_domicile">
                 <span>Box D3E</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_d3e_qty">-</button>
-                <input type="number" id="box_d3e_qty" name="box_d3e_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="box_d3e_qty">+</button>
+                <button type="button" class="qty-minus" data-target="box_d3e_domicile_qty">-</button>
+                <input type="number" id="box_d3e_domicile_qty" name="box_d3e_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_d3e_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Roulette 200L">
+            <label for="bac_industriel_200_DEEE_domicile">
+                <span>Bac Industriel Roulette 200L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_industriel_200_DEEE_domicile_qty">-</button>
+                <input type="number" id="bac_industriel_200_DEEE_domicile_qty" name="bac_industriel_200_DEEE_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_industriel_200_DEEE_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
-            <label for="bac_550l">
+            <label for="bac_550l_domicile">
                 <span>Bac Industriel Roulette 550L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="bac_550l_qty">-</button>
-                <input type="number" id="bac_550l_qty" name="bac_550l_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="bac_550l_qty">+</button>
+                <button type="button" class="qty-minus" data-target="bac_550l_domicile_qty">-</button>
+                <input type="number" id="bac_550l_domicile_qty" name="bac_550l_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_550l_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Caisse-palette-grillagée-1m3-1.png" alt="Caisse Palette Grillagée 1m3">
-            <label for="caisse_palette">
+            <label for="caisse_palette_domicile">
                 <span>Caisse Palette Grillagée 1m3</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="caisse_palette_qty">-</button>
-                <input type="number" id="caisse_palette_qty" name="caisse_palette_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="caisse_palette_qty">+</button>
+                <button type="button" class="qty-minus" data-target="caisse_palette_domicile_qty">-</button>
+                <input type="number" id="caisse_palette_domicile_qty" name="caisse_palette_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="caisse_palette_domicile_qty">+</button>
             </div>
         </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/1.png" alt="Petite imprimante">
+            <label for="imprimante_petite_domicile">
+                <span>Imprimante (petite)</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="imprimante_petite_domicile_qty">-</button>
+                <input type="number" id="imprimante_petite_domicile_qty" name="imprimante_petite_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="imprimante_petite_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/2.png" alt="Moyenne imprimante">
+            <label for="imprimante_moyenne_domicile">
+                <span>Imprimante (moyenne)</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="imprimante_moyenne_domicile_qty">-</button>
+                <input type="number" id="imprimante_moyenne_domicile_qty" name="imprimante_moyenne_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="imprimante_moyenne_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/3.png" alt="Grande imprimante">
+            <label for="imprimante_grande_domicile">
+                <span>Imprimante (grande)</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="imprimante_grande_domicile_qty">-</button>
+                <input type="number" id="imprimante_grande_domicile_qty" name="imprimante_grande_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="imprimante_grande_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/4.png" alt="Déchiqueteuse">
+            <label for="dechiqueteuse_domicile">
+                <span>Déchiqueteuse</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="dechiqueteuse_domicile_qty">-</button>
+                <input type="number" id="dechiqueteuse_domicile_qty" name="dechiqueteuse_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="dechiqueteuse_domicile_qty">+</button>
+            </div>
+        </div>
+
+
     </div>
 </div>
 
 <!-- Champ Cartouches d'encre / Toners (choix multiples) -->
-<div id="cartouches_encres_wrapper" style="display: none;">
+<div id="cartouches_encres_domicile_wrapper" style="display: none;">
     <label>Cartouches d'encre / Toners (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Cartouche">
-            <label for="box_cartouche">
+            <label for="box_cartouche_domicile">
                 <span>Box Cartouche</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_cartouche_qty">-</button>
-                <input type="number" id="box_cartouche_qty" name="box_cartouche_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="box_cartouche_qty">+</button>
+                <button type="button" class="qty-minus" data-target="box_cartouche__domicileqty">-</button>
+                <input type="number" id="box_cartouche_domicile_qty" name="box_cartouche_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_cartouche_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Cartouches 200L">
+            <label for="bac_toner_200l_domicile">
+                <span>Bac Industriel Cartouches - Toners 200L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_toner_200l_domicile_qty">-</button>
+                <input type="number" id="bac_toner_200l_domicile_qty" name="bac_toner_200l_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_toner_200l_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
-            <label for="bac_550l_cartouche">
+            <label for="bac_550l_cartouche_domicile">
                 <span>Bac Industriel Roulette 550L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="bac_550l_cartouche_qty">-</button>
-                <input type="number" id="bac_550l_cartouche_qty" name="bac_550l_cartouche_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="bac_550l_cartouche_qty">+</button>
+                <button type="button" class="qty-minus" data-target="bac_550l_cartouche_domicile_qty">-</button>
+                <input type="number" id="bac_550l_cartouche_domicile_qty" name="bac_550l_cartouche_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_550l_cartouche_domicile_qty">+</button>
             </div>
         </div>
+
     </div>
 </div>
 
 <!-- Champ Accumulateurs / Batteries / Piles (choix multiples) -->
-<div id="piles_wrapper" style="display: none;">
+<div id="piles_domicile_wrapper" style="display: none;">
     <label>Accumulateurs / Batteries / Piles (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-6kg-.png" alt="Bac PVC Pile 6Kg">
-            <label for="bac_pile_6kg">
+            <label for="bac_pile_6kg_domicile">
                 <span>Bac PVC Pile 6Kg</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="bac_pile_6kg_qty">-</button>
-                <input type="number" id="bac_pile_6kg_qty" name="bac_pile_6kg_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="bac_pile_6kg_qty">+</button>
+                <button type="button" class="qty-minus" data-target="bac_pile_6kg_domicile_qty">-</button>
+                <input type="number" id="bac_pile_6kg_domicile_qty" name="bac_pile_6kg_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_pile_6kg_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-15kg.png" alt="Bac PVC Pile 15Kg">
-            <label for="bac_pile_15kg">
+            <label for="bac_pile_15kg_domicile">
                 <span>Bac PVC Pile 15Kg</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="bac_pile_15kg_qty">-</button>
-                <input type="number" id="bac_pile_15kg_qty" name="bac_pile_15kg_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="bac_pile_15kg_qty">+</button>
+                <button type="button" class="qty-minus" data-target="bac_pile_15kg_domicile_qty">-</button>
+                <input type="number" id="bac_pile_15kg_domicile_qty" name="bac_pile_15kg_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_pile_15kg_domicile_qty">+</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Champ Électroménager Chaud / Froid (choix multiples) -->
-<div id="electromenager_wrapper" style="display: none;">
+<div id="electromenager_domicile_wrapper" style="display: none;">
     <label>Électroménager Chaud / Froid (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/machine-laver.png" alt="Machine à laver / Sèche linge">
-            <label for="machine_laver">
+            <label for="machine_laver_domicile">
                 <span>Machine à laver / Sèche linge</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="machine_laver_qty">-</button>
-                <input type="number" id="machine_laver_qty" name="machine_laver_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="machine_laver_qty">+</button>
+                <button type="button" class="qty-minus" data-target="machine_laver_domicile_qty">-</button>
+                <input type="number" id="machine_laver_domicile_qty" name="machine_laver_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="machine_laver_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/frigo.png" alt="Réfrigirateur / Congélateur">
-            <label for="refrigerateur">
-                <span>Réfrigirateur / Congélateur</span>
+            <label for="refrigerateur_domicile">
+                <span>Réfrigirateur</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="refrigerateur_qty">-</button>
-                <input type="number" id="refrigerateur_qty" name="refrigerateur_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="refrigerateur_qty">+</button>
+                <button type="button" class="qty-minus" data-target="refrigerateur_domicile_qty">-</button>
+                <input type="number" id="refrigerateur_domicile_qty" name="refrigerateur_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="refrigerateur_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2024/12/Design-sans-titre-7.png" alt="Congélateur">
+            <label for="congelateur_domicile">
+                <span>Congélateur</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="congelateur_domicile_qty">-</button>
+                <input type="number" id="congelateur_domicile_qty" name="congelateur_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="congelateur_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/four.png" alt="Four">
-            <label for="four">
+            <label for="four_domicile">
                 <span>Four</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="four_qty">-</button>
-                <input type="number" id="four_qty" name="four_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="four_qty">+</button>
+                <button type="button" class="qty-minus" data-target="four_domicile_qty">-</button>
+                <input type="number" id="four_domicile_qty" name="four_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="four_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/cuisiniere.png" alt="Cuisinière">
-            <label for="cuisiniere">
+            <label for="cuisiniere_domicile">
                 <span>Cuisinière</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="cuisiniere_qty">-</button>
-                <input type="number" id="cuisiniere_qty" name="cuisiniere_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="cuisiniere_qty">+</button>
+                <button type="button" class="qty-minus" data-target="cuisiniere_domicile_qty">-</button>
+                <input type="number" id="cuisiniere_domicile_qty" name="cuisiniere_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="cuisiniere_domicile_qty">+</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Champ Ampoules / Lampes / Néons (choix multiples) -->
-<div id="ampoules_wrapper" style="display: none;">
+<div id="ampoules_domicile_wrapper" style="display: none;">
     <label>Ampoules / Lampes / Néons (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Ampoules">
-            <label for="box_ampoules">
+            <label for="box_ampoules_domicile">
                 <span>Box Ampoules</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_ampoules_qty">-</button>
-                <input type="number" id="box_ampoules_qty" name="box_ampoules_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="box_ampoules_qty">+</button>
+                <button type="button" class="qty-minus" data-target="box_ampoules_domicile_qty">-</button>
+                <input type="number" id="box_ampoules_domicile_qty" name="box_ampoules_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_ampoules_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Néons">
-            <label for="box_neons">
+            <label for="box_neons_domicile">
                 <span>Box Néons</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_neons_qty">-</button>
-                <input type="number" id="box_neons_qty" name="box_neons_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="box_neons_qty">+</button>
+                <button type="button" class="qty-minus" data-target="box_neons_domicile_qty">-</button>
+                <input type="number" id="box_neons_domicile_qty" name="box_neons_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_neons_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Ampoule 200L">
+            <label for="bac_200l_ampoules_domicile">
+                <span>Bac Industriel Ampoules - Lampes 200L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_200l_ampoules_domicile_qty">-</button>
+                <input type="number" id="bac_200l_ampoules_domicile_qty" name="bac_200l_ampoules_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_200l_ampoules_domicile_qty">+</button>
             </div>
         </div>
 
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
-            <label for="bac_550l_ampoules">
+            <label for="bac_550l_ampoules_domicile">
                 <span>Bac Industriel Roulette 550L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="bac_550l_ampoules_qty">-</button>
-                <input type="number" id="bac_550l_ampoules_qty" name="bac_550l_ampoules_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="bac_550l_ampoules_qty">+</button>
+                <button type="button" class="qty-minus" data-target="bac_550l_ampoules_domicile_qty">-</button>
+                <input type="number" id="bac_550l_ampoules_domicile_qty" name="bac_550l_ampoules_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_550l_ampoules_domicile_qty">+</button>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="type_deee_depot_wrapper" style="display: none;">
+    <label for="type_deee_depot">Type de D3E / DEEE (entrepôt) </label>
+        <select name="type_deee_depot" id="deee_depot_select">
+            <option value="">Sélectionnez un type de D3E / DEEE</option>
+            <option value="informatiques_bureautiques_depot">Informatiques / Bureautiques</option>
+            <option value="cartouches_encres_toners_depot">Cartouches d'encres / Toners</option>
+            <option value="accumulateurs_batteries_piles_depot">Accumulateurs / Batteries / Piles</option>
+            <option value="electromenager_chaud_froid_depot">Electroménager chaud / Froid</option>
+            <option value="climatisation_chaud_froid_depot">Climatisation Chaud / Froid</option>
+            <option value="ampoules_lampes_neons_depot">Ampoules / Lampes / Néons</option>
+        </select>
+</div>
+
+<!-- Champ Informatiques et Bureautiques (choix multiples) -->
+<div id="informatiques_bureautiques_depot_wrapper" style="display: none;">
+    <label>Informatiques et Bureautiques (choix multiples)</label>
+    <div class="choices-grid">
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box D3E">
+            <label for="box_d3e_depot">
+                <span>Box D3E</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="box_d3e_depot_qty">-</button>
+                <input type="number" id="box_d3e_depot_qty" name="box_d3e_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_d3e_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Roulette 200L">
+            <label for="bac_industriel_200_DEEE_depot">
+                <span>Bac Industriel Roulette 200L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_industriel_200_DEEE_depot_qty">-</button>
+                <input type="number" id="bac_industriel_200_DEEE_depot_qty" name="bac_industriel_200_DEEE_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_industriel_200_DEEE_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <label for="bac_550l_depot">
+                <span>Bac Industriel Roulette 550L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_550l_depot_qty">-</button>
+                <input type="number" id="bac_550l_depot_qty" name="bac_550l_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_550l_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Caisse-palette-grillagée-1m3-1.png" alt="Caisse Palette Grillagée 1m3">
+            <label for="caisse_palette_depot">
+                <span>Caisse Palette Grillagée 1m3</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="caisse_palette_depot_qty">-</button>
+                <input type="number" id="caisse_palette_depot_qty" name="caisse_palette_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="caisse_palette_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/1.png" alt="Petite imprimante">
+            <label for="imprimante_petite_depot">
+                <span>Imprimante (petite)</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="imprimante_petite_depot_qty">-</button>
+                <input type="number" id="imprimante_petite_depot_qty" name="imprimante_petite_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="imprimante_petite_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/2.png" alt="Moyenne imprimante">
+            <label for="imprimante_moyenne_depot">
+                <span>Imprimante (moyenne)</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="imprimante_moyenne_depot_qty">-</button>
+                <input type="number" id="imprimante_moyenne_depot_qty" name="imprimante_moyenne_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="imprimante_moyenne_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/3.png" alt="Grande imprimante">
+            <label for="imprimante_grande_depot">
+                <span>Imprimante (grande)</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="imprimante_grande_depot_qty">-</button>
+                <input type="number" id="imprimante_grande_depot_qty" name="imprimante_grande_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="imprimante_grande_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/4.png" alt="Déchiqueteuse">
+            <label for="dechiqueteuse_depot">
+                <span>Déchiqueteuse</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="dechiqueteuse_depot_qty">-</button>
+                <input type="number" id="dechiqueteuse_depot_qty" name="dechiqueteuse_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="dechiqueteuse_depot_qty">+</button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<!-- Champ Cartouches d'encre / Toners (choix multiples) -->
+<div id="cartouches_depot_encres_wrapper" style="display: none;">
+    <label>Cartouches d'encre / Toners (choix multiples)</label>
+    <div class="choices-grid">
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Cartouche">
+            <label for="box_cartouche_depot">
+                <span>Box Cartouche</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="box_cartouche__depotqty">-</button>
+                <input type="number" id="box_cartouche_depot_qty" name="box_cartouche_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_cartouche_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Cartouches 200L">
+            <label for="bac_toner_200l_depot">
+                <span>Bac Industriel Cartouches - Toners 200L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_toner_200l_depot_qty">-</button>
+                <input type="number" id="bac_toner_200l_depot_qty" name="bac_toner_200l_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_toner_200l_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <label for="bac_550l_cartouche_depot">
+                <span>Bac Industriel Roulette 550L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_550l_cartouche_depot_qty">-</button>
+                <input type="number" id="bac_550l_cartouche_depot_qty" name="bac_550l_cartouche_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_550l_cartouche_depot_qty">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Champ Accumulateurs / Batteries / Piles (choix multiples) -->
+<div id="piles_depot_wrapper" style="display: none;">
+    <label>Accumulateurs / Batteries / Piles (choix multiples)</label>
+    <div class="choices-grid">
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-6kg-.png" alt="Bac PVC Pile 6Kg">
+            <label for="bac_pile_6kg_depot">
+                <span>Bac PVC Pile 6Kg</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_pile_6kg_depot_qty">-</button>
+                <input type="number" id="bac_pile_6kg_depot_qty" name="bac_pile_6kg_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_pile_6kg_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-15kg.png" alt="Bac PVC Pile 15Kg">
+            <label for="bac_pile_15kg_depot">
+                <span>Bac PVC Pile 15Kg</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_pile_15kg_depot_qty">-</button>
+                <input type="number" id="bac_pile_15kg_depot_qty" name="bac_pile_15kg_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_pile_15kg_depot_qty">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Champ Électroménager Chaud / Froid (choix multiples) -->
+<div id="electromenager_depot_wrapper" style="display: none;">
+    <label>Électroménager Chaud / Froid (choix multiples)</label>
+    <div class="choices-grid">
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/machine-laver.png" alt="Machine à laver / Sèche linge">
+            <label for="machine_laver_depot">
+                <span>Machine à laver / Sèche linge</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="machine_laver_depot_qty">-</button>
+                <input type="number" id="machine_laver_depot_qty" name="machine_laver_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="machine_laver_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/frigo.png" alt="Réfrigirateur / Congélateur">
+            <label for="refrigerateur_depot">
+                <span>Réfrigirateur</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="refrigerateur_depot_qty">-</button>
+                <input type="number" id="refrigerateur_depot_qty" name="refrigerateur_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="refrigerateur_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2024/12/Design-sans-titre-7.png" alt="Congélateur">
+            <label for="congelateur_depot">
+                <span>Congélateur</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="congelateur_depot_qty">-</button>
+                <input type="number" id="congelateur_depot_qty" name="congelateur_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="congelateur_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/four.png" alt="Four">
+            <label for="four_depot">
+                <span>Four</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="four_depot_qty">-</button>
+                <input type="number" id="four_depot_qty" name="four_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="four_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/cuisiniere.png" alt="Cuisinière">
+            <label for="cuisiniere_depot">
+                <span>Cuisinière</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="cuisiniere_depot_qty">-</button>
+                <input type="number" id="cuisiniere_depot_qty" name="cuisiniere_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="cuisiniere_depot_qty">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Champ Ampoules / Lampes / Néons (choix multiples) -->
+<div id="ampoules_depot_wrapper" style="display: none;">
+    <label>Ampoules / Lampes / Néons (choix multiples)</label>
+    <div class="choices-grid">
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Ampoules">
+            <label for="box_ampoules_depot">
+                <span>Box Ampoules</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="box_ampoules_depot_qty">-</button>
+                <input type="number" id="box_ampoules_depot_qty" name="box_ampoules_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_ampoules_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Néons">
+            <label for="box_neons_depot">
+                <span>Box Néons</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="box_neons_depot_qty">-</button>
+                <input type="number" id="box_neons_depot_qty" name="box_neons_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_neons_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Ampoule 200L">
+            <label for="bac_200l_ampoules_depot">
+                <span>Bac Industriel Ampoules - Lampes 200L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_200l_ampoules_depot_qty">-</button>
+                <input type="number" id="bac_200l_ampoules_depot_qty" name="bac_200l_ampoules_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_200l_ampoules_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <label for="bac_550l_ampoules_depot">
+                <span>Bac Industriel Roulette 550L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_550l_ampoules_depot_qty">-</button>
+                <input type="number" id="bac_550l_ampoules_depot_qty" name="bac_550l_ampoules_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_550l_ampoules_depot_qty">+</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -1190,15 +1628,15 @@
 <div id="destruction_archives_domicile_wrapper" style="display: none;">
     <label>Type de Contenant pour Destruction d'archives / Documents confidentiels à domicile</label>
     <div class="choices-grid">
-        <div class="benne archive-70L">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/02/70.png" alt="Box sécurisé 70L" width="50">
-            <label for="box_70L_archives_domicile">
-                <span>Box sécurisé 70L</span>
+        <div class="benne archive-90L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/02/70.png" alt="Box sécurisé 90L" width="50">
+            <label for="box_90L_archives_domicile">
+                <span>Box sécurisé 90L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_70L_archives_domicile_qty">-</button>
-                <input type="number" id="box_70L_archives_domicile_qty" name="box_70L_archives_domicile_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="box_70L_archives_domicile_qty">+</button>
+                <button type="button" class="qty-minus" data-target="box_90L_archives_domicile_qty">-</button>
+                <input type="number" id="box_90L_archives_domicile_qty" name="box_90L_archives_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_90L_archives_domicile_qty">+</button>
             </div>
         </div>
 
@@ -1226,6 +1664,18 @@
             </div>
         </div>
 
+        <div class="benne archive-240L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/7.png" alt="Bac sécurisé ouvert 240L" width="50">
+            <label for="bac_secure_240_ouvert_domicile">
+                <span>Box sécurisé ouvert 240L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_secure_240_ouvert_domicile_qty">-</button>
+                <input type="number" id="bac_secure_240_ouvert_domicile_qty" name="bac_secure_240_ouvert_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_secure_240_ouvert_domicile_qty">+</button>
+            </div>
+        </div>
+
         <div class="benne archive-480L">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/415.png" alt="Box roulant sécurisé 480L" width="50">
             <label for="box_480L_archives_domicile">
@@ -1235,6 +1685,18 @@
                 <button type="button" class="qty-minus" data-target="box_480L_archives_domicile_qty">-</button>
                 <input type="number" id="box_480L_archives_domicile_qty" name="box_480L_archives_domicile_qty" value="0" min="0" readonly>
                 <button type="button" class="qty-plus" data-target="box_480L_archives_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne archive-550L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/Design-sans-titre-10.png" alt="Bac sécurisé ouvert 550L" width="50">
+            <label for="bac_secure_550_ouvert_domicile">
+                <span>Box sécurisé ouvert 550L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_secure_550_ouvert_domicile_qty">-</button>
+                <input type="number" id="bac_secure_550_ouvert_domicile_qty" name="bac_secure_550_ouvert_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_secure_550_ouvert_domicile_qty">+</button>
             </div>
         </div>
 
@@ -1252,15 +1714,15 @@
 <div id="destruction_archives_depot_wrapper" style="display: none;">
     <label>Contenant pour Destruction d'archives / Documents confidentiels à notre dépôt</label>
     <div class="choices-grid">
-        <div class="benne archive-70L">
+        <div class="benne archive-90L">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/70.png" alt="Box sécurisé 70L" width="50">
-            <label for="box_70L_archives_depot">
-                <span>Box sécurisé 70L</span>
+            <label for="box_90L_archives_depot">
+                <span>Box sécurisé 90L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_70L_archives_depot_qty">-</button>
-                <input type="number" id="box_70L_archives_depot_qty" name="box_70L_archives_depot_qty" value="0" min="0" readonly>
-                <button type="button" class="qty-plus" data-target="box_70L_archives_depot_qty">+</button>
+                <button type="button" class="qty-minus" data-target="box_90L_archives_depot_qty">-</button>
+                <input type="number" id="box_90L_archives_depot_qty" name="box_90L_archives_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="box_90L_archives_depot_qty">+</button>
             </div>
         </div>
 
@@ -1288,6 +1750,18 @@
             </div>
         </div>
 
+        <div class="benne archive-240L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/7.png" alt="Bac sécurisé ouvert 240L" width="50">
+            <label for="bac_secure_240_ouvert_depot">
+                <span>Box sécurisé ouvert 240L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_secure_240_ouvert_depot_qty">-</button>
+                <input type="number" id="bac_secure_240_ouvert_depot_qty" name="bac_secure_240_ouvert_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_secure_240_ouvert_depot_qty">+</button>
+            </div>
+        </div>
+
         <div class="benne archive-480L">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/415.png" alt="Box roulant sécurisé 480L" width="50">
             <label for="box_480L_archives_depot">
@@ -1300,9 +1774,21 @@
             </div>
         </div>
 
+        <div class="benne archive-550L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/Design-sans-titre-10.png" alt="Bac sécurisé ouvert 550L" width="50">
+            <label for="bac_secure_550_ouvert_depot">
+                <span>Box sécurisé ouvert 550L</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="bac_secure_550_ouvert_depot_qty">-</button>
+                <input type="number" id="bac_secure_550_ouvert_depot_qty" name="bac_secure_550_ouvert_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="bac_secure_550_ouvert_depot_qty">+</button>
+            </div>
+        </div>
+
         <div class="benne archive-vrac">
-            <input type="checkbox" id="vrac_entrepot_estimer_archives" name="destruction_archives[]" value="vrac_entrepot_estimer_archives">
-            <label for="vrac_entrepot_estimer_archives">
+            <input type="checkbox" id="vrac_depot_estimer_archives" name="destruction_archives[]" value="vrac_depot_estimer_archives">
+            <label for="vrac_depot_estimer_archives">
                 <img src="https://citydebarras.fr/wp-content/uploads/2021/01/004-paper.png" alt="Vrac à estimer" width="50">
                 <span>Vrac à estimer</span>
             </label>
@@ -1396,7 +1882,7 @@
 
 
 <div id="volume-section" style="display: none;">
-    <h2>Estimez les m³ dont vous aurez besoin pour votre déménagement</h2>
+    <h2>Estimez le volume dont vous avez besoin pour votre débarras</h2>
 
     <div class="accordion">
         <!-- Bureau Section -->
@@ -1605,6 +2091,102 @@
                         <button type="button" class="qty-minus volume-control" data-target="armoire_4portes_qty">-</button>
                         <input type="number" id="armoire_4portes_qty" class="volume-control" value="0" data-volume="3.45" readonly>
                         <button type="button" class="qty-plus volume-control" data-target="armoire_4portes_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Banque d'accueil</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="banque_accueil_qty">-</button>
+                        <input type="number" id="banque_accueil_qty" class="volume-control" value="0" data-volume="2.30" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="banque_accueil_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Fauteuil accueil</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="fauteuil_accueil_qty">-</button>
+                        <input type="number" id="fauteuil_accueil_qty" class="volume-control" value="0" data-volume="0.20" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="fauteuil_accueil_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Siège cafétéria</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="siege_cafeteria_qty">-</button>
+                        <input type="number" id="siege_cafeteria_qty" class="volume-control" value="0" data-volume="0.10" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="siege_cafeteria_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Siège direction</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="siege_direction_qty">-</button>
+                        <input type="number" id="siege_direction_qty" class="volume-control" value="0" data-volume="0.60" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="siege_direction_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Siège opérateur</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="siege_operateur_qty">-</button>
+                        <input type="number" id="siege_operateur_qty" class="volume-control" value="0" data-volume="0.40" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="siege_operateur_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Siège poutre 4 places</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="siege_poutre_qty">-</button>
+                        <input type="number" id="siege_poutre_qty" class="volume-control" value="0" data-volume="1.40" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="siege_poutre_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Siège réunion</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="siege_reunion_qty">-</button>
+                        <input type="number" id="siege_reunion_qty" class="volume-control" value="0" data-volume="0.20" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="siege_reunion_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Siège visiteur</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="siege_visiteur_qty">-</button>
+                        <input type="number" id="siege_visiteur_qty" class="volume-control" value="0" data-volume="0.20" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="siege_visiteur_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Table de réunion 12 places</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="table_reunion_12_qty">-</button>
+                        <input type="number" id="table_reunion_12_qty" class="volume-control" value="0" data-volume="4.50" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="table_reunion_12_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Table de réunion 8 places</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="table_reunion_8_qty">-</button>
+                        <input type="number" id="table_reunion_8_qty" class="volume-control" value="0" data-volume="1.70" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="table_reunion_8_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Table de réunion 4 places</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="table_reunion_4_qty">-</button>
+                        <input type="number" id="table_reunion_4_qty" class="volume-control" value="0" data-volume="1.00" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="table_reunion_4_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Armoire à rideaux basse</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="armoire_rideaux_basse_qty">-</button>
+                        <input type="number" id="armoire_rideaux_basse_qty" class="volume-control" value="0" data-volume="0.80" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="armoire_rideaux_basse_qty">+</button>
                     </div>
                 </div>
             </div>
@@ -1827,6 +2409,46 @@
                         <button type="button" class="qty-plus volume-control" data-target="vestiaires_banc_qty">+</button>
                     </div>
                 </div>
+                <div class="furniture-item">
+                    <span>Bureau de maître</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="bureau_maitre_qty">-</button>
+                        <input type="number" id="bureau_maitre_qty" class="volume-control" value="0" data-volume="1.30" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="bureau_maitre_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Chaise administration</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="chaise_admin_qty">-</button>
+                        <input type="number" id="chaise_admin_qty" class="volume-control" value="0" data-volume="0.40" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="chaise_admin_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Chaise primaire</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="chaise_primaire_qty">-</button>
+                        <input type="number" id="chaise_primaire_qty" class="volume-control" value="0" data-volume="0.20" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="chaise_primaire_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Fauteuil de direction</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="fauteuil_direction_qty">-</button>
+                        <input type="number" id="fauteuil_direction_qty" class="volume-control" value="0" data-volume="0.60" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="fauteuil_direction_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Meuble à plan</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="meuble_plan_qty">-</button>
+                        <input type="number" id="meuble_plan_qty" class="volume-control" value="0" data-volume="0.80" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="meuble_plan_qty">+</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1885,6 +2507,46 @@
                         <button type="button" class="qty-plus volume-control" data-target="table_restauration_4p_qty">+</button>
                     </div>
                 </div>
+                <div class="furniture-item">
+                    <span>Chaise restauration</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="chaise_restauration_qty">-</button>
+                        <input type="number" id="chaise_restauration_qty" class="volume-control" value="0" data-volume="0.20" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="chaise_restauration_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Chaise restauration rembourrée</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="chaise_restauration_rembourree_qty">-</button>
+                        <input type="number" id="chaise_restauration_rembourree_qty" class="volume-control" value="0" data-volume="0.20" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="chaise_restauration_rembourree_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Chariot à glissière</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="chariot_glissiere_qty">-</button>
+                        <input type="number" id="chariot_glissiere_qty" class="volume-control" value="0" data-volume="0.60" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="chariot_glissiere_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Chariot plateau en bois</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="chariot_plateau_bois_qty">-</button>
+                        <input type="number" id="chariot_plateau_bois_qty" class="volume-control" value="0" data-volume="0.50" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="chariot_plateau_bois_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Table inox de cuisine</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="table_inox_cuisine_qty">-</button>
+                        <input type="number" id="table_inox_cuisine_qty" class="volume-control" value="0" data-volume="0.70" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="table_inox_cuisine_qty">+</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1917,6 +2579,30 @@
                         <button type="button" class="qty-minus volume-control" data-target="table_chambre_qty">-</button>
                         <input type="number" id="table_chambre_qty" class="volume-control" value="0" data-volume="0.30" readonly>
                         <button type="button" class="qty-plus volume-control" data-target="table_chambre_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Divan d'examen</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="divan_examen_qty">-</button>
+                        <input type="number" id="divan_examen_qty" class="volume-control" value="0" data-volume="0.90" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="divan_examen_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Guéridon inox</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="gueridon_inox_qty">-</button>
+                        <input type="number" id="gueridon_inox_qty" class="volume-control" value="0" data-volume="0.50" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="gueridon_inox_qty">+</button>
+                    </div>
+                </div>
+                <div class="furniture-item">
+                    <span>Chariot armoire</span>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-minus volume-control" data-target="chariot_armoire_qty">-</button>
+                        <input type="number" id="chariot_armoire_qty" class="volume-control" value="0" data-volume="1.50" readonly>
+                        <button type="button" class="qty-plus volume-control" data-target="chariot_armoire_qty">+</button>
                     </div>
                 </div>
             </div>
@@ -2121,6 +2807,142 @@
                 <button type="button" class="qty-plus volume-control" data-target="tablettes_verre_qty">+</button>
             </div>
         </div>
+        <div class="furniture-item">
+            <span>Banque d'accueil/comptoir</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="banque_comptoir_qty">-</button>
+                <input type="number" id="banque_comptoir_qty" class="volume-control" value="0" data-volume="1.40" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="banque_comptoir_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Chevalet d'écriture</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="chevalet_ecriture_qty">-</button>
+                <input type="number" id="chevalet_ecriture_qty" class="volume-control" value="0" data-volume="0.40" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="chevalet_ecriture_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Comptoir de bar</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="comptoir_bar_qty">-</button>
+                <input type="number" id="comptoir_bar_qty" class="volume-control" value="0" data-volume="1.40" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="comptoir_bar_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Table de réunion</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="table_reunion_qty">-</button>
+                <input type="number" id="table_reunion_qty" class="volume-control" value="0" data-volume="1.30" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="table_reunion_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Tableau d'écriture</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="tableau_ecriture_qty">-</button>
+                <input type="number" id="tableau_ecriture_qty" class="volume-control" value="0" data-volume="0.10" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="tableau_ecriture_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Vitrine de présentation alimentaire (non réfrigérée)</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="vitrine_presentation_qty">-</button>
+                <input type="number" id="vitrine_presentation_qty" class="volume-control" value="0" data-volume="1.00" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="vitrine_presentation_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Vitrine haute en verre</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="vitrine_verre_qty">-</button>
+                <input type="number" id="vitrine_verre_qty" class="volume-control" value="0" data-volume="1.00" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="vitrine_verre_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>PLV basse</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="plv_basse_qty">-</button>
+                <input type="number" id="plv_basse_qty" class="volume-control" value="0" data-volume="0.80" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="plv_basse_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>PLV haute</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="plv_haute_qty">-</button>
+                <input type="number" id="plv_haute_qty" class="volume-control" value="0" data-volume="1.20" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="plv_haute_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Colonnes rainurées</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="colonnes_rainurees_qty">-</button>
+                <input type="number" id="colonnes_rainurees_qty" class="volume-control" value="0" data-volume="0.22" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="colonnes_rainurees_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Comptoir</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="comptoir_qty">-</button>
+                <input type="number" id="comptoir_qty" class="volume-control" value="0" data-volume="0.61" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="comptoir_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Gondoles métalliques</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="gondoles_metal_qty">-</button>
+                <input type="number" id="gondoles_metal_qty" class="volume-control" value="0" data-volume="1.16" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="gondoles_metal_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Panneaux d'affichage</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="panneaux_affichage_qty">-</button>
+                <input type="number" id="panneaux_affichage_qty" class="volume-control" value="0" data-volume="0.23" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="panneaux_affichage_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Podiums 3 niveaux</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="podiums_3niveaux_qty">-</button>
+                <input type="number" id="podiums_3niveaux_qty" class="volume-control" value="0" data-volume="1.29" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="podiums_3niveaux_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Présentoirs rainurés</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="presentoirs_rainures_qty">-</button>
+                <input type="number" id="presentoirs_rainures_qty" class="volume-control" value="0" data-volume="0.90" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="presentoirs_rainures_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Vitrine comptoir</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="vitrine_comptoir_qty">-</button>
+                <input type="number" id="vitrine_comptoir_qty" class="volume-control" value="0" data-volume="0.37" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="vitrine_comptoir_qty">+</button>
+            </div>
+        </div>
+        <div class="furniture-item">
+            <span>Vitrines Hautes</span>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus volume-control" data-target="vitrines_hautes_qty">-</button>
+                <input type="number" id="vitrines_hautes_qty" class="volume-control" value="0" data-volume="0.49" readonly>
+                <button type="button" class="qty-plus volume-control" data-target="vitrines_hautes_qty">+</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -2321,7 +3143,7 @@
         </div>
     </div>
 </div>
-            
+
 
 
     <!-- Volume Estimé -->
@@ -2333,75 +3155,172 @@
 <div class="camions">
     <!-- Camion 1 -->
     <div class="camion camion-container" id="camion1" data-volume="3">
-        <img src="images/5m3.jpg" alt="Camion 3m³">
+        <img src="images/3m3.png" alt="Camion 3m³">
         <h4>Camion 3m³</h4>
         <p class="fs-sm mb-36">
-            Idéal pour déménager <span class="fw-bold">un studio ou un petit appartement</span>.<br>
-            Environ 40 cartons (50x40x40).<br>
-            Charge maximum : 1000kg
+            Idéal pour débarrasser <span class="fw-bold">quelques cartons ou petits meubles</span>.
         </p>
+        <div class="fs-sm">
+            &#128230; Environ 24 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 915kg.
+        </div>
         <button type="button" class="choisir-camion" onclick="selectCamion('camion1')">Choisir ce camion</button>
     </div>
 
     <!-- Camion 2 -->
     <div class="camion camion-container" id="camion2" data-volume="5">
-        <img src="images/10m3.jpg" alt="Camion 5m³">
+        <img src="images/5m3.png" alt="Camion 5m³">
         <h4>Camion 5m³</h4>
         <p class="fs-sm mb-36">
-            Idéal pour déménager <span class="fw-bold">un appartement de 2-3 pièces</span>.<br>
-            Environ 80 cartons (50x40x40).<br>
-            Charge maximum : 2000kg
+            Idéal pour débarrasser <span class="fw-bold">une cave, une studette ou un petit appartement</span>.
         </p>
+        <div class="fs-sm">
+            &#128230; Environ 40 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 1000kg.
+        </div>
         <button type="button" class="choisir-camion" onclick="selectCamion('camion2')">Choisir ce camion</button>
     </div>
 
     <!-- Camion 3 -->
     <div class="camion camion-container" id="camion3" data-volume="8">
-        <img src="images/20m3.jpg" alt="Camion 8m³">
+        <img src="images/8m3.png" alt="Camion 8m³">
         <h4>Camion 8m³</h4>
         <p class="fs-sm mb-36">
-            Idéal pour déménager <span class="fw-bold">une maison de 3-4 pièces</span>.<br>
-            Environ 120 cartons (50x40x40).<br>
-            Charge maximum : 3000kg
+            Idéal pour débarrasser <span class="fw-bold">un bureau ou un appartement T1</span>.
         </p>
+        <div class="fs-sm">
+            &#128230; Environ 60 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 895kg.
+        </div>
         <button type="button" class="choisir-camion" onclick="selectCamion('camion3')">Choisir ce camion</button>
+    </div>
+
+     <!-- Camion 11 -->
+     <div class="camion camion-container" id="camion11" data-volume="10">
+        <img src="images/8m3.png" alt="Camion 10m³">
+        <h4>Camion 10m³</h4>
+        <p class="fs-sm mb-36">
+            Idéal pour débarrasser <span class="fw-bold">un bureau ou un appartement T2</span>.
+        </p>
+        <div class="fs-sm">
+            &#128230; Environ 100 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 950kg.
+        </div>
+        <button type="button" class="choisir-camion" onclick="selectCamion('camion11')">Choisir ce camion</button>
     </div>
 
     <!-- Camion 4 -->
     <div class="camion camion-container" id="camion4" data-volume="12">
-        <img src="images/30m3.jpg" alt="Camion 12m³">
+        <img src="images/12m3.png" alt="Camion 12m³">
         <h4>Camion 12m³</h4>
         <p class="fs-sm mb-36">
-            Idéal pour déménager <span class="fw-bold">une grande maison ou villa</span>.<br>
-            Environ 160 cartons (50x40x40).<br>
-            Charge maximum : 4000kg
+            Idéal pour débarrasser <span class="fw-bold">entreprise de 2/3 bureaux ou appartement T2</span>.
         </p>
+        <div class="fs-sm">
+            &#128230; Environ 110 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 950kg.
+        </div>
         <button type="button" class="choisir-camion" onclick="selectCamion('camion4')">Choisir ce camion</button>
+    </div>
+
+    <!-- Camion 12 -->
+    <div class="camion camion-container" id="camion12" data-volume="15">
+        <img src="images/12m3.png" alt="Camion 15m³">
+        <h4>Camion 15m³</h4>
+        <p class="fs-sm mb-36">
+            Idéal pour débarrasser <span class="fw-bold">un petit local ou magasin</span>.
+        </p>
+        <div class="fs-sm">
+            &#128230; Environ 130 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 100kg.
+        </div>
+        <button type="button" class="choisir-camion" onclick="selectCamion('camion12')">Choisir ce camion</button>
     </div>
 
       <!-- Camion 5 -->
       <div class="camion camion-container" id="camion5" data-volume="17">
-        <img src="images/30m3.jpg" alt="Camion 17m³">
+        <img src="images/12m3.png" alt="Camion 17m³">
         <h4>Camion 17m³</h4>
         <p class="fs-sm mb-36">
-            Idéal pour déménager <span class="fw-bold">une grande maison ou villa</span>.<br>
-            Environ 160 cartons (50x40x40).<br>
-            Charge maximum : 4000kg
+            Idéal pour débarrasser <span class="fw-bold">un appartement T3 ou une petite maison</span>.
         </p>
+        <div class="fs-sm">
+            &#128230; Environ 160 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 1100kg.
+        </div>
         <button type="button" class="choisir-camion" onclick="selectCamion('camion5')">Choisir ce camion</button>
     </div>
 
       <!-- Camion 6 -->
       <div class="camion camion-container" id="camion6" data-volume="20">
-        <img src="images/30m3.jpg" alt="Camion 20m³">
+        <img src="images/20m3.png" alt="Camion 20m³">
         <h4>Camion 20m³</h4>
         <p class="fs-sm mb-36">
-            Idéal pour déménager <span class="fw-bold">une grande maison ou villa</span>.<br>
-            Environ 160 cartons (50x40x40).<br>
-            Charge maximum : 4000kg
+            Idéal pour débarrasser <span class="fw-bold">grande maison ou entreprise de 4/5 bureaux</span>.
         </p>
+        <div class="fs-sm">
+            &#128230; Environ 200 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 1000kg.
+        </div>
         <button type="button" class="choisir-camion" onclick="selectCamion('camion6')">Choisir ce camion</button>
     </div>
+
+    <!-- Camion 7 -->
+    <div class="camion camion-container" id="camion7" data-volume="23">
+        <img src="images/23m3.png" alt="Camion 23m³">
+        <h4>Camion 23m³</h4>
+        <p class="fs-sm mb-36">
+            Idéal pour débarrasser <span class="fw-bold">grande maison ou entreprise de 6/7 bureaux</span>.
+        </p>
+        <div class="fs-sm">
+            &#128230; Environ 240 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 1400kg.
+        </div>
+        <button type="button" class="choisir-camion" onclick="selectCamion('camion7')">Choisir ce camion</button>
+    </div>
+
+    <!-- Camion 8 -->
+    <div class="camion camion-container" id="camion8" data-volume="25">
+        <img src="images/23m3.png" alt="Camion 25m³">
+        <h4>Camion 25m³</h4>
+        <p class="fs-sm mb-36">
+            Idéal pour débarrasser <span class="fw-bold">grande maison ou entreprise de 8/9 bureaux</span>.
+        </p>
+        <div class="fs-sm">
+            &#128230; Environ 270 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 1780kg.
+        </div>
+        <button type="button" class="choisir-camion" onclick="selectCamion('camion8')">Choisir ce camion</button>
+    </div>
+
+    <!-- Camion 9 -->
+    <div class="camion camion-container" id="camion9" data-volume="27">
+        <img src="images/27m3.png" alt="Camion 27m³">
+        <h4>Camion 27m³</h4>
+        <p class="fs-sm mb-36">
+            Idéal pour débarrasser <span class="fw-bold">grande maison ou entreprise de 10 bureaux</span>.
+        </p>
+        <div class="fs-sm">
+            &#128230; Environ 320 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 2850kg.
+        </div>
+        <button type="button" class="choisir-camion" onclick="selectCamion('camion9')">Choisir ce camion</button>
+    </div>
+
+    <!-- Camion 10 -->
+    <div class="camion camion-container" id="camion10" data-volume="30">
+        <img src="images/30m3.png" alt="Camion 30m³">
+        <h4>Camion 30m³</h4>
+        <p class="fs-sm mb-36">
+            Idéal pour débarrasser <span class="fw-bold">grande maison ou entreprise de + 10 bureaux</span>.
+        </p>
+        <div class="fs-sm">
+            &#128230; Environ 400 cartons (50x40x40).<br>
+            &#9874; Charge maximum : 3500kg.
+        </div>
+        <button type="button" class="choisir-camion" onclick="selectCamion('camion10')">Choisir ce camion</button>
+    </div>
+
 
     <input type="hidden" id="camion_selectionne" name="camion_selectionne" value="none">
 
@@ -2414,42 +3333,60 @@
 
 <!-- Step 2 -->
 <div id="step-2" class="form-step" style="display: none;">
+
+    <!-- Bouton Retour -->
+    <button type="button" id="previous-step">
+        ⬅️ Retour
+    </button>
+
+
     <!-- Nom -->
     <label for="name">Nom <span class="required">*</span></label>
     <input type="text" id="name" name="name" placeholder="Prénom Nom" required>
-  
+
     <!-- Je suis -->
     <label for="profession">Je suis <span class="required">*</span></label>
     <select id="profession" name="profession" required>
       <option value="1">Un particulier</option>
       <option value="2">Un professionnel</option>
-      
+
     </select>
-  
-    <!-- SIRET (conditionnel) -->
-    <div id="siret-block" style="display: none;">
-      <label for="siret">SIRET</label>
-      <input type="text" id="siret" name="siret">
-    </div>
-  
-    <!-- Raison Sociale (conditionnel) -->
-    <div id="raison-block" style="display: none;">
-      <label for="raison">Raison Sociale</label>
-      <input type="text" id="raison" name="raison">
-    </div>
-  
+
+  <!-- SIRET (conditionnel) -->
+<div id="siret-block" style="display: none;">
+    <label for="siret">SIREN (9 chiffres)<span class="required">*</span></label>
+    <input type="text" id="siret" name="siret" onchange="getEntrepriseInfo()">
+</div>
+
+  <!-- Raison Sociale (conditionnel) -->
+  <div id="raison-block" style="display: none;">
+    <label for="raison">Raison Sociale</label>
+    <input type="text" id="raison" name="raison" readonly>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div id="error-message" style="color: red; display: none;">
+    L'entreprise semble ne plus être active (en cessation selon Pappers.com)
+  </div>
+
+  <!-- Numéro de TVA intra-communautaire (conditionnel) -->
+<div id="tva-block" style="display: none;">
+    <label for="tva">Numéro TVA intra-communautaire</label>
+    <input type="text" id="tva" name="tva" readonly>
+</div>
+
     <!-- E-mail -->
     <label for="email">E-mail <span class="required">*</span></label>
     <input type="email" id="email" name="email" required>
-  
+
     <!-- Téléphone -->
     <label for="phone">Téléphone <span class="required">*</span></label>
     <input type="tel" id="phone" name="phone" required>
-  
+
     <!-- Adresse -->
-    <label for="address">Adresse <span class="required">*</span></label>
+    <label for="adresse">Adresse <span class="required">*</span></label>
     <input id="adresse" type="text" name="add" placeholder="Votre adresse" required>
-  
+
 
 <!-- Sélection de l'étage -->
 <div id="additional-fields">
@@ -2484,22 +3421,136 @@
 
 
 
-  
+
     <!-- Description du besoin -->
 <label for="description">Décrivez votre besoin <span class="required">*</span></label>
 <textarea id="description" name="description" maxlength="500" placeholder="Merci de nous préciser les conditions d'accès : escaliers, ascenseur, étage..." required></textarea>
 
-    <!-- Téléchargement de fichiers -->
-    <label for="file-upload">Fichiers (jpg, png, pdf, doc, etc.)</label>
-    <input type="file" id="file-upload" name="file-upload[]" accept=".jpg,.png,.pdf,.doc" multiple>
-  
+  <!-- Téléchargement de plusieurs fichiers -->
+  <label for="file-upload">Afin de mieux appréhender votre demande, vous pouvez si vous le souhaitez nous fournir des photos (.jpg, .png, .tiff) ou autres fichiers (.pdf, .doc, .xls):</label><br><br>
+  <input type="file" id="file-upload" name="file-upload[]" accept="image/*,application/pdf,.doc,.docx" multiple>
+
+
+
+
+
+<div id="preview"></div>
+
+
     <!-- Bouton Soumettre -->
     <button type="submit">Soumettre</button>
   </div>
 </form>
 
+<!-- BOUTON D'AIDE -->
+<div id="helpButton">Vous avez besoin d'aide ?</div>
+
+<!-- CONTENEUR DU FORMULAIRE D'AIDE (MASQUÉ PAR DÉFAUT) -->
+<div id="helpFormContainer">
+    <form action="help_send.php" method="POST" id="helpForm">
+        <p>Vous ne savez pas quel service choisir ? Vous avez besoin d'aide ? Décrivez-nous simplement votre besoin</p>
+        
+        <label for="helpName">Votre nom</label>
+        <input type="text" id="helpName" name="helpName" required>
+
+        <label for="helpEmail">Votre email</label>
+        <input type="email" id="helpEmail" name="helpEmail" required>
+
+        <label for="helpMessage">Votre demande</label>
+        <textarea id="helpMessage" name="helpMessage" rows="4" required></textarea>
+
+        <button type="submit">Envoyer</button>
+    </form>
+</div>
+
 <!-- Lien vers le fichier JS -->
 <script src="script.js"></script>
+
+<script>
+    function initAutocomplete() {
+        const input = document.getElementById('adresse');
+        const options = {
+            types: ['geocode'], // Limit to geographic locations
+            componentRestrictions: { country: 'fr' } // Restrict to France if needed
+        };
+        new google.maps.places.Autocomplete(input, options);
+    }
+
+    // Wait for the page to load before initializing
+    google.maps.event.addDomListener(window, 'load', initAutocomplete);
+</script>
+
+<script>
+    async function getEntrepriseInfo() {
+        const siretInput = document.getElementById("siret");
+        const apiKey = "d2f88b5bad910d64116d906bfd47d37fc8507b7cd8001a54"; // Remplacez par votre clé API Pappers
+
+        if (siretInput) {
+            let siret = siretInput.value;
+
+            // Suppression des espaces dans le SIRET
+            siret = siret.replace(/\s+/g, '');
+
+            if (siret) {
+                try {
+                    // Requête à l'API Pappers
+                    const response = await fetch(`https://api.pappers.fr/v2/entreprise?siren=${siret}`, {
+                        headers: {
+                            "api-key": apiKey
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        // Vérification si l'entreprise est en cessation
+                        const errorMessageElement = document.getElementById("error-message");
+                        const raisonElement = document.getElementById("raison");
+                        const tvaElement = document.getElementById("tva");
+                        const tvaBlock = document.getElementById("tva-block");
+                        const raisonBlock = document.getElementById("raison-block");
+
+                        if (data.entreprise_cessee) {
+                            if (errorMessageElement) {
+                                errorMessageElement.style.display = "block";
+                            }
+                            if (raisonElement) {
+                                raisonElement.value = "";
+                            }
+                            if (tvaElement) {
+                                tvaElement.value = "";
+                                tvaBlock.style.display = "none";
+                            }
+                        } else {
+                            if (errorMessageElement) {
+                                errorMessageElement.style.display = "none";
+                            }
+                            if (raisonElement) {
+                                raisonElement.value = data.denomination;
+                                raisonBlock.style.display = "block";
+                            }
+                            if (tvaElement && data.numero_tva_intracommunautaire) {
+                                tvaElement.value = data.numero_tva_intracommunautaire;
+                                tvaBlock.style.display = "block";
+                            } else if (tvaElement) {
+                                tvaElement.value = "Non disponible";
+                                tvaBlock.style.display = "block";
+                            }
+                        }
+                    } else {
+                        console.error("Erreur de récupération des données de l'entreprise. Statut :", response.status);
+                    }
+                } catch (error) {
+                    console.error("Erreur réseau ou autre :", error);
+                }
+            }
+        } else {
+            console.error("Le champ SIRET est introuvable dans le DOM.");
+        }
+    }
+</script>
+
+
 
 </body>
 </html>

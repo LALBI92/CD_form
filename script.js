@@ -16,6 +16,7 @@ function toggleAccordion(id) {
     }
 }
 
+
 // Sélecteur pour l'étage et l'ascenseur
 const etageSelect = document.getElementById('etage');
 const ascenseurSelect = document.getElementById('ascenseur');
@@ -41,7 +42,7 @@ function updateProduit() {
     }
     // Si l'étage est RDC
     else if (selectedEtage === 'RDC') {
-        produitFinal = `etageRDC_${camionId}`;
+        produitFinal = `etageRDC_sans_ascenseur_${camionId}`; // Toujours "sans_ascenseur" pour le RDC
     }
     // Si l'étage est entre 1 et 6
     else if (parseInt(selectedEtage) >= 1 && parseInt(selectedEtage) <= 6) {
@@ -108,26 +109,37 @@ function selectCamion(camionId) {
 
     // Mettre à jour le champ caché avec l'ID du camion sélectionné
     document.getElementById('camion_selectionne').value = camionId;
+    console.log("Camion sélectionné : " + camionId);
 
     // Afficher les champs supplémentaires pour l'étage et l'ascenseur
     document.getElementById('additional-fields').style.display = 'block';
 
     // Mettre à jour le produit après la sélection du camion
     updateProduit();
+
+    // Passer automatiquement à l'étape suivante
+    document.getElementById('step-2').style.display = 'block';
+    document.getElementById('step-1').style.display = 'none';
+
+    // Faire défiler la page vers le haut
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
 
 // Ajoute l'événement au clic pour les camions
 const choisirButtons = document.querySelectorAll(".choisir-camion");
 choisirButtons.forEach(button => {
     button.addEventListener("click", function () {
-        const camionId = this.closest(".camion").id; 
+        const camionId = this.closest(".camion").id;
         selectCamion(camionId);
     });
 });
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     const sectionsToShow = {
         // Sections principales
         "dechets_non_dangereux": "dechets_nd_wrapper",
@@ -165,13 +177,23 @@ document.addEventListener("DOMContentLoaded", function () {
         "accumulateurs_batteries_piles": "piles_wrapper",
         "electromenager_chaud_froid": "electromenager_wrapper",
         "ampoules_lampes_neons": "ampoules_wrapper",
+        "informatiques_bureautiques_domicile": "informatiques_bureautiques_domicile_wrapper",
+        "cartouches_encres_toners_domicile": "cartouches_encres_domicile_wrapper",
+        "accumulateurs_batteries_piles_domicile": "piles_domicile_wrapper",
+        "electromenager_chaud_froid_domicile": "electromenager_domicile_wrapper",
+        "ampoules_lampes_neons_domicile": "ampoules_domicile_wrapper",
+        "informatiques_bureautiques_depot": "informatiques_bureautiques_depot_wrapper",
+        "cartouches_encres_toners_depot": "cartouches_depot_encres_wrapper",
+        "accumulateurs_batteries_piles_depot": "piles_depot_wrapper",
+        "electromenager_chaud_froid_depot": "electromenager_depot_wrapper",
+        "ampoules_lampes_neons_depot": "ampoules_depot_wrapper",
         // Destruction d'archives (sections supplémentaires déjà incluses ci-dessus)
         // Louer une benne
         "gravats_beton": "gravats_propres_wrapper",
         "dnd_bennes":"dechets_non_dangereux_wrapper"
     };
 
-    
+
 
     // Fonction pour masquer toutes les sections des bennes
     function hideAllBenneSections() {
@@ -191,6 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (jeRecycle) {
         jeRecycle.addEventListener("change", function () {
             hideAllBenneSections(); // Masquer toutes les sections au début
+            hideAllDeeeSections();
 
             // Afficher la bonne section selon le choix de recyclage
             const selectedValue = jeRecycle.value;
@@ -221,15 +244,67 @@ function hideChoiceSections() {
     });
 }
 
-// Fonction pour masquer uniquement les sections liées à D3E/DEEE
-function hideDeeeSections() {
-    ["informatiques_bureautiques", "cartouches_encres_toners", "accumulateurs_batteries_piles", "electromenager_chaud_froid", "ampoules_lampes_neons", /* autres sections pertinentes */].forEach(section => {
-        const sectionElement = document.getElementById(sectionsToShow[section]);
-        if (sectionElement) {
-            sectionElement.style.display = "none";
+function hideAllDeeeSections() {
+    // Masquer les sections domicile et entrepôt
+    hideDeeeDomicileSections();
+    hideDeeedepotSections();
+
+    // Masquer les sélecteurs domicile et entrepôt eux-mêmes
+    const typeDeeeDomicileWrapper = document.getElementById("type_deee_domicile_wrapper");
+    const typeDeeedepotWrapper = document.getElementById("type_deee_depot_wrapper");
+
+    if (typeDeeeDomicileWrapper) typeDeeeDomicileWrapper.style.display = "none";
+    if (typeDeeedepotWrapper) typeDeeedepotWrapper.style.display = "none";
+}
+
+function resetDeeeSelectFields() {
+    const deeeDomicileSelect = document.getElementById("deee_domicile_select");
+    const deeedepotSelect = document.getElementById("deee_depot_select");
+
+    if (deeeDomicileSelect) deeeDomicileSelect.value = ""; // Réinitialiser à la valeur par défaut
+    if (deeedepotSelect) deeedepotSelect.value = ""; // Réinitialiser à la valeur par défaut
+}
+
+function hideAllDeeeSections() {
+    // Masquer les sous-sections
+    hideDeeeDomicileSections();
+    hideDeeedepotSections();
+
+    // Masquer les sélecteurs domicile et entrepôt
+    const typeDeeeDomicileWrapper = document.getElementById("type_deee_domicile_wrapper");
+    const typeDeeedepotWrapper = document.getElementById("type_deee_depot_wrapper");
+
+    if (typeDeeeDomicileWrapper) typeDeeeDomicileWrapper.style.display = "none";
+    if (typeDeeedepotWrapper) typeDeeedepotWrapper.style.display = "none";
+
+    // Réinitialiser les champs select
+    resetDeeeSelectFields();
+}
+
+
+// Fonction pour masquer les DEEE
+function hideDeeeDomicileSections() {
+    Object.entries(sectionsToShow).forEach(([key, value]) => {
+        if (key.includes("_domicile")) { // Si c'est une clé pour Domicile
+            const sectionElement = document.getElementById(value);
+            if (sectionElement) {
+                sectionElement.style.display = "none";
+            }
         }
     });
 }
+
+function hideDeeedepotSections() {
+    Object.entries(sectionsToShow).forEach(([key, value]) => {
+        if (key.includes("_depot")) { // Si c'est une clé pour Entrepôt
+            const sectionElement = document.getElementById(value);
+            if (sectionElement) {
+                sectionElement.style.display = "none";
+            }
+        }
+    });
+}
+
 
 // Fonction pour masquer uniquement les sections liées aux types de bennes
 function hideBenneSections() {
@@ -255,14 +330,51 @@ choices.forEach(choice => {
     });
 });
 
-// Gérer la sélection du type de D3E / DEEE
-const deeeSelect = document.getElementById("deee_select");
-if (deeeSelect) {
-    deeeSelect.addEventListener("change", function () {
-        hideDeeeSections(); // Masquer seulement les sections D3E/DEEE
-        const sectionId = sectionsToShow[deeeSelect.value];
+// Gérer la sélection du lieu des DEEE
+const lieuDeee = document.getElementById("lieu_deee");
+if (lieuDeee) {
+    lieuDeee.addEventListener("change", function () {
+        // Sélection des sous-sections
+        const typeDeeeDomicileWrapper = document.getElementById("type_deee_domicile_wrapper");
+        const typeDeeeDepotWrapper = document.getElementById("type_deee_depot_wrapper");
+
+        // Masquer les sous-sections par défaut
+        if (typeDeeeDomicileWrapper) typeDeeeDomicileWrapper.style.display = "none";
+        if (typeDeeeDepotWrapper) typeDeeeDepotWrapper.style.display = "none";
+
+        // Afficher la section correcte selon la sélection
+        if (lieuDeee.value === "type_deee_domicile") {
+            if (typeDeeeDomicileWrapper) typeDeeeDomicileWrapper.style.display = "block";
+        } else if (lieuDeee.value === "type_deee_depot") {
+            if (typeDeeeDepotWrapper) typeDeeeDepotWrapper.style.display = "block";
+        }
+    });
+}
+
+const deeeDomicileSelect = document.getElementById("deee_domicile_select");
+if (deeeDomicileSelect) {
+    deeeDomicileSelect.addEventListener("change", function () {
+        hideDeeeDomicileSections(); // Masquer toutes les sections de domicile
+        const sectionId = sectionsToShow[this.value]; // Trouver l'ID complet
         if (sectionId) {
-            document.getElementById(sectionId).style.display = "block";
+            const sectionElement = document.getElementById(sectionId);
+            if (sectionElement) {
+                sectionElement.style.display = "block"; // Afficher la section correspondante
+            }
+        }
+    });
+}
+
+const deeedepotSelect = document.getElementById("deee_depot_select");
+if (deeedepotSelect) {
+    deeedepotSelect.addEventListener("change", function () {
+        hideDeeedepotSections(); // Masquer toutes les sections d'entrepôt
+        const sectionId = sectionsToShow[this.value]; // Trouver l'ID complet
+        if (sectionId) {
+            const sectionElement = document.getElementById(sectionId);
+            if (sectionElement) {
+                sectionElement.style.display = "block"; // Afficher la section correspondante
+            }
         }
     });
 }
@@ -348,7 +460,7 @@ qtyButtons.forEach(button => {
 function updateVehicleSuggestions() {
     const estimatedVolume = parseFloat(document.getElementById("volume-result").textContent);
     const allVehicles = document.querySelectorAll(".camion");
-    
+
     // Produits spécifiques qui nécessitent une exclusion de camions
     const restrictedProducts = {
         "armoire_rideaux_1m2_qty": ["camion1"],
@@ -368,6 +480,15 @@ function updateVehicleSuggestions() {
         "commode_qty": ["camion1"],
         "buffet_bas_qty": ["camion1"],
         "buffet_haut_qty": ["camion1"],
+        "table_reunion_12_qty": ["camion1"],
+        "banque_comptoir_qty": ["camion1"],
+        "comptoir_bar_qty": ["camion1"],
+        "vitrine_presentation_qty": ["camion1"],
+        "vitrine_verre_qty": ["camion1"],
+        "plv_basse_qty": ["camion1"],
+        "plv_haute_qty": ["camion1"],
+        "podiums_3niveaux_qty": ["camion1"],
+        "vitrine_comptoir_qty": ["camion1"],
         "congelateur_coffre_qty": ["camion1", "camion2"], // Congélateur coffre exclut camion1 et camion2
         "refrigerateur_americain_qty": ["camion1", "camion2"]
     };
@@ -420,59 +541,61 @@ choisirButtons.forEach(button => {
     });
 });
 
-// Gestion des étapes du formulaire (Step 1 -> Step 2)
-const step1 = document.getElementById("step-1");
-const step2 = document.getElementById("step-2");
-const nextStepBtn = document.getElementById("next-step");
-
-nextStepBtn.addEventListener("click", function () {
-    step1.style.display = "none";
-    step2.style.display = "block";
-});
 
 // Gérer l'affichage conditionnel du SIRET et de la Raison Sociale
 const professionSelect = document.getElementById("profession");
 const siretBlock = document.getElementById("siret-block");
-const raisonBlock = document.getElementById("raison-block");
+const siretInput = document.getElementById("siret");
 
-professionSelect.addEventListener("change", function () {
-    if (this.value === "2") { // Un professionnel
-        siretBlock.style.display = "block";
-        raisonBlock.style.display = "block";
-    } else {
-        siretBlock.style.display = "none";
-        raisonBlock.style.display = "none";
+if (professionSelect && siretBlock) {
+    professionSelect.addEventListener("change", function () {
+        if (this.value === "2") { // Un professionnel
+            siretBlock.style.display = "block";
+            siretInput.setAttribute("required", "required");
+        } else {
+            siretBlock.style.display = "none";
+            siretInput.removeAttribute("required");
+        }
+    });
+}
+
+// Validation du formulaire
+document.getElementById("devisForm").addEventListener("submit", function(e) {
+    if (professionSelect.value === "2" && !siretInput.value.trim()) {
+        e.preventDefault();
+        alert("Le SIRET est obligatoire pour un professionnel");
+        siretInput.focus();
     }
 });
 
 
-    
+
         // Gérer la sélection d'un camion
         let selectedCamion = null;
-    
+
         function selectCamion(camionId) {
             // Retirer la sélection précédente, s'il y en a une
             if (selectedCamion) {
                 selectedCamion.classList.remove('selected');
             }
-    
+
             // Sélectionner le nouveau camion et ajouter un effet visuel (bordure)
             const camion = document.getElementById(camionId);
             camion.classList.add('selected');
             selectedCamion = camion;
-    
+
             // Mettre à jour le champ caché avec l'ID du camion sélectionné
             document.getElementById('camion_selectionne').value = camionId;
             console.log("Camion sélectionné : " + camionId);
-    
+
             // Afficher les champs supplémentaires pour l'étage et l'ascenseur
             document.getElementById('additional-fields').style.display = 'block';
-    
+
             // Ajouter un écouteur pour l'étage afin de gérer l'affichage de l'ascenseur
             etageSelect.addEventListener('change', function () {
                 const selectedEtage = etageSelect.value;
                 console.log("Étage sélectionné : " + selectedEtage);
-    
+
                 // Si l'étage est supérieur ou égal à 1, afficher le champ ascenseur
                 if (parseInt(selectedEtage) >= 1) {
                     ascenseurBlock.style.display = 'block';
@@ -481,4 +604,107 @@ professionSelect.addEventListener("change", function () {
                 }
             });
         }
+
+        // Bouton Retour (de Step 2 vers Step 1)
+    document.getElementById('previous-step').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche tout comportement par défaut du bouton
+        document.getElementById('step-2').style.display = 'none';
+        document.getElementById('step-1').style.display = 'block';
     });
+
+        // Ajout de la validation du bouton "Suivant"
+        document.getElementById('next-step').addEventListener('click', function(event) {
+            // Empêcher le comportement par défaut
+            event.preventDefault();
+
+            // Vérification du type de besoin (déjà existant)
+            const typeBesoin = document.getElementById('type_besoin');
+            let typeBesoinMessage = document.getElementById('type_besoin_message');
+
+            if (typeBesoin.value === "") {
+                if (!typeBesoinMessage) {
+                    typeBesoinMessage = document.createElement('div');
+                    typeBesoinMessage.id = 'type_besoin_message';
+                    typeBesoinMessage.style.color = 'red';
+                    typeBesoinMessage.style.marginTop = '5px';
+                    typeBesoinMessage.innerText = 'Veuillez sélectionner un type de besoin.';
+                    typeBesoin.parentElement.appendChild(typeBesoinMessage);
+                }
+                return;
+            } else if (typeBesoinMessage) {
+                typeBesoinMessage.remove();
+            }
+
+            // Vérification de la sélection d'un camion
+            const camionSelectionne = document.getElementById('camion_selectionne').value;
+
+            // Vérification de la sélection d'un produit
+            let produitSelectionne = false;
+
+            // 1. Vérifier les produits avec quantité (input type="number")
+            const productInputs = document.querySelectorAll('.benne input[type="number"]');
+            productInputs.forEach(input => {
+                if (parseInt(input.value, 10) > 0) {
+                    produitSelectionne = true;
+                }
+            });
+
+            // 2. Vérifier également les produits qui n'ont pas de quantité (input type="checkbox")
+            const productCheckboxes = document.querySelectorAll('.benne input[type="checkbox"]');
+            productCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    produitSelectionne = true;
+                }
+            });
+
+            // Vérifier qu'au moins un camion ou un produit est sélectionné
+            let selectionMessage = document.getElementById('selection_message');
+            if (camionSelectionne === "none" && !produitSelectionne) {
+                if (!selectionMessage) {
+                    selectionMessage = document.createElement('div');
+                    selectionMessage.id = 'selection_message';
+                    selectionMessage.style.color = 'red';
+                    selectionMessage.style.marginTop = '5px';
+                    selectionMessage.innerText = 'Veuillez sélectionner un produit et/ou un camion pour continuer.';
+                    // Insertion du message juste au-dessus du bouton "Suivant"
+                    const nextStepBtn = document.getElementById('next-step');
+                    const step1Container = document.getElementById('step-1');
+                    step1Container.insertBefore(selectionMessage, nextStepBtn);
+                }
+                return; // Bloquer la progression vers l'étape suivante
+            } else if (selectionMessage) {
+                selectionMessage.remove();
+            }
+
+            // Toutes les conditions étant remplies, passez à l'étape suivante
+            document.getElementById('step-2').style.display = 'block';
+            document.getElementById('step-1').style.display = 'none';
+
+            // Faire défiler la page vers le haut
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+
+
+    // Quand on clique sur le bouton, on affiche ou on masque le formulaire
+    document.getElementById('helpButton').addEventListener('click', function() {
+        const formContainer = document.getElementById('helpFormContainer');
+        if (formContainer.style.display === 'none' || formContainer.style.display === '') {
+            formContainer.style.display = 'block';
+        } else {
+            formContainer.style.display = 'none';
+        }
+    });
+
+
+
+
+
+
+
+
+

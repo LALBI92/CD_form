@@ -4,12 +4,18 @@ body {
     background-color: #f8f8f8;
     color: #333;
     margin: 0;
-    padding: 20px;
+    margin-top: 130px;
+    margin-bottom: 60px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+
 }
 
 h2 {
     text-align: center;
     color: #61A223;
+    font-size: 35px;
 }
 
 form {
@@ -84,6 +90,7 @@ label img {
 
 /* Button-like style for each selection box with image */
 .benne {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -95,7 +102,7 @@ label img {
     text-align: center;
     transition: background-color 0.3s, box-shadow 0.3s;
     cursor: pointer;
-    height: 150px; /* Ajuster en fonction de votre design */
+    height: 180px; /* Ajuster en fonction de votre design */
 }
 
 .benne:hover {
@@ -104,7 +111,7 @@ label img {
 }
 
 .benne img {
-    width: 80px; /* Taille de l'image */
+    width: 8px; /* Taille de l'image */
     margin-bottom: 10px; /* Espace entre l'image et le texte */
 }
 
@@ -205,6 +212,31 @@ button[type="submit"]:focus {
     }
 }
 
+/* Style des descriptions camions */
+
+.fw-bold {
+    font-weight: bold;
+}
+
+.fs-sm {
+    font-size: 14px; /* Ajustez selon vos besoins */
+    line-height: 1.5;
+}
+
+.mb-36 {
+    margin-bottom: 20px; /* Espacement après chaque paragraphe */
+}
+
+ul {
+    margin-top: 10px; /* Espacement entre le paragraphe et les puces */
+    padding-left: 20px; /* Indentation des listes */
+}
+
+ul li {
+    margin-bottom: 5px; /* Espacement entre les puces */
+}
+
+
 /* Maintien des styles de grille pour les choix et les contenants */
 .choices-grid {
     display: grid;
@@ -225,6 +257,7 @@ button[type="submit"]:focus {
     text-align: center;
     cursor: pointer;
     transition: border-color 0.3s ease, background-color 0.3s ease;
+    min-height: 180px;
 }
 
 /* Effet au survol pour les deux types */
@@ -364,17 +397,18 @@ button[type="submit"]:focus {
 }
 
 .furniture-item {
-    flex: 1 1 calc(25% - 20px); /* Chaque élément prendra environ 25% de la largeur du conteneur parent, moins une marge */
+    flex: 1 1 calc(25% - 20px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     margin: 10px;
-    border: 1px solid #ddd; /* Léger cadre autour de chaque item */
+    border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     background-color: #fff;
+    position: relative;
 }
 
 .furniture-item:hover {
@@ -452,10 +486,23 @@ input:focus {
     transition: transform 0.3s, box-shadow 0.3s; /* Animation pour effet visuel */
 }
 
+@keyframes glow {
+    0% {
+        box-shadow: 0px 8px 16px rgba(97, 162, 35, 0.7), 0px 0px 10px rgba(97, 162, 35, 0.8);
+    }
+    50% {
+        box-shadow: 0px 8px 16px rgba(97, 162, 35, 0.5), 0px 0px 15px rgba(97, 162, 35, 1);
+    }
+    100% {
+        box-shadow: 0px 8px 16px rgba(97, 162, 35, 0.7), 0px 0px 10px rgba(97, 162, 35, 0.8);
+    }
+}
+
 .camion.selected {
-    border-color: #61A223; /* Bordure verte pour la sélection */
-    box-shadow: 0px 6px 12px rgba(97, 162, 35, 0.5); /* Ombre accentuée pour la sélection */
-    transform: scale(1.05); /* Zoom léger pour la sélection */
+    border-color: #61A223;
+    border-width: 4px;
+    transform: scale(1.1);
+    animation: glow 1.5s infinite; /* Applique l'animation lumineuse */
 }
 
 
@@ -525,4 +572,264 @@ input:focus {
 
 .ascenseur-options input[type="radio"] {
     margin-right: 5px;
+}
+
+
+.info-icon {
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    top: 120%; /* Position au-dessus ou en dessous de l'icône */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.info-icon:hover .tooltip,
+.info-icon:focus .tooltip {
+    display: block;
+}
+
+#previous-step {
+    background-color: #ffffff; /* Fond blanc */
+    border: 2px solid #61a223; /* Contour vert */
+    border-radius: 8px; /* Coins arrondis */
+    padding: 10px 20px; /* Espacement interne */
+    font-size: 16px; /* Taille du texte */
+    color: #61a223; /* Couleur du texte */
+    font-family: Arial, sans-serif; /* Police */
+    cursor: pointer; /* Curseur en main */
+    transition: all 0.3s ease; /* Animation des interactions */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre discrète */
+    margin-right: 10px; /* Espacement à droite */
+    margin-bottom: 20px;
+}
+
+#previous-step:hover {
+    background-color: #61a223; /* Fond vert au survol */
+    color: #ffffff; /* Texte blanc au survol */
+    transform: translateY(-2px); /* Déplacement léger vers le haut */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Ombre accentuée */
+}
+
+/* Header styles */
+#header {
+    background-color: #ffffff;
+
+    position: fixed;
+    top: 0;
+    width: 100vw; /* Le header s'étend sur toute la largeur de l'écran */
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    left: 0; /* Assurez-vous qu'il commence bien à gauche */
+}
+
+#header .container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alignement à gauche sur desktop */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#header .logo {
+    max-height: 70px;
+    width: auto;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    #header .container {
+        justify-content: center; /* Centrer le logo sur mobile */
+    }
+}
+
+
+ /* Bouton d'aide flottant en bas à droite */
+ #helpButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007BFF;
+    color: #FFF;
+    padding: 12px 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    font-weight: 600;
+}
+
+/* Conteneur du formulaire d'aide */
+#helpFormContainer {
+    display: none; /* masqué par défaut */
+    position: fixed;
+    bottom: 80px;  /* pour laisser la place au bouton */
+    right: 20px;
+    width: 300px;
+    background: #FFF;
+    border: 1px solid #CCC;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    z-index: 10000;
+}
+
+/* Styles du formulaire d'aide */
+#helpForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#helpForm h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+#helpForm label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+#helpForm input,
+#helpForm textarea {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#helpForm button[type="submit"] {
+    background-color: #28A745;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#helpForm button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Pour que le bouton et le formulaire restent bien visibles sur mobile */
+@media (max-width: 600px) {
+    #helpButton {
+        bottom: 10px;
+        right: 10px;
+    }
+    #helpFormContainer {
+        width: 90%;
+        right: 5%;
+        bottom: 70px;
+    }
+}
+
+/* Styles pour le bouton d'information et la modale */
+.info-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    z-index: 1;
+}
+
+.info-button:hover {
+    transform: scale(1.1);
+}
+
+.info-button i {
+    color: #61A223;
+    font-size: 1.2rem;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 90vh;
+    position: relative;
+    overflow: auto;
+}
+
+.modal-content img {
+    max-width: 90vw;
+    max-height: 60vh;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    background: none;
+    border: none;
+    padding: 5px;
+}
+
+.close-modal:hover {
+    color: #333;
+}
+
+/* Pour que le bouton info soit bien positionné dans le label */
+label[for="benne_10m3_cartons"] {
+    position: relative;
+}
+
+@media (max-width: 600px) {
+  .modal-content img {
+    max-width: 98vw;
+    max-height: 40vh;
+  }
 }
