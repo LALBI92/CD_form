@@ -41,9 +41,9 @@ function createInfoModal(productId, imageUrl) {
     });
 
     // Trouver le conteneur .benne correspondant et y ajouter le bouton
-    const benneContainer = document.querySelector(`.benne label[for="${productId}"]`);
-    if (benneContainer && benneContainer.parentElement.classList.contains('benne')) {
-        benneContainer.parentElement.appendChild(infoButton);
+    const benneContainer = document.querySelector(`.benne label[for="${productId}"]`)?.parentElement;
+    if (benneContainer && benneContainer.classList.contains('benne')) {
+        benneContainer.appendChild(infoButton);
     } else {
         console.error(`Conteneur .benne non trouvé pour l'ID: ${productId}`);
     }
@@ -84,7 +84,6 @@ createInfoModal('benne_30m3_dechets_verts', 'images/benne_30m3.png');
 createInfoModal('box_90L_archives_domicile', 'images/box_securise_90.png');
 createInfoModal('box_240L_archives_domicile', 'images/box_securise_240.png');
 createInfoModal('box_480L_archives_domicile', 'images/box_securise_480.png');
-createInfoModal('benne_8m3_gravats', 'images/benne_8m3.png');
 createInfoModal('benne_8m3_dechets', 'images/benne_8m3.png');
 createInfoModal('benne_10m3_dechets', 'images/benne_10m3.png');
 createInfoModal('benne_15m3_dechets', 'images/benne_15m3.png');
@@ -102,7 +101,7 @@ createInfoModal('box_240L_archives_depot', 'images/box_securise_240.png');
 createInfoModal('box_480L_archives_depot', 'images/box_securise_480.png');
 createInfoModal('box_d3e', 'images/box_D3E_70.png');
 createInfoModal('box_secure_90', 'images/box_securise_90.png');
-createInfoModal('box_secure_120', 'images/box_securise_120.png');
+createInfoModal('box_secure_120', 'images/box_120L.png');
 createInfoModal('box_secure_240', 'images/box_securise_240.png');
 createInfoModal('box_secure_480', 'images/box_securise_480.png');
 createInfoModal('bac_secure_240_ouvert_domicile', 'images/bac_240.png');
@@ -136,5 +135,13 @@ createInfoModal('palette_660l_plastiques',    'images/palette_660.png');
 createInfoModal('bac_roulant_770l_plastiques','images/bac_770.png');
 createInfoModal('palette_660l_bois',          'images/palette_660.png');
 createInfoModal('palette_660l_ferrailles',    'images/palette_660.png');
+createInfoModal('benne_chaine_8m3_dib_chantier',            'images/benne_chaine_8m3.png');
+createInfoModal('benne_chaine_8m3_gravats_melange_chantier','images/benne_chaine_8m3.png');
+createInfoModal('benne_chaine_8m3_gravats_propres_chantier','images/benne_chaine_8m3.png');
+createInfoModal('benne_chaine_8m3_bois_chantier',           'images/benne_chaine_8m3.png');
+createInfoModal('benne_chaine_8m3_platre_chantier',         'images/benne_chaine_8m3.png');
+createInfoModal('benne_8m3_gravats',                        'images/benne_chaine_8m3.png');
+createInfoModal('box_130L_archives_depot',     'images/box_120L.png');
+createInfoModal('box_130L_archives_domicile',  'images/box_120L.png');
 
 }); 
