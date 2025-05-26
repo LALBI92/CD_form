@@ -107,7 +107,7 @@
     <div class="choices-grid">
         <div class="benne benne-10m3">
             <label for="benne_10m3_cartons">
-                <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" width="50">
+                <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" width="50">
                 <span>Benne 10m3</span>
             </label>
             <div class="quantity-selector">
@@ -118,7 +118,7 @@
         </div>
         <div class="benne benne-15m3">
             <label for="benne_15m3_cartons">
-                <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" width="50">
+                <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" width="50">
                 <span>Benne 15m3</span>
             </label>
             <div class="quantity-selector">
@@ -170,7 +170,7 @@
     <label>DND Contenants Papiers (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne benne-10m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" />
             <label for="benne_10m3_papiers">
                 <span>Benne 10m3</span>
             </label>
@@ -181,7 +181,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" />
             <label for="benne_15m3_papiers">
                 <span>Benne 15m3</span>
             </label>
@@ -233,7 +233,7 @@
     <label>DND Contenants Plastiques (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne benne-10m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" />
             <label for="benne_10m3_plastiques">
                 <span>Benne 10m3</span>
             </label>
@@ -244,7 +244,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" />
             <label for="benne_15m3_plastiques">
                 <span>Benne 15m3</span>
             </label>
@@ -296,7 +296,7 @@
     <label>DND Contenants Palettes (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne benne-10m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" />
             <label for="benne_10m3_palettes">
                 <span>Benne 10m3</span>
             </label>
@@ -307,7 +307,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" />
             <label for="benne_15m3_palettes">
                 <span>Benne 15m3</span>
             </label>
@@ -336,7 +336,7 @@
     <label>DND Contenants Encombrants (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne benne-10m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" />
             <label for="benne_10m3_encombrants">
                 <span>Benne 10m3</span>
             </label>
@@ -347,7 +347,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" />
             <label for="benne_15m3_encombrants">
                 <span>Benne 15m3</span>
             </label>
@@ -376,7 +376,7 @@
     <label>DND Contenants DIB (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne benne-10m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" />
             <label for="benne_10m3_dib">
                 <span>Benne 10m3</span>
             </label>
@@ -387,7 +387,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" />
             <label for="benne_15m3_dib">
                 <span>Benne 15m3</span>
             </label>
@@ -416,7 +416,7 @@
     <label>DND Contenants Bois (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne benne-10m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" />
             <label for="benne_10m3_bois">
                 <span>Benne 10m3</span>
             </label>
@@ -427,7 +427,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" />
             <label for="benne_15m3_bois">
                 <span>Benne 15m3</span>
             </label>
@@ -467,7 +467,7 @@
     <label>DND Contenants Ferrailles (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne benne-10m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" />
             <label for="benne_10m3_ferrailles">
                 <span>Benne 10m3</span>
             </label>
@@ -478,7 +478,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" />
             <label for="benne_15m3_ferrailles">
                 <span>Benne 15m3</span>
             </label>
@@ -518,7 +518,7 @@
     <label>DND Contenants Déchets verts (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne benne-10m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/3.png" alt="Benne 10m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" />
             <label for="benne_10m3_dechets_verts">
                 <span>Benne 10m3</span>
             </label>
@@ -529,7 +529,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/5.png" alt="Benne 15m3" />
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" />
             <label for="benne_15m3_dechets_verts">
                 <span>Benne 15m3</span>
             </label>
@@ -611,7 +611,7 @@
             </div>
         </div>
         <div class="benne benne-8m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-8m.png" alt="Benne à chaîne 8m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-a-chaine-3m_jaune.png" alt="Benne à chaîne 8m3">
             <label for="benne_chaine_8m3_dib_chantier">
                 <span>Benne à chaîne 8m3</span>
             </label>
@@ -622,9 +622,9 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-15m.png" alt="Benne à chaîne 15m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-30m.png" alt="Benne à chaîne 15m3">
             <label for="benne_chaine_15m3_dib_chantier">
-                <span>Benne à chaîne 15m3</span>
+                <span>Benne ampliroll 15m3</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="benne_chaine_15m3_dib_chantier_qty">-</button>
@@ -633,7 +633,7 @@
             </div>
         </div>
         <div class="benne benne-30m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-30m.png" alt="Benne ampliroll 30m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/4.png" alt="Benne ampliroll 30m3">
             <label for="benne_ampliroll_30m3_dib_chantier">
                 <span>Benne ampliroll 30m3</span>
             </label>
@@ -662,7 +662,7 @@
             </div>
         </div>
         <div class="benne benne-3m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-3m.png" alt="Benne ampliroll 3m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-20m.png" alt="Benne ampliroll 3m3">
             <label for="benne_ampliroll_3m3_bois_chantier">
                 <span>Benne ampliroll 3m3</span>
             </label>
@@ -673,7 +673,7 @@
             </div>
         </div>
         <div class="benne benne-8m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-8m.png" alt="Benne à chaîne 8m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-a-chaine-3m_jaune.png" alt="Benne à chaîne 8m3">
             <label for="benne_chaine_8m3_bois_chantier">
                 <span>Benne à chaîne 8m3</span>
             </label>
@@ -684,9 +684,9 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-15m.png" alt="Benne à chaîne 15m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-30m.png" alt="Benne à chaîne 15m3">
             <label for="benne_chaine_15m3_bois_chantier">
-                <span>Benne à chaîne 15m3</span>
+                <span>Benne ampliroll 15m3</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="benne_chaine_15m3_bois_chantier_qty">-</button>
@@ -695,7 +695,7 @@
             </div>
         </div>
         <div class="benne benne-30m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-30m.png" alt="Benne ampliroll 30m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2020/09/4.png" alt="Benne ampliroll 30m3">
             <label for="benne_ampliroll_30m3_bois_chantier">
                 <span>Benne ampliroll 30m3</span>
             </label>
@@ -725,7 +725,7 @@
             </div>
         </div>
         <div class="benne benne-8m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-8m.png" alt="Benne à chaîne 8m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-a-chaine-3m_jaune.png" alt="Benne à chaîne 8m3">
             <label for="benne_chaine_8m3_platre_chantier">
                 <span>Benne à chaîne 8m3</span>
             </label>
@@ -754,7 +754,7 @@
             </div>
         </div>
         <div class="benne benne-3m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-3m.png" alt="Benne ampliroll 3m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-20m.png" alt="Benne ampliroll 3m3">
             <label for="benne_ampliroll_3m3_gravats_melange_chantier">
                 <span>Benne ampliroll 3m3</span>
             </label>
@@ -765,7 +765,7 @@
             </div>
         </div>
         <div class="benne benne-8m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-8m.png" alt="Benne à chaîne 8m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-a-chaine-3m_jaune.png" alt="Benne à chaîne 8m3">
             <label for="benne_chaine_8m3_gravats_melange_chantier">
                 <span>Benne à chaîne 8m3</span>
             </label>
@@ -794,7 +794,7 @@
             </div>
         </div>
         <div class="benne benne-3m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-3m.png" alt="Benne ampliroll 3m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-20m.png" alt="Benne ampliroll 3m3">
             <label for="benne_ampliroll_3m3_gravats_propres_chantier">
                 <span>Benne ampliroll 3m3</span>
             </label>
@@ -805,7 +805,7 @@
             </div>
         </div>
         <div class="benne benne-8m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-8m.png" alt="Benne à chaîne 8m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-a-chaine-3m_jaune.png" alt="Benne à chaîne 8m3">
             <label for="benne_chaine_8m3_gravats_propres_chantier">
                 <span>Benne à chaîne 8m3</span>
             </label>
@@ -826,7 +826,7 @@
         <div class="benne box-gobelet">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/Gobelets-1536x1536.png" alt="Box Gobelet">
             <label for="box_gobelet">
-                <span>Box Gobelet</span>
+                <span>Box Gobelet 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_gobelet_qty">-</button>
@@ -838,7 +838,7 @@
         <div class="benne box-capsule">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/Capsules-1536x1536.png" alt="Box Capsule">
             <label for="box_capsule">
-                <span>Box Capsule</span>
+                <span>Box Capsule 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_capsule_qty">-</button>
@@ -850,7 +850,7 @@
         <div class="benne box-biodechets-hebdo">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/Dechets-1536x1536.png" alt="Box Bio-déchets Hebdomadaire">
             <label for="box_biodechets_hebdo">
-                <span>Box Bio-déchets Hebdomadaire</span>
+                <span>Box Bio-déchets Hebdomadaire 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_biodechets_hebdo_qty">-</button>
@@ -862,7 +862,7 @@
         <div class="benne box-biodechets-2semaines">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/Dechets-1536x1536.png" alt="Box Bio-déchets 1 semaine sur 2">
             <label for="box_biodechets_2semaines">
-                <span>Box Bio-déchets 1 semaine sur 2</span>
+                <span>Box Bio-déchets 1 semaine sur 2 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_biodechets_2semaines_qty">-</button>
@@ -874,7 +874,7 @@
         <div class="benne box-piles">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/Cartouches-1536x1536.png" alt="Box Piles">
             <label for="box_piles">
-                <span>Box Piles</span>
+                <span>Box Piles 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_piles_qty">-</button>
@@ -886,7 +886,7 @@
         <div class="benne box-bouteilles-canettes">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/IMG_20191229_115542.png" alt="Box Bouteilles et Canettes">
             <label for="box_bouteilles_canettes">
-                <span>Box Bouteilles et Canettes</span>
+                <span>Box Bouteilles et Canettes 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_bouteilles_canettes_qty">-</button>
@@ -898,7 +898,7 @@
         <div class="benne box-papier">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/Papiers-1-1536x1536.png" alt="Box Papier">
             <label for="box_papier">
-                <span>Box Papier</span>
+                <span>Box Papier 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_papier_qty">-</button>
@@ -910,7 +910,7 @@
         <div class="benne lot-5-box-papier">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/Papiers-1-1536x1536.png" alt="Lot de 5 Petit Box Papier">
             <label for="lot_5_box_papier">
-                <span>Lot de 5 Petit Box Papier</span>
+                <span>Lot de 5 Petit Box Papier (20L)</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="lot_5_box_papier_qty">-</button>
@@ -922,7 +922,7 @@
         <div class="benne box_d3e_bureau">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/IMG_20191229_114714-1536x1536.png" alt="Box D3E">
             <label for="box_d3e_bureau">
-                <span>Box D3E</span>
+                <span>Box D3E 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_d3e_bureau_qty">-</button>
@@ -970,7 +970,7 @@
         <div class="benne box-secure-480">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/415.png" alt="Box roulant sécurisé 480L" width="50">
             <label for="box_secure_480">
-                <span>Box Sécurisé 480L</span>
+                <span>Box Sécurisé 415L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_secure_480_qty">-</button>
@@ -1014,9 +1014,9 @@
     <label>Informatiques et Bureautiques (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box D3E">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box-e1748254026514.png" alt="Box D3E">
             <label for="box_d3e_domicile">
-                <span>Box D3E</span>
+                <span>Box D3E 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_d3e_domicile_qty">-</button>
@@ -1038,7 +1038,7 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-a%CC%80-roulettes-550L-e1748254097172.png" alt="Bac Industriel Roulette 550L">
             <label for="bac_550l_domicile">
                 <span>Bac Industriel Roulette 550L</span>
             </label>
@@ -1050,7 +1050,7 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Caisse-palette-grillagée-1m3-1.png" alt="Caisse Palette Grillagée 1m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Caisse-palette-grillagée-1m3-1-e1748254117358.png" alt="Caisse Palette Grillagée 1m3">
             <label for="caisse_palette_domicile">
                 <span>Caisse Palette Grillagée 1m3</span>
             </label>
@@ -1118,9 +1118,9 @@
     <label>Cartouches d'encre / Toners (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Cartouche">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box-e1748254026514.png" alt="Box Cartouche">
             <label for="box_cartouche_domicile">
-                <span>Box Cartouche</span>
+                <span>Box Cartouche 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_cartouche__domicileqty">-</button>
@@ -1132,7 +1132,7 @@
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Cartouches 200L">
             <label for="bac_toner_200l_domicile">
-                <span>Bac Industriel Cartouches - Toners 200L</span>
+                <span>Bac Industriel Cartouches - Toners Roulette 200L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="bac_toner_200l_domicile_qty">-</button>
@@ -1142,9 +1142,9 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-a%CC%80-roulettes-550L-e1748254097172.png" alt="Bac Industriel Roulette 550L">
             <label for="bac_550l_cartouche_domicile">
-                <span>Bac Industriel Roulette 550L</span>
+                <span>Bac Industriel Cartouches - Toners Roulette 550L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="bac_550l_cartouche_domicile_qty">-</button>
@@ -1161,7 +1161,7 @@
     <label>Accumulateurs / Batteries / Piles (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-6kg-.png" alt="Bac PVC Pile 6Kg">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-6kg--e1748254077253.png" alt="Bac PVC Pile 6Kg">
             <label for="bac_pile_6kg_domicile">
                 <span>Bac PVC Pile 6Kg</span>
             </label>
@@ -1173,7 +1173,7 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-15kg.png" alt="Bac PVC Pile 15Kg">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-15kg-e1748254046134.png" alt="Bac PVC Pile 15Kg">
             <label for="bac_pile_15kg_domicile">
                 <span>Bac PVC Pile 15Kg</span>
             </label>
@@ -1257,9 +1257,9 @@
     <label>Ampoules / Lampes / Néons (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Ampoules">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box-e1748254026514.png" alt="Box Ampoules">
             <label for="box_ampoules_domicile">
-                <span>Box Ampoules</span>
+                <span>Box Ampoules 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_ampoules_domicile_qty">-</button>
@@ -1269,9 +1269,9 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Néons">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box-e1748254026514.png" alt="Box Néons">
             <label for="box_neons_domicile">
-                <span>Box Néons</span>
+                <span>Box Néons 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_neons_domicile_qty">-</button>
@@ -1283,7 +1283,7 @@
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Ampoule 200L">
             <label for="bac_200l_ampoules_domicile">
-                <span>Bac Industriel Ampoules - Lampes 200L</span>
+                <span>Bac Industriel Ampoules - Lampes Roulette  200L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="bac_200l_ampoules_domicile_qty">-</button>
@@ -1293,9 +1293,9 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-a%CC%80-roulettes-550L-e1748254097172.png" alt="Bac Industriel Roulette 550L">
             <label for="bac_550l_ampoules_domicile">
-                <span>Bac Industriel Roulette 550L</span>
+                <span>Bac Industriel Ampoules - Lampes Roulette 550L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="bac_550l_ampoules_domicile_qty">-</button>
@@ -1324,9 +1324,9 @@
     <label>Informatiques et Bureautiques (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box D3E">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box-e1748254026514.png" alt="Box D3E">
             <label for="box_d3e_depot">
-                <span>Box D3E</span>
+                <span>Box D3E 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_d3e_depot_qty">-</button>
@@ -1348,7 +1348,7 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-a%CC%80-roulettes-550L-e1748254097172.png" alt="Bac Industriel Roulette 550L">
             <label for="bac_550l_depot">
                 <span>Bac Industriel Roulette 550L</span>
             </label>
@@ -1360,7 +1360,7 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Caisse-palette-grillagée-1m3-1.png" alt="Caisse Palette Grillagée 1m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Caisse-palette-grillagée-1m3-1-e1748254117358.png" alt="Caisse Palette Grillagée 1m3">
             <label for="caisse_palette_depot">
                 <span>Caisse Palette Grillagée 1m3</span>
             </label>
@@ -1428,9 +1428,9 @@
     <label>Cartouches d'encre / Toners (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Cartouche">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box-e1748254026514.png" alt="Box Cartouche">
             <label for="box_cartouche_depot">
-                <span>Box Cartouche</span>
+                <span>Box Cartouche 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_cartouche__depotqty">-</button>
@@ -1442,7 +1442,7 @@
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Cartouches 200L">
             <label for="bac_toner_200l_depot">
-                <span>Bac Industriel Cartouches - Toners 200L</span>
+                <span>Bac Industriel Cartouches - Toners Roulette 200L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="bac_toner_200l_depot_qty">-</button>
@@ -1452,9 +1452,9 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-a%CC%80-roulettes-550L-e1748254097172.png" alt="Bac Industriel Roulette 550L">
             <label for="bac_550l_cartouche_depot">
-                <span>Bac Industriel Roulette 550L</span>
+                <span>Bac Industriel Cartouches - Toners Roulette 550L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="bac_550l_cartouche_depot_qty">-</button>
@@ -1470,7 +1470,7 @@
     <label>Accumulateurs / Batteries / Piles (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-6kg-.png" alt="Bac PVC Pile 6Kg">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-6kg--e1748254077253.png" alt="Bac PVC Pile 6Kg">
             <label for="bac_pile_6kg_depot">
                 <span>Bac PVC Pile 6Kg</span>
             </label>
@@ -1482,7 +1482,7 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-15kg.png" alt="Bac PVC Pile 15Kg">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-à-piles-15kg-e1748254046134.png" alt="Bac PVC Pile 15Kg">
             <label for="bac_pile_15kg_depot">
                 <span>Bac PVC Pile 15Kg</span>
             </label>
@@ -1566,9 +1566,9 @@
     <label>Ampoules / Lampes / Néons (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Ampoules">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box-e1748254026514.png" alt="Box Ampoules">
             <label for="box_ampoules_depot">
-                <span>Box Ampoules</span>
+                <span>Box Ampoules 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_ampoules_depot_qty">-</button>
@@ -1578,9 +1578,9 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box.png" alt="Box Néons">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Box-e1748254026514.png" alt="Box Néons">
             <label for="box_neons_depot">
-                <span>Box Néons</span>
+                <span>Box Néons 70L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_neons_depot_qty">-</button>
@@ -1592,7 +1592,7 @@
         <div class="benne">
             <img src="https://citydebarras.fr/wp-content/uploads/2025/01/6.png" alt="Bac Industriel Ampoule 200L">
             <label for="bac_200l_ampoules_depot">
-                <span>Bac Industriel Ampoules - Lampes 200L</span>
+                <span>Bac Industriel Ampoules - Lampes Roulette 200L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="bac_200l_ampoules_depot_qty">-</button>
@@ -1602,9 +1602,9 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-à-roulettes-550L.png" alt="Bac Industriel Roulette 550L">
+            <img src="https://citydebarras.fr/wp-content/uploads/2021/07/Bac-industriel-a%CC%80-roulettes-550L-e1748254097172.png" alt="Bac Industriel Roulette 550L">
             <label for="bac_550l_ampoules_depot">
-                <span>Bac Industriel Roulette 550L</span>
+                <span>Bac Industriel Ampoules - Lampes Roulette 550L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="bac_550l_ampoules_depot_qty">-</button>
@@ -1646,7 +1646,7 @@
         <div class="benne archive-130L">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/70.png" alt="Box sécurisé 130L" width="50">
             <label for="box_130L_archives_domicile">
-                <span>Box sécurisé 130L</span>
+                <span>Box sécurisé 120L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_130L_archives_domicile_qty">-</button>
@@ -1682,7 +1682,7 @@
         <div class="benne archive-480L">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/415.png" alt="Box roulant sécurisé 480L" width="50">
             <label for="box_480L_archives_domicile">
-                <span>Box roulant sécurisé 480L</span>
+                <span>Box roulant sécurisé 415L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_480L_archives_domicile_qty">-</button>
@@ -1692,7 +1692,7 @@
         </div>
 
         <div class="benne archive-550L">
-            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/Design-sans-titre-10.png" alt="Bac sécurisé ouvert 550L" width="50">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/caisse-palette-plastique-550_01142.webp" alt="Bac sécurisé ouvert 550L" width="50">
             <label for="bac_secure_550_ouvert_domicile">
                 <span>Box sécurisé ouvert 550L</span>
             </label>
@@ -1732,7 +1732,7 @@
         <div class="benne archive-130L">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/70.png" alt="Box sécurisé 130L" width="50">
             <label for="box_130L_archives_depot">
-                <span>Box sécurisé 130L</span>
+                <span>Box sécurisé 120L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_130L_archives_depot_qty">-</button>
@@ -1768,7 +1768,7 @@
         <div class="benne archive-480L">
             <img src="https://citydebarras.fr/wp-content/uploads/2021/02/415.png" alt="Box roulant sécurisé 480L" width="50">
             <label for="box_480L_archives_depot">
-                <span>Box roulant sécurisé 480L</span>
+                <span>Box roulant sécurisé 415L</span>
             </label>
             <div class="quantity-selector">
                 <button type="button" class="qty-minus" data-target="box_480L_archives_depot_qty">-</button>
@@ -1778,7 +1778,7 @@
         </div>
 
         <div class="benne archive-550L">
-            <img src="https://citydebarras.fr/wp-content/uploads/2025/01/Design-sans-titre-10.png" alt="Bac sécurisé ouvert 550L" width="50">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/caisse-palette-plastique-550_01142.webp" alt="Bac sécurisé ouvert 550L" width="50">
             <label for="bac_secure_550_ouvert_depot">
                 <span>Box sécurisé ouvert 550L</span>
             </label>
@@ -1814,7 +1814,7 @@
     <label>Gravats Propres (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-3m.png" alt="Benne 8m3" width="50">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-a-chaine-3m_jaune.png" alt="Benne 8m3" width="50">
             <label for="benne_8m3_gravats">
                 <span>Benne 8m3</span>
             </label>
@@ -1832,7 +1832,7 @@
     <label>Déchets Non Dangereux (choix multiples)</label>
     <div class="choices-grid">
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-3m.png" alt="Benne 8m3" width="50">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/8bleue.png" alt="Benne 8m3" width="50">
             <label for="benne_8m3_dechets">
                 <span>Benne 8m3</span>
             </label>
@@ -1844,7 +1844,7 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-3m.png" alt="Benne 10m3" width="50">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/10rose.png" alt="Benne 10m3" width="50">
             <label for="benne_10m3_dechets">
                 <span>Benne 10m3</span>
             </label>
@@ -1856,7 +1856,7 @@
         </div>
 
         <div class="benne">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-a-chaine-3m.png" alt="Benne 15m3" width="50">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne 15m3" width="50">
             <label for="benne_15m3_dechets">
                 <span>Benne 15m3</span>
             </label>
