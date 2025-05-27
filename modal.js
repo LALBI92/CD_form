@@ -147,6 +147,15 @@ createInfoModal('benne_chaine_15m3_bois_chantier',  'images/benne_15m3.png');
 createInfoModal('benne_chaine_15m3_dib_chantier',   'images/benne_15m3.png');
 createInfoModal('benne_ampliroll_30m3_dib_chantier','images/benne_30m3.png');
 createInfoModal('benne_ampliroll_30m3_bois_chantier','images/benne_30m3.png');
+createInfoModal('big_bag_1m3_dib_chantier',                 'images/bigbag.png');
+createInfoModal('big_bag_1m3_bois_chantier',                'images/bigbag.png');
+createInfoModal('big_bag_1m3_platre_chantier',              'images/bigbag.png');
+createInfoModal('big_bag_1m3_gravats_melange_chantier',     'images/bigbag.png');
+createInfoModal('big_bag_1m3_gravats_propres_chantier',     'images/bigbag.png');
+createInfoModal('benne_ampliroll_3m3_bois_chantier',        'images/benne_ampliroll_3m3.png');
+createInfoModal('benne_ampliroll_3m3_gravats_melange_chantier','images/benne_ampliroll_3m3.png');
+createInfoModal('benne_ampliroll_3m3_gravats_propres_chantier','images/benne_ampliroll_3m3.png');
+
 
 
 }); 
