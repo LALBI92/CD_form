@@ -662,7 +662,7 @@
             </div>
         </div>
         <div class="benne benne-3m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-20m.png" alt="Benne ampliroll 3m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-ampliroll-3m.png" alt="Benne ampliroll 3m3">
             <label for="benne_ampliroll_3m3_bois_chantier">
                 <span>Benne ampliroll 3m3</span>
             </label>
@@ -754,7 +754,7 @@
             </div>
         </div>
         <div class="benne benne-3m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-20m.png" alt="Benne ampliroll 3m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-ampliroll-3m.png" alt="Benne ampliroll 3m3">
             <label for="benne_ampliroll_3m3_gravats_melange_chantier">
                 <span>Benne ampliroll 3m3</span>
             </label>
@@ -794,7 +794,7 @@
             </div>
         </div>
         <div class="benne benne-3m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-20m.png" alt="Benne ampliroll 3m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/Benne-ampliroll-3m.png" alt="Benne ampliroll 3m3">
             <label for="benne_ampliroll_3m3_gravats_propres_chantier">
                 <span>Benne ampliroll 3m3</span>
             </label>
