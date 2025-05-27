@@ -622,7 +622,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-30m.png" alt="Benne à chaîne 15m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne à chaîne 15m3">
             <label for="benne_chaine_15m3_dib_chantier">
                 <span>Benne ampliroll 15m3</span>
             </label>
@@ -684,7 +684,7 @@
             </div>
         </div>
         <div class="benne benne-15m3">
-            <img src="https://citydebarras.fr/wp-content/uploads/2020/11/Benne-ampliroll-30m.png" alt="Benne à chaîne 15m3">
+            <img src="https://citydebarras.fr/wp-content/uploads/2025/05/15jaune.png" alt="Benne à chaîne 15m3">
             <label for="benne_chaine_15m3_bois_chantier">
                 <span>Benne ampliroll 15m3</span>
             </label>
