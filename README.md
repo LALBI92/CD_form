@@ -1,54 +1,22 @@
-# Procédure de Déploiement
+TRAVAIL EN LOCAL PUIS 
 
-## Workflow de Développement
+git checkout local           # S'assurer d'être sur local
+git add .                   # Ajouter modifications
+git commit "Message"        # Commit local
+git push origin local       # Sauvegarder sur GitHub
 
-### 1. Développement Local
+INTEGRATION VERS DEVELOP
 
-# S'assurer d'être sur la branche local
-git checkout local
-
-# Faire les modifications...
-
-# Ajouter les modifications
-git add .
-
-# Créer un commit
-git commit -m "Description des modifications"
-
-# Pousser vers GitHub
-git push origin local
-
-
-### 2. Déploiement en Développement
-
-# Basculez sur la branche develop
 git checkout develop
-
-# Fusionnez local dans develop
 git merge local
+./deploy-to-dev.sh "Message" # Ce script fait le push automatiquement
 
-# Poussez develop vers GitHub
-git push origin develop
+Dans CPANEL => git pull origin develop
 
-### 3. Mise à jour du Serveur de Développement
+Testez https://dev2.cityrecyclage.com/CD_form/ si OK
 
-# Sur le serveur de dev (via cPanel)
-cd /home/votre_utilisateur/www/dev2.cityrecyclage.com
+DEVELOP VERS PROD
 
-# S'assurer d'être sur develop
-git checkout develop
+./deploy-to-prod.sh  
 
-# Récupérer les modifications
-git pull origin develop
-
-
-## Structure des Branches
-- `local` : Environnement de développement local
-- `develop` : Environnement de développement (dev2.cityrecyclage.com)
-- `master` : Environnement de production
-
-## Points Importants
-- Toujours travailler sur la branche `local`
-- Pousser d'abord sur `local`, puis sur `develop`
-- Sur le serveur de dev, rester sur la branche `develop`
-- Vérifier que les modifications sont bien présentes sur dev2.cityrecyclage.com après chaque pull
+Dans CPANEL => git pull origin master
