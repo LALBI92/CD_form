@@ -143,5 +143,10 @@ createInfoModal('benne_chaine_8m3_platre_chantier',         'images/benne_chaine
 createInfoModal('benne_8m3_gravats',                        'images/benne_chaine_8m3.png');
 createInfoModal('box_130L_archives_depot',     'images/box_120L.png');
 createInfoModal('box_130L_archives_domicile',  'images/box_120L.png');
+createInfoModal('benne_chaine_15m3_bois_chantier',  'images/benne_15m3.png');
+createInfoModal('benne_chaine_15m3_dib_chantier',   'images/benne_15m3.png');
+createInfoModal('benne_ampliroll_30m3_dib_chantier','images/benne_30m3.png');
+createInfoModal('benne_ampliroll_30m3_bois_chantier','images/benne_30m3.png');
+
 
 }); 
