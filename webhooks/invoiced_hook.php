@@ -39,12 +39,23 @@ try {
     /* 4. (Optionnel) drop les doublons rapides —— */
     // ex : file-based lock, APCu, ou juste rien en dev
 
-    /* 5. Traitement métier (catch interne) ———— */
+    /* 5. Réponse immédiate pour éviter les timeouts ———— */
+    http_response_code(200);
+    echo "OK";
+    
+    // Fermer la connexion avec le client pour libérer Invoiced
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    } else {
+        // Pour les serveurs non-FastCGI
+        ob_end_flush();
+        flush();
+    }
+
+    /* 6. Traitement métier en arrière-plan ———— */
     $logger->log('Début du traitement', ['type' => $payload['type'] ?? 'unknown']);
     (new InvoicedHandler)->handle($payload);
     $logger->log('Traitement terminé avec succès');
-
-    http_response_code(200);           // ✅ toujours
 } catch (Throwable $e) {
     $logger->logError('Exception non gérée', $e);
     http_response_code(200);           // ✅ malgré l'erreur

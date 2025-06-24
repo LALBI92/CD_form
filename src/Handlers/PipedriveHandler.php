@@ -90,8 +90,8 @@ class PipedriveHandler
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         
         if (!empty($data)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
@@ -132,6 +132,22 @@ class PipedriveHandler
         $deal     = $event['data']     ?? [];
         $previous = $event['previous'] ?? [];
 
+        // PROTECTION ANTI-BOUCLE : Ignorer les webhooks causés par nos propres mises à jour
+        // Si le changement provient de l'API (change_source: api), c'est probablement nous
+        $changeSource = $event['meta']['change_source'] ?? '';
+        if ($changeSource === 'api') {
+            $this->logger->log('Webhook ignoré - changement provenant de l\'API (probablement notre système)', [
+                'deal_id' => $deal['id'] ?? null,
+                'change_source' => $changeSource
+            ]);
+            $this->logger->log('Traitement événement terminé');
+            return;
+        }
+
+        // DÉSACTIVATION TEMPORAIRE : Gestion automatique des changements d'étape
+        // Pour éviter les boucles causées par les automatisations Pipedrive
+        // Seule la logique délai de paiement reste active
+        
         // Détection du passage à l'étape "Intervention prévue" (ID: 5)
         $stageAfter  = $deal['stage_id'] ?? null;
         $stageBefore = $previous['stage_id'] ?? null;
@@ -143,7 +159,7 @@ class PipedriveHandler
         ]);
 
         // Si le deal passe à l'étape "Intervention prévue" (5)
-        // MAIS SEULEMENT si on vient d'une étape antérieure (éviter les retours en arrière)
+        // MAIS SEULEMENT si on vient d'une étape antérieure (éviter les retours en arrière)  
         if ($stageBefore != 5 && $stageAfter == 5 && ($stageBefore === null || $stageBefore < 5)) {
             $this->logger->log('Deal passé à étape Intervention prévue depuis étape antérieure', [
                 'deal_id' => $deal['id'],
@@ -158,13 +174,54 @@ class PipedriveHandler
                 'to_stage' => $stageAfter
             ]);
         }
+        
+        $this->logger->log('Gestion automatique changements d\'étape temporairement désactivée - traitement délai de paiement uniquement');
 
         // Si le délai de paiement vient d'être renseigné pour une entreprise
         if ($this->delaiPaiementFieldKey) {
-            $delaiPaiementBefore = $previous['custom_fields'][$this->delaiPaiementFieldKey]['value'] ?? null;
-            $delaiPaiementAfter = $deal['custom_fields'][$this->delaiPaiementFieldKey]['value'] ?? null;
+            // Pour les champs enum, Pipedrive envoie l'ID, pas la value
+            $delaiPaiementBefore = $previous['custom_fields'][$this->delaiPaiementFieldKey]['id'] ?? 
+                                   $previous['custom_fields'][$this->delaiPaiementFieldKey]['value'] ?? null;
+            $delaiPaiementAfter = $deal['custom_fields'][$this->delaiPaiementFieldKey]['id'] ?? 
+                                  $deal['custom_fields'][$this->delaiPaiementFieldKey]['value'] ?? null;
             
-            if (empty($delaiPaiementBefore) && !empty($delaiPaiementAfter)) {
+            // Debug des champs délai de paiement
+            $this->logger->log('Debug délai de paiement', [
+                'field_key' => $this->delaiPaiementFieldKey,
+                'previous_field' => $previous['custom_fields'][$this->delaiPaiementFieldKey] ?? 'absent',
+                'current_field' => $deal['custom_fields'][$this->delaiPaiementFieldKey] ?? 'absent',
+                'delai_before' => $delaiPaiementBefore,
+                'delai_after' => $delaiPaiementAfter,
+                'condition_met_initial' => (empty($delaiPaiementBefore) && !empty($delaiPaiementAfter)),
+                'condition_met_change' => (!empty($delaiPaiementBefore) && !empty($delaiPaiementAfter) && $delaiPaiementBefore != $delaiPaiementAfter)
+            ]);
+            
+            // Détecter l'ajout initial OU le changement de délai de paiement
+            if ((empty($delaiPaiementBefore) && !empty($delaiPaiementAfter)) || 
+                (!empty($delaiPaiementBefore) && !empty($delaiPaiementAfter) && $delaiPaiementBefore != $delaiPaiementAfter)) {
+                
+                // PROTECTION RENFORCÉE : Vérifier si une facture existe déjà pour ce deal
+                $dealId = $deal['id'] ?? null;
+                if ($dealId) {
+                    $dealDetails = $this->callPipedriveApi('GET', '/deals/' . $dealId);
+                    $existingInvoiceId = $dealDetails->data->{'8bd7f09811f5c47aa719d924e9a193d1d3cf8242'} ?? null;
+                    
+                    if (!empty($existingInvoiceId)) {
+                        $this->logger->log('Deal a déjà une facture - changement de délai ignoré', [
+                            'deal_id' => $dealId,
+                            'existing_invoice_id' => $existingInvoiceId,
+                            'delai_paiement_id' => $delaiPaiementAfter
+                        ]);
+                        $this->logger->log('Traitement événement terminé');
+                        return;
+                    }
+                }
+                
+                $this->logger->log('Délai de paiement détecté - déclenchement traitement', [
+                    'deal_id' => $deal['id'],
+                    'delai_paiement_id' => $delaiPaiementAfter,
+                    'type' => empty($delaiPaiementBefore) ? 'ajout_initial' : 'modification'
+                ]);
                 $this->processPaymentTermsSet($deal);
             }
         }
@@ -222,13 +279,62 @@ class PipedriveHandler
         $organization = $orgDetails->data;
 
         // Détermination du type de client via le SIRET
-        $isCompany = !empty($organization->custom_fields->siret ?? null);
+        // 1. D'abord chercher dans les champs custom de l'organisation Pipedrive
+        $siret = null;
+        if (isset($organization->custom_fields)) {
+            foreach ($organization->custom_fields as $fieldKey => $fieldData) {
+                if (isset($fieldData->value) && !empty($fieldData->value) && 
+                    (strpos($fieldKey, 'siret') !== false || strpos(strtolower($fieldData->value), 'siret') !== false)) {
+                    $siret = $fieldData->value;
+                    break;
+                }
+            }
+        }
         
-        $this->logger->log('Type de client déterminé', [
+        // 2. Si pas trouvé dans Pipedrive, vérifier dans les métadonnées Invoiced du client
+        if (empty($siret)) {
+            try {
+                // Récupérer l'ID client Invoiced depuis le deal ou l'organisation
+                $invoicedCustomerId = null;
+                
+                // Essayer de récupérer depuis les champs custom de l'organisation
+                if (isset($organization->custom_fields)) {
+                    foreach ($organization->custom_fields as $fieldKey => $fieldData) {
+                        if (strpos($fieldKey, 'invoiced') !== false && !empty($fieldData->value)) {
+                            $invoicedCustomerId = $fieldData->value;
+                            break;
+                        }
+                    }
+                }
+                
+                // Si pas trouvé, chercher le client via l'estimate
+                if (!$invoicedCustomerId) {
+                    $estimate = $this->inv->Estimate->retrieve($estimateId);
+                    $invoicedCustomerId = $estimate->customer;
+                }
+                
+                if ($invoicedCustomerId) {
+                    $customer = $this->inv->Customer->retrieve($invoicedCustomerId);
+                    $siret = $customer->metadata['siret'] ?? null;
+                    
+                    $this->logger->log('SIRET récupéré depuis métadonnées Invoiced', [
+                        'customer_id' => $invoicedCustomerId,
+                        'siret' => $siret
+                    ]);
+                }
+            } catch (\Exception $e) {
+                $this->logger->log('Erreur récupération SIRET depuis Invoiced', ['error' => $e->getMessage()]);
+            }
+        }
+        
+        $isCompany = !empty($siret);
+        
+        $this->logger->log('Type de client déterminé (amélioré)', [
             'deal_id' => $dealId,
             'org_id' => $orgId,
             'is_company' => $isCompany,
-            'siret' => $organization->custom_fields->siret ?? 'non présent'
+            'siret' => $siret ?? 'non présent',
+            'source_siret' => empty($siret) ? 'aucune' : 'pipedrive_ou_invoiced'
         ]);
 
         if ($isCompany) {
@@ -262,18 +368,45 @@ class PipedriveHandler
     private function processPaymentTermsSet(array $deal): void
     {
         $dealId = $deal['id'] ?? null;
-        $delaiPaiement = $deal['custom_fields'][$this->delaiPaiementFieldKey]['value'] ?? null;
+        $delaiPaiementId = $deal['custom_fields'][$this->delaiPaiementFieldKey]['id'] ?? 
+                          $deal['custom_fields'][$this->delaiPaiementFieldKey]['value'] ?? null;
         
-        if (!$dealId || !$delaiPaiement) {
+        if (!$dealId || !$delaiPaiementId) {
             $this->logger->log('Données manquantes pour traitement délai paiement', [
                 'deal_id' => $dealId,
-                'delai_paiement' => $delaiPaiement
+                'delai_paiement_id' => $delaiPaiementId
+            ]);
+            return;
+        }
+
+        // PROTECTION ANTI-DUPLICATION RENFORCÉE
+        $dealDetails = $this->callPipedriveApi('GET', '/deals/' . $dealId);
+        $existingInvoiceId = $dealDetails->data->{'8bd7f09811f5c47aa719d924e9a193d1d3cf8242'} ?? null;
+        
+        if (!empty($existingInvoiceId)) {
+            $this->logger->log('PROTECTION : Facture déjà existante, création annulée', [
+                'deal_id' => $dealId,
+                'existing_invoice_id' => $existingInvoiceId,
+                'delai_paiement_id' => $delaiPaiementId
+            ]);
+            
+            // S'assurer que le deal est à l'étape facturation
+            $this->ensureDealInFacturationStage($dealId, $existingInvoiceId);
+            return;
+        }
+
+        // Conversion de l'ID du délai vers la valeur réelle
+        $delaiPaiementValue = $this->convertDelaiPaiementIdToValue($delaiPaiementId);
+        
+        if (!$delaiPaiementValue) {
+            $this->logger->log('Impossible de convertir l\'ID délai de paiement en valeur', [
+                'deal_id' => $dealId,
+                'delai_paiement_id' => $delaiPaiementId
             ]);
             return;
         }
 
         // Récupération de l'ID du devis
-        $dealDetails = $this->callPipedriveApi('GET', '/deals/' . $dealId);
         $estimateId = $dealDetails->data->{'b8b55bcfd1cc07f3e577fb7a8d4fe498b435813a'} ?? null;
         
         if (!$estimateId) {
@@ -281,7 +414,13 @@ class PipedriveHandler
             return;
         }
 
-        $this->createInvoiceForCompany($estimateId, $dealId, $delaiPaiement);
+        $this->logger->log('Création facture entreprise autorisée', [
+            'deal_id' => $dealId,
+            'estimate_id' => $estimateId,
+            'payment_terms' => $delaiPaiementValue
+        ]);
+
+        $this->createInvoiceForCompany($estimateId, $dealId, $delaiPaiementValue);
     }
 
     /**
@@ -315,7 +454,9 @@ class PipedriveHandler
             ]);
 
             // Mise à jour du deal avec l'ID de la facture
-            $this->updateDealWithInvoice($dealId, $invoice->id, 'DUE_ON_RECEIPT');
+            // Conversion de la valeur vers le format Pipedrive
+            $pipedriveTerms = $this->convertInvoicedTermsToPipedrive('DUE_ON_RECEIPT');
+            $this->updateDealWithInvoice($dealId, $invoice->id, $pipedriveTerms);
 
         } catch (\Exception $e) {
             $this->logger->logError('Erreur création facture particulier', $e);
@@ -355,6 +496,16 @@ class PipedriveHandler
             ];
             
             $invoice = $estimate->invoice($invoiceData);
+            
+            // CORRECTION : Mise à jour séparée des payment terms après création
+            // Car la méthode invoice() ne transmet pas toujours les payment terms
+            $invoice->payment_terms = $invoicedTerms;
+            $invoice->save();
+            
+            $this->logger->log('Payment terms mis à jour après création facture', [
+                'invoice_id' => $invoice->id,
+                'payment_terms' => $invoicedTerms
+            ]);
             
             // Envoi de la facture
             $invoice->send();
@@ -406,13 +557,16 @@ class PipedriveHandler
                 $updateData[$urlFactureFieldKey] = $invoiceUrl;
             }
             
-            // Ajout du délai de paiement
+            // Ajout du délai de paiement (conversion label → ID)
             if ($this->delaiPaiementFieldKey) {
-                $updateData[$this->delaiPaiementFieldKey] = $paymentTerms;
+                $delaiPaiementId = $this->convertLabelToPipedriveId($paymentTerms);
+                if ($delaiPaiementId) {
+                    $updateData[$this->delaiPaiementFieldKey] = $delaiPaiementId;
+                }
             }
             
-            // Changement d'étape vers "facturation"
-            $updateData['stage_id'] = 6; // ID de l'étape "facturation"
+            // Passage automatique à l'étape "facturation" (réactivé)
+            $updateData['stage_id'] = 7; // ID correct de l'étape "facturation"
 
             // Mise à jour du deal
             $response = $this->callPipedriveApi('PUT', "/deals/{$dealId}", $updateData);
@@ -422,7 +576,7 @@ class PipedriveHandler
                 'invoice_id' => $invoiceId,
                 'invoice_url' => $invoiceUrl,
                 'payment_terms' => $paymentTerms,
-                'stage_id' => 6
+                'stage_id' => 7
             ]);
             
         } catch (Exception $e) {
@@ -444,7 +598,7 @@ class PipedriveHandler
             $fullDeal = $this->callPipedriveApi('GET', "/deals/{$dealId}");
             $currentStage = $fullDeal->data->stage_id ?? null;
             
-            if ($currentStage != 6) { // Si pas déjà à l'étape "facturation"
+            if ($currentStage != 7) { // Si pas déjà à l'étape "facturation"
                 
                 // Récupération de la facture pour obtenir son délai de paiement
                 $invoice = $this->inv->Invoice->retrieve($existingInvoiceId);
@@ -454,12 +608,15 @@ class PipedriveHandler
                 $pipedriveTerms = $this->convertInvoicedTermsToPipedrive($paymentTerms);
                 
                 $updateData = [
-                    'stage_id' => 6  // Étape "facturation"
+                    'stage_id' => 7  // Étape "facturation"
                 ];
                 
-                // Ajouter le délai de paiement si le champ existe
+                // Ajouter le délai de paiement si le champ existe (conversion label → ID)
                 if ($this->delaiPaiementFieldKey) {
-                    $updateData[$this->delaiPaiementFieldKey] = $pipedriveTerms;
+                    $delaiPaiementId = $this->convertLabelToPipedriveId($pipedriveTerms);
+                    if ($delaiPaiementId) {
+                        $updateData[$this->delaiPaiementFieldKey] = $delaiPaiementId;
+                    }
                 }
                 
                 $this->callPipedriveApi('PUT', "/deals/{$dealId}", $updateData);
@@ -469,7 +626,7 @@ class PipedriveHandler
                     'invoice_id' => $existingInvoiceId,
                     'payment_terms' => $pipedriveTerms,
                     'previous_stage' => $currentStage,
-                    'new_stage' => 6
+                    'new_stage' => 7
                 ]);
             }
             
@@ -498,5 +655,130 @@ class PipedriveHandler
         ];
         
         return $mapping[$invoicedTerms] ?? $invoicedTerms;
+    }
+
+    /**
+     * Convertit l'ID d'un délai de paiement vers sa valeur réelle
+     */
+    private function convertDelaiPaiementIdToValue(string $delaiPaiementId): ?string
+    {
+        try {
+            // Récupération des détails du champ "Délai de paiement"
+            $dealFields = $this->callPipedriveApi('GET', '/dealFields');
+            
+            foreach ($dealFields->data as $field) {
+                if ($field->key === $this->delaiPaiementFieldKey && isset($field->options)) {
+                    // Recherche de l'option correspondant à l'ID
+                    foreach ($field->options as $option) {
+                        if ($option->id == $delaiPaiementId) {
+                            $value = $option->value ?? null;
+                            $label = $option->label ?? null;
+                            
+                            // Si pas de value, utiliser le label et le convertir
+                            if (empty($value) && !empty($label)) {
+                                $value = $this->convertLabelToInvoicedValue($label);
+                            }
+                            
+                            $this->logger->log('Délai de paiement converti', [
+                                'id' => $delaiPaiementId,
+                                'label' => $label,
+                                'value' => $value,
+                                'converted_from_label' => empty($option->value)
+                            ]);
+                            return $value;
+                        }
+                    }
+                }
+            }
+            
+            $this->logger->log('ID délai de paiement non trouvé dans les options', [
+                'delai_paiement_id' => $delaiPaiementId,
+                'field_key' => $this->delaiPaiementFieldKey
+            ]);
+            
+        } catch (\Exception $e) {
+            $this->logger->log('Erreur lors de la conversion délai de paiement', [
+                'error' => $e->getMessage(),
+                'delai_paiement_id' => $delaiPaiementId
+            ]);
+        }
+        
+        return null;
+    }
+
+    private function convertLabelToInvoicedValue(string $label): ?string
+    {
+        // Mapping des labels français vers les valeurs Invoiced
+        $labelMapping = [
+            'Paiement à réception (particuliers)' => 'DUE_ON_RECEIPT',
+            'NET 7 (7 jours)' => 'NET_7',
+            'NET 15 (15 jours)' => 'NET_15', 
+            'NET 30 (30 jours)' => 'NET_30',
+            'NET 45 (45 jours)' => 'NET_45',
+            'NET 60 (60 jours)' => 'NET_60',
+            'NET 90 (90 jours)' => 'NET_90'
+        ];
+        
+        // Recherche exacte d'abord
+        if (isset($labelMapping[$label])) {
+            return $labelMapping[$label];
+        }
+        
+        // Recherche par pattern si pas de correspondance exacte
+        foreach ($labelMapping as $labelPattern => $value) {
+            if (strpos($label, 'NET 7') !== false) return 'NET_7';
+            if (strpos($label, 'NET 15') !== false) return 'NET_15';
+            if (strpos($label, 'NET 30') !== false) return 'NET_30';
+            if (strpos($label, 'NET 45') !== false) return 'NET_45';
+            if (strpos($label, 'NET 60') !== false) return 'NET_60';
+            if (strpos($label, 'NET 90') !== false) return 'NET_90';
+            if (strpos($label, 'réception') !== false || strpos($label, 'DUE') !== false) return 'DUE_ON_RECEIPT';
+        }
+        
+        $this->logger->log('Label délai de paiement non reconnu', [
+            'label' => $label,
+            'available_mappings' => array_keys($labelMapping)
+        ]);
+        
+        return null;
+    }
+
+    /**
+     * Convertit un label de délai de paiement vers l'ID de l'option Pipedrive
+     */
+    private function convertLabelToPipedriveId(string $label): ?string
+    {
+        try {
+            // Récupération des détails du champ "Délai de paiement"
+            $dealFields = $this->callPipedriveApi('GET', '/dealFields');
+            
+            foreach ($dealFields->data as $field) {
+                if ($field->key === $this->delaiPaiementFieldKey && isset($field->options)) {
+                    // Recherche de l'option correspondant au label
+                    foreach ($field->options as $option) {
+                        if ($option->label === $label) {
+                            $this->logger->log('Label délai de paiement converti vers ID', [
+                                'label' => $label,
+                                'id' => $option->id
+                            ]);
+                            return (string)$option->id;
+                        }
+                    }
+                }
+            }
+            
+            $this->logger->log('Label délai de paiement non trouvé dans les options', [
+                'label' => $label,
+                'field_key' => $this->delaiPaiementFieldKey
+            ]);
+            
+        } catch (\Exception $e) {
+            $this->logger->log('Erreur lors de la conversion label vers ID', [
+                'error' => $e->getMessage(),
+                'label' => $label
+            ]);
+        }
+        
+        return null;
     }
 }

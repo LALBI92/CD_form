@@ -14,6 +14,10 @@ class InvoicedHandler
     private ?string           $invoicedPersonFieldKey = null;
     private ?string           $categoriesFieldKey = null;
     private ?string           $devisInvoicedFieldKey = null;
+    private $siretFieldKey; // Clé du champ SIRET/SIREN
+
+    // Clé du champ 'Date du solde'
+    private string $dateSoldeFieldKey = '58319154cbe240244c3907dc4476d04c653b75ac';
 
     public function __construct()
     {
@@ -34,65 +38,78 @@ class InvoicedHandler
      */
     private function initCustomFields(): void
     {
-        // 1. Vérifier si les champs existent déjà
-        $fields = $this->callPipedriveApi('GET', '/organizationFields');
-        foreach ($fields->data as $field) {
-            if ($field->name === 'invoiced_id') {
-                $this->invoicedFieldKey = $field->key;
-                $this->logger->log('Champ organisation trouvé', ['key' => $this->invoicedFieldKey]);
+        try {
+            // Récupération des champs personnalisés organisations
+            $orgFields = $this->callPipedriveApi('GET', '/organizationFields');
+            
+            foreach ($orgFields->data as $field) {
+                if ($field->name === 'Invoiced ID' || $field->name === 'invoiced_id') {
+                    $this->invoicedFieldKey = $field->key;
+                    $this->logger->log('Champ organisation trouvé', ['key' => $field->key, 'name' => $field->name]);
+                }
+                // Détection du champ SIRET/SIREN
+                if (strtolower($field->name) === 'siren' || 
+                    strtolower($field->name) === 'siret' ||
+                    stripos($field->name, 'siret') !== false || 
+                    stripos($field->name, 'siren') !== false) {
+                    $this->siretFieldKey = $field->key;
+                    $this->logger->log('Champ SIRET/SIREN trouvé', ['key' => $field->key, 'name' => $field->name]);
+                }
             }
-        }
 
-        $fields = $this->callPipedriveApi('GET', '/personFields');
-        foreach ($fields->data as $field) {
-            if ($field->name === 'invoiced_id') {
-                $this->invoicedPersonFieldKey = $field->key;
-                $this->logger->log('Champ personne trouvé', ['key' => $this->invoicedPersonFieldKey]);
+            $fields = $this->callPipedriveApi('GET', '/personFields');
+            foreach ($fields->data as $field) {
+                if ($field->name === 'invoiced_id') {
+                    $this->invoicedPersonFieldKey = $field->key;
+                    $this->logger->log('Champ personne trouvé', ['key' => $this->invoicedPersonFieldKey]);
+                }
             }
-        }
 
-        // Vérifier si le champ catégories existe pour les deals
-        $dealFields = $this->callPipedriveApi('GET', '/dealFields');
-        foreach ($dealFields->data as $field) {
-            if ($field->name === 'Catégorie') {
-                $this->categoriesFieldKey = $field->key;
-                $this->logger->log('Champ catégories trouvé', ['key' => $this->categoriesFieldKey]);
+            // Vérifier si le champ catégories existe pour les deals
+            $dealFields = $this->callPipedriveApi('GET', '/dealFields');
+            foreach ($dealFields->data as $field) {
+                if ($field->name === 'Catégorie') {
+                    $this->categoriesFieldKey = $field->key;
+                    $this->logger->log('Champ catégories trouvé', ['key' => $this->categoriesFieldKey]);
+                }
+                if ($field->name === 'Devis Invoiced') {
+                    $this->devisInvoicedFieldKey = $field->key;
+                    $this->logger->log('Champ Devis Invoiced trouvé', ['key' => $this->devisInvoicedFieldKey]);
+                }
             }
-            if ($field->name === 'Devis Invoiced') {
-                $this->devisInvoicedFieldKey = $field->key;
-                $this->logger->log('Champ Devis Invoiced trouvé', ['key' => $this->devisInvoicedFieldKey]);
+
+            // 2. Créer les champs s'ils n'existent pas
+            if (!$this->invoicedFieldKey) {
+                $field = $this->callPipedriveApi('POST', '/organizationFields', [
+                    'name' => 'invoiced_id',
+                    'field_type' => 'varchar',
+                    'field_for' => 'organization'
+                ]);
+                $this->invoicedFieldKey = $field->data->key;
+                $this->logger->log('Champ organisation créé', ['key' => $this->invoicedFieldKey]);
             }
-        }
 
-        // 2. Créer les champs s'ils n'existent pas
-        if (!$this->invoicedFieldKey) {
-            $field = $this->callPipedriveApi('POST', '/organizationFields', [
-                'name' => 'invoiced_id',
-                'field_type' => 'varchar',
-                'field_for' => 'organization'
-            ]);
-            $this->invoicedFieldKey = $field->data->key;
-            $this->logger->log('Champ organisation créé', ['key' => $this->invoicedFieldKey]);
-        }
+            if (!$this->invoicedPersonFieldKey) {
+                $field = $this->callPipedriveApi('POST', '/personFields', [
+                    'name' => 'invoiced_id',
+                    'field_type' => 'varchar',
+                    'field_for' => 'person'
+                ]);
+                $this->invoicedPersonFieldKey = $field->data->key;
+                $this->logger->log('Champ personne créé', ['key' => $this->invoicedPersonFieldKey]);
+            }
 
-        if (!$this->invoicedPersonFieldKey) {
-            $field = $this->callPipedriveApi('POST', '/personFields', [
-                'name' => 'invoiced_id',
-                'field_type' => 'varchar',
-                'field_for' => 'person'
-            ]);
-            $this->invoicedPersonFieldKey = $field->data->key;
-            $this->logger->log('Champ personne créé', ['key' => $this->invoicedPersonFieldKey]);
-        }
-
-        if (!$this->categoriesFieldKey) {
-            $field = $this->callPipedriveApi('POST', '/dealFields', [
-                'name' => 'Catégorie',
-                'field_type' => 'varchar',
-                'field_for' => 'deal'
-            ]);
-            $this->categoriesFieldKey = $field->data->key;
-            $this->logger->log('Champ catégories créé', ['key' => $this->categoriesFieldKey]);
+            if (!$this->categoriesFieldKey) {
+                $field = $this->callPipedriveApi('POST', '/dealFields', [
+                    'name' => 'Catégorie',
+                    'field_type' => 'varchar',
+                    'field_for' => 'deal'
+                ]);
+                $this->categoriesFieldKey = $field->data->key;
+                $this->logger->log('Champ catégories créé', ['key' => $this->categoriesFieldKey]);
+            }
+        } catch (\Exception $e) {
+            $this->logger->logError('Erreur lors de l\'initialisation des champs personnalisés', $e);
         }
     }
 
@@ -101,14 +118,30 @@ class InvoicedHandler
      */
     private function callPipedriveApi(string $method, string $endpoint, array $data = []): object
     {
-        $url = $this->pipedriveBaseUrl . $endpoint . '?api_token=' . $this->pipedriveToken;
+        // DEBUG: Vérification des types avant construction de l'URL
+        $this->logger->log('=== DEBUG CALL PIPEDRIVE API ===', [
+            'method' => $method,
+            'endpoint' => $endpoint,
+            'pipedriveBaseUrl_type' => gettype($this->pipedriveBaseUrl),
+            'pipedriveBaseUrl_value' => (string)$this->pipedriveBaseUrl,
+            'pipedriveToken_type' => gettype($this->pipedriveToken),
+            'pipedriveToken_length' => is_string($this->pipedriveToken) ? strlen($this->pipedriveToken) : 'not_string'
+        ]);
+        
+        try {
+            $url = $this->pipedriveBaseUrl . $endpoint . '?api_token=' . (string)$this->pipedriveToken;
+            $this->logger->log('URL construite avec succès', ['url_length' => strlen($url)]);
+        } catch (\Exception $e) {
+            $this->logger->logError('Erreur lors de la construction de l\'URL', $e);
+            throw $e;
+        }
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Timeout de 30 secondes
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // Timeout de connexion de 10 secondes
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15); // Timeout réduit à 15 secondes
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // Timeout de connexion réduit à 5 secondes
         
         if (!empty($data)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
@@ -178,10 +211,8 @@ class InvoicedHandler
                 $orgData[$this->invoicedFieldKey] = (string)$c['id'];
 
                 // Pour les entreprises, on ajoute le SIRET si disponible
-                if ($c['type'] === 'company' && !empty($c['metadata']['siret'])) {
-                    $orgData['custom_fields'] = [
-                        'siret' => $c['metadata']['siret']
-                    ];
+                if ($c['type'] === 'company' && !empty($c['metadata']['siret']) && $this->siretFieldKey) {
+                    $orgData[$this->siretFieldKey] = $c['metadata']['siret'];
                 }
 
                 $org = $this->callPipedriveApi('POST', '/organizations', $orgData);
@@ -222,6 +253,19 @@ class InvoicedHandler
 
             case 'customer.updated':
                 $c = $event['data']['object'];
+                $previous = $event['data']['previous'] ?? [];
+                
+                // Filtrer les mises à jour causées par nos propres modifications de métadonnées
+                if (isset($previous['metadata']) && 
+                    isset($c['metadata']['pipedrive_org_id']) && 
+                    !isset($previous['metadata']['pipedrive_org_id'])) {
+                    $this->logger->log('Mise à jour client ignorée - causée par synchronisation métadonnées', [
+                        'customer_id' => $c['id'],
+                        'type' => $c['type']
+                    ]);
+                    break;
+                }
+                
                 $this->logger->log('Mise à jour client', [
                     'customer_id' => $c['id'],
                     'type' => $c['type']
@@ -242,10 +286,8 @@ class InvoicedHandler
                     }
 
                     // Pour les entreprises, mise à jour du SIRET si disponible
-                    if ($c['type'] === 'company' && !empty($c['metadata']['siret'])) {
-                        $orgData['custom_fields'] = [
-                            'siret' => $c['metadata']['siret']
-                        ];
+                    if ($c['type'] === 'company' && !empty($c['metadata']['siret']) && $this->siretFieldKey) {
+                        $orgData[$this->siretFieldKey] = $c['metadata']['siret'];
                     }
 
                     $this->callPipedriveApi('PUT', '/organizations/' . $orgId, $orgData);
@@ -285,6 +327,20 @@ class InvoicedHandler
             case 'estimate.created':
             case 'estimate.updated':
                 $est = $event['data']['object'];
+                $previous = $event['data']['previous'] ?? [];
+                
+                // Filtrer les mises à jour causées par nos propres modifications de métadonnées
+                if ($event['type'] === 'estimate.updated' && 
+                    isset($previous['metadata']) && 
+                    isset($est['metadata']['pipedrive_deal_id']) && 
+                    !isset($previous['metadata']['pipedrive_deal_id'])) {
+                    $this->logger->log('Mise à jour devis ignorée - causée par synchronisation métadonnées', [
+                        'estimate_id' => $est['id'],
+                        'status' => $est['status'] ?? 'unknown'
+                    ]);
+                    break;
+                }
+                
                 if (($est['status'] ?? '') === 'draft') {
                     $this->logger->log('Devis ignoré - statut brouillon', ['status' => $est['status'] ?? 'unknown']);
                     break;
@@ -310,13 +366,21 @@ class InvoicedHandler
                 // Récupération des IDs Pipedrive depuis les métadonnées du client
                 $customerId = $est['customer']['id'] ?? null;
                 if (!$customerId) {
-                    $this->logger->log('ID client non trouvé dans le devis', ['estimate_id' => $est['id']]);
+                    $this->logger->log('ID client non trouvé dans le devis', ['estimate_id' => (string)($est['id'] ?? 'unknown')]);
                     break;
                 }
 
-                $customer = $this->inv->Customer->retrieve($customerId);
-                $orgId = $customer->metadata['pipedrive_org_id'] ?? null;
-                $personId = $customer->metadata['pipedrive_person_id'] ?? null;
+                // Utiliser d'abord les données du client incluses dans le devis
+                $customerData = $est['customer'] ?? [];
+                $orgId = $customerData['metadata']['pipedrive_org_id'] ?? null;
+                $personId = $customerData['metadata']['pipedrive_person_id'] ?? null;
+                
+                // Si pas trouvé dans les données du devis, récupérer depuis Invoiced
+                if (!$orgId || !$personId) {
+                    $customer = $this->inv->Customer->retrieve($customerId);
+                    $orgId = $orgId ?: ($customer->metadata['pipedrive_org_id'] ?? null);
+                    $personId = $personId ?: ($customer->metadata['pipedrive_person_id'] ?? null);
+                }
 
                 if (!$orgId && !$personId) {
                     $this->logger->log('IDs Pipedrive non trouvés dans les métadonnées, recherche par invoiced_id', ['customer_id' => $customerId]);
@@ -349,7 +413,8 @@ class InvoicedHandler
                             'person_id' => $personId
                         ]);
 
-                        // Stockage des IDs dans les métadonnées du client
+                        // Stockage des IDs dans les métadonnées du client si pas déjà présents
+                        $customer = $customer ?? $this->inv->Customer->retrieve($customerId);
                         $customer->metadata = array_merge($customer->metadata ?? [], [
                             'pipedrive_org_id' => $orgId,
                             'pipedrive_person_id' => $personId
@@ -359,6 +424,12 @@ class InvoicedHandler
                         $this->logger->log('Organisation non trouvée, création nécessaire', ['customer_id' => $customerId]);
                         // Code existant pour la création...
                     }
+                } else {
+                    $this->logger->log('IDs Pipedrive trouvés', [
+                        'org_id' => $orgId,
+                        'person_id' => $personId,
+                        'source' => $customerData ? 'devis' : 'metadonnees'
+                    ]);
                 }
 
                 // Recherche du deal existant
@@ -367,23 +438,48 @@ class InvoicedHandler
                 // 1. D'abord, vérifier si l'ID du deal est stocké dans les métadonnées du devis
                 if (!empty($est['metadata']['pipedrive_deal_id'])) {
                     $dealId = $est['metadata']['pipedrive_deal_id'];
-                    $this->logger->log('Deal ID trouvé dans les métadonnées', ['deal_id' => $dealId]);
-                } else {
-                    // 2. Sinon, chercher par l'ID du devis
+                    $this->logger->log('Deal ID trouvé dans les métadonnées du devis', ['deal_id' => $dealId]);
+                    
+                    // Vérifier que le deal existe encore dans Pipedrive
+                    try {
+                        $dealCheck = $this->callPipedriveApi('GET', '/deals/' . $dealId);
+                        if (!isset($dealCheck->data)) {
+                            $this->logger->log('Deal inexistant dans Pipedrive, réinitialisation', ['deal_id' => $dealId]);
+                            $dealId = null;
+                        }
+                    } catch (\Exception $e) {
+                        $this->logger->log('Erreur lors de la vérification du deal, réinitialisation', ['deal_id' => $dealId]);
+                        $dealId = null;
+                    }
+                }
+                
+                // 2. Si pas trouvé dans les métadonnées, chercher par l'ID du devis dans les champs custom
+                if (!$dealId) {
                     $estimateId = $est['id'] ?? null;
                     if ($estimateId) {
                         $search = $this->callPipedriveApi('GET', '/deals', [
-                            'term' => (string)$estimateId,
-                            'fields' => 'invoiced_estimate_id'
+                            'limit' => 100,
+                            'status' => 'all_not_deleted'
                         ]);
+                        
                         if (isset($search->data) && !empty($search->data)) {
                             foreach ($search->data as $deal) {
-                                if (isset($deal->invoiced_estimate_id) && $deal->invoiced_estimate_id === (string)$estimateId) {
+                                // Vérifier le champ custom qui contient l'ID du devis
+                                $customField = 'b8b55bcfd1cc07f3e577fb7a8d4fe498b435813a';
+                                if (isset($deal->{$customField}) && $deal->{$customField} === (string)$estimateId) {
                                     $dealId = $deal->id;
-                                    $this->logger->log('Deal trouvé par estimate_id', [
+                                    $this->logger->log('Deal trouvé par estimate_id dans champ custom', [
                                         'deal_id' => $dealId,
                                         'estimate_id' => $estimateId
                                     ]);
+                                    
+                                    // Mettre à jour les métadonnées du devis avec l'ID du deal trouvé
+                                    $estimate = $this->inv->Estimate->retrieve($est['id']);
+                                    $estimate->metadata = array_merge($estimate->metadata ?? [], [
+                                        'pipedrive_deal_id' => $dealId
+                                    ]);
+                                    $estimate->save();
+                                    $this->logger->log('Métadonnées du devis mises à jour avec le deal ID', ['deal_id' => $dealId]);
                                     break;
                                 }
                             }
@@ -395,7 +491,7 @@ class InvoicedHandler
                     // Création du deal si non trouvé
                     $deal = $this->createDealFromEstimate($est);
                     $dealId = $deal->data->id ?? null;
-                    $this->logger->log('Deal créé dans Pipedrive', ['deal_id' => $dealId]);
+                    $this->logger->log('Deal créé dans Pipedrive', ['deal_id' => $dealId, 'estimate_id' => $est['id']]);
                     
                     // Stocker l'ID du deal dans les métadonnées du devis
                     $estimate = $this->inv->Estimate->retrieve($est['id']);
@@ -404,65 +500,69 @@ class InvoicedHandler
                     ]);
                     $estimate->save();
                 } else {
-                    // Si le deal existe déjà, supprimer tous les produits existants
-                    $this->removeAllProductsFromDeal($dealId);
-                    $this->logger->log('Produits existants supprimés du deal', ['deal_id' => $dealId]);
-                    
-                    // Mise à jour des catégories du deal existant
-                    $categories = $this->extractCategoriesFromDeal($dealId);
-                    if (!empty($categories) && $this->categoriesFieldKey) {
-                        $updateData = [$this->categoriesFieldKey => $categories];
-                        
-                        // Ajout de l'URL du devis si disponible
-                        if ($this->devisInvoicedFieldKey && !empty($est['url'])) {
-                            $updateData[$this->devisInvoicedFieldKey] = $est['url'];
-                        }
+                                        $this->logger->log('Deal existant trouvé, mise à jour au lieu de création', [
+                        'deal_id' => $dealId,
+                        'estimate_id' => $est['id']
+                    ]);
 
-                        // Ajout de l'ID numérique du devis pour le PipedriveHandler
-                        $updateData['b8b55bcfd1cc07f3e577fb7a8d4fe498b435813a'] = (string)$est['id'];
-                        
-                        $this->callPipedriveApi('PUT', '/deals/' . $dealId, $updateData);
-                        $this->logger->log('Deal mis à jour avec catégories, URL et ID devis', [
+                    // Vérifier si le deal doit être mis à jour avec la nouvelle organisation
+                    $dealInfo = $this->callPipedriveApi('GET', '/deals/' . $dealId);
+                    if ($dealInfo->data->org_id != $orgId) {
+                        $this->logger->log('Mise à jour de l\'organisation du deal', [
                             'deal_id' => $dealId,
-                            'categories' => $categories,
-                            'url' => $est['url'] ?? 'non disponible',
-                            'estimate_id' => $est['id']
+                            'old_org_id' => $dealInfo->data->org_id,
+                            'new_org_id' => $orgId,
+                            'new_person_id' => $personId
+                        ]);
+                        
+                        $this->callPipedriveApi('PUT', '/deals/' . $dealId, [
+                            'org_id' => $orgId,
+                            'person_id' => $personId
                         ]);
                     }
-                }
-
-                // Ajout des produits au deal après sa création
-                $productIdMapping = require __DIR__ . '/ProductIdMapping.php';
-                foreach ($est['items'] as $item) {
-                    $code = $item['catalog_item'];
-                    $pipedriveProductId = $productIdMapping[$code] ?? null;
-
-                    if ($pipedriveProductId) {
-                        $productData = [
-                            'product_id' => $pipedriveProductId,
-                            'item_price' => $item['unit_cost'],
-                            'quantity' => $item['quantity']
-                        ];
-                        $response = $this->callPipedriveApi('POST', '/deals/' . $dealId . '/products', $productData);
-                        // Log ou gestion de la réponse ici
-                        if (isset($response->success) && $response->success) {
-                            $this->logger->log('Produit ajouté avec succès au deal', [
-                                'deal_id' => $dealId,
-                                'product_id' => $pipedriveProductId,
-                                'quantity' => $item['quantity'],
-                                'item_price' => $item['unit_cost'],
-                                'response' => $response->data
-                            ]);
-                        } else {
-                            $this->logger->log('Erreur lors de l\'ajout du produit au deal', [
-                                'deal_id' => $dealId,
-                                'product_id' => $pipedriveProductId,
-                                'error' => $response
-                            ]);
+                    
+                    // Vérifier si les produits ont changé avant de les supprimer/re-ajouter
+                    $currentProducts = $this->callPipedriveApi('GET', '/deals/' . $dealId . '/products');
+                    $currentProductCodes = [];
+                    if (isset($currentProducts->data)) {
+                        foreach ($currentProducts->data as $product) {
+                            // Récupérer le code du produit depuis Pipedrive
+                            $productDetail = $this->callPipedriveApi('GET', '/products/' . $product->product_id);
+                            if (isset($productDetail->data->code)) {
+                                $currentProductCodes[] = [
+                                    'code' => $productDetail->data->code,
+                                    'quantity' => $product->quantity,
+                                    'price' => $product->item_price
+                                ];
+                            }
                         }
+                    }
+                    
+                    // Produits du devis
+                    $newProductCodes = array_map(function($item) {
+                        return [
+                            'code' => $item['catalog_item'],
+                            'quantity' => $item['quantity'],
+                            'price' => $item['unit_cost']
+                        ];
+                    }, $est['items']);
+                    
+                    // Comparer les produits
+                    $productsChanged = (serialize($currentProductCodes) !== serialize($newProductCodes));
+                    
+                    if ($productsChanged) {
+                        $this->logger->log('Produits du deal ont changé, mise à jour nécessaire', [
+                            'deal_id' => $dealId,
+                            'current_products' => $currentProductCodes,
+                            'new_products' => $newProductCodes
+                        ]);
+                        
+                        // Supprimer tous les produits existants
+                        $this->removeAllProductsFromDeal($dealId);
+                        $this->logger->log('Produits existants supprimés du deal', ['deal_id' => $dealId]);
                     } else {
-                        $this->logger->log('ID produit Pipedrive manquant pour ce code', [
-                            'catalog_item' => $code
+                        $this->logger->log('Produits du deal inchangés, pas de modification nécessaire', [
+                            'deal_id' => $dealId
                         ]);
                     }
                 }
@@ -490,6 +590,59 @@ class InvoicedHandler
                         ]);
                     }
                 }
+
+                // Ajout des produits au deal (seulement si nouveau deal ou produits changés)
+                $shouldAddProducts = false;
+                
+                if (!isset($productsChanged)) {
+                    // Nouveau deal créé
+                    $shouldAddProducts = true;
+                    $this->logger->log('Nouveau deal - ajout des produits nécessaire', ['deal_id' => $dealId]);
+                } else if ($productsChanged) {
+                    // Deal existant avec produits modifiés
+                    $shouldAddProducts = true;
+                    $this->logger->log('Produits modifiés - ajout des produits nécessaire', ['deal_id' => $dealId]);
+                }
+                
+                if ($shouldAddProducts) {
+                    $productIdMapping = require __DIR__ . '/ProductIdMapping.php';
+                    foreach ($est['items'] as $item) {
+                        $code = $item['catalog_item'];
+                        $pipedriveProductId = $productIdMapping[$code] ?? null;
+
+                        if ($pipedriveProductId) {
+                            $productData = [
+                                'product_id' => $pipedriveProductId,
+                                'item_price' => $item['unit_cost'],
+                                'quantity' => $item['quantity']
+                            ];
+                            $response = $this->callPipedriveApi('POST', '/deals/' . $dealId . '/products', $productData);
+                            if (isset($response->success) && $response->success) {
+                                $this->logger->log('Produit ajouté avec succès au deal', [
+                                    'deal_id' => $dealId,
+                                    'product_id' => $pipedriveProductId,
+                                    'quantity' => $item['quantity'],
+                                    'item_price' => $item['unit_cost'],
+                                    'response' => $response->data
+                                ]);
+                            } else {
+                                $this->logger->log('Erreur lors de l\'ajout du produit au deal', [
+                                    'deal_id' => $dealId,
+                                    'product_id' => $pipedriveProductId,
+                                    'error' => $response
+                                ]);
+                            }
+                        } else {
+                            $this->logger->log('ID produit Pipedrive manquant pour ce code', [
+                                'catalog_item' => $code
+                            ]);
+                        }
+                    }
+                } else {
+                    $this->logger->log('Ajout de produits ignoré - aucun changement détecté', [
+                        'deal_id' => $dealId
+                    ]);
+                }
                 break;
 
             /*────────────────────────────────────────────────────
@@ -500,7 +653,7 @@ class InvoicedHandler
                 $dealId = $est['metadata']['pipedrive_deal_id'] ?? null;
                 
                 if (!$dealId) {
-                    $this->logger->log('Deal ID non trouvé dans les métadonnées', ['estimate_id' => $est['id']]);
+                    $this->logger->log('Deal ID non trouvé dans les métadonnées', ['estimate_id' => (string)($est['id'] ?? 'unknown')]);
                     break;
                 }
 
@@ -515,94 +668,143 @@ class InvoicedHandler
                 break;
 
             /*────────────────────────────────────────────────────
-             * 4. Facture payée (invoice.paid)
-             ────────────────────────────────────────────────────*/
-            case 'invoice.paid':
-                $inv = $event['data']['object'];
-                $dealId = $inv['metadata']['pipedrive_deal_id'] ?? null;
-                
-                if (!$dealId) {
-                    $this->logger->log('Deal ID non trouvé dans les métadonnées', ['invoice_id' => $inv['id']]);
-                    break;
-                }
-
-                $this->logger->log('Mise à jour statut deal - facture payée', [
-                    'invoice_id' => $inv['id'],
-                    'deal_id' => $dealId
-                ]);
-
-                $this->callPipedriveApi('PUT', '/deals/'.$dealId, [
-                    'stage_id' => (int)$_ENV['PIPEDRIVE_STAGE_PAYE'],
-                ]);
-                break;
-
-            /*────────────────────────────────────────────────────
-             * 5. Création/Mise à jour de facture
+             * 3. Facture créée/mise à jour (invoice.created/invoice.updated)
              ────────────────────────────────────────────────────*/
             case 'invoice.created':
             case 'invoice.updated':
-                $inv = $event['data']['object'];
-                $this->logger->log('Traitement facture', [
-                    'invoice_id' => $inv['id'],
-                    'status' => $inv['status'] ?? 'unknown'
-                ]);
-
-                // Recherche du deal associé au devis
-                $estimateId = $inv['estimate'] ?? null;
-                if (!$estimateId) {
-                    $this->logger->log('Pas de devis associé à la facture', ['invoice_id' => $inv['id']]);
+                $invoice = $event['data']['object'];
+                $dealId = $invoice['metadata']['pipedrive_deal_id'] ?? null;
+                
+                if (!$dealId) {
+                    $this->logger->log('Deal ID non trouvé dans les métadonnées de la facture', [
+                        'invoice_id' => $invoice['id']
+                    ]);
                     break;
                 }
 
-                // Recherche du deal via le devis
-                $search = $this->callPipedriveApi('GET', '/deals', [
-                    'term' => $estimateId,
-                    'fields' => 'invoiced_estimate_id'
+                $this->logger->log('Facture créée/mise à jour - calcul date du solde', [
+                    'invoice_id' => $invoice['id'],
+                    'deal_id' => $dealId,
+                    'payment_terms' => $invoice['payment_terms'] ?? 'aucun'
                 ]);
 
-                $dealId = null;
-                foreach ($search->data as $deal) {
-                    if (isset($deal->invoiced_estimate_id) && $deal->invoiced_estimate_id === (string)$estimateId) {
-                        $dealId = $deal->id;
-                        break;
+                // Calculer et mettre à jour la date du solde pour les professionnels
+                $this->updateDateSolde($dealId, $invoice);
+                break;
+
+            /*────────────────────────────────────────────────────
+             * 4. Facture payée (invoice.paid) - LOGIQUE AVANCÉE AVEC ACOMPTES
+             ────────────────────────────────────────────────────*/
+            case 'invoice.paid':
+                $invoice = $event['data']['object'];
+                $dealId = $invoice['metadata']['pipedrive_deal_id'] ?? null;
+                
+                if (!$dealId) {
+                    $this->logger->log('Deal ID non trouvé dans les métadonnées de la facture', [
+                        'invoice_id' => (string)($invoice['id'] ?? 'unknown')
+                    ]);
+                    break;
+                }
+
+                $this->logger->log('Facture entièrement payée - traitement workflow complet', [
+                    'invoice_id' => $invoice['id'],
+                    'deal_id' => $dealId,
+                    'amount_paid' => $invoice['total'] ?? 0
+                ]);
+
+                // Récupération des détails du deal pour déterminer le type de client
+                $dealDetails = $this->callPipedriveApi('GET', '/deals/' . $dealId);
+                $deal = $dealDetails->data;
+                $orgId = $deal->org_id->value ?? $deal->org_id ?? null;
+                
+                if ($orgId) {
+                    $isCompany = $this->isCompanyCustomer($orgId);
+                    
+                    if ($isCompany) {
+                        // PROFESSIONNEL : Passage à "Paiement complet" puis "Gagné"
+                        $this->logger->log('Client professionnel - facture soldée', [
+                            'deal_id' => $dealId,
+                            'org_id' => $orgId
+                        ]);
+                        
+                        $this->updateDealStage($dealId, 8); // Paiement Complet
+                        $this->markDealAsWon($dealId, $invoice);
+                    } else {
+                        // PARTICULIER : Passage direct à "Paiement complet" puis "Gagné"
+                        $this->logger->log('Client particulier - facture payée', [
+                            'deal_id' => $dealId,
+                            'org_id' => $orgId
+                        ]);
+                        
+                        $this->updateDealStage($dealId, 8); // Paiement Complet
+                        $this->markDealAsWon($dealId, $invoice);
+                    }
+                } else {
+                    $this->logger->log('Organisation non trouvée pour le deal', ['deal_id' => $dealId]);
+                }
+                break;
+
+            /*────────────────────────────────────────────────────
+             * 5. Paiement partiel (invoice.payment_succeeded mais pas invoice.paid)
+             ────────────────────────────────────────────────────*/
+            case 'payment.created':
+                $payment = $event['data']['object'];
+                $invoiceId = null;
+                
+                // Récupération de l'ID de la facture depuis le paiement
+                if (isset($payment['applied_to']) && is_array($payment['applied_to'])) {
+                    foreach ($payment['applied_to'] as $application) {
+                        if ($application['type'] === 'invoice') {
+                            $invoiceId = $application['invoice'];
+                            break;
+                        }
                     }
                 }
-
+                
+                if (!$invoiceId) {
+                    $this->logger->log('ID facture non trouvé dans le paiement');
+                    break;
+                }
+                
+                // Vérification si la facture est entièrement payée
+                $invoice = $this->inv->Invoice->retrieve($invoiceId);
+                $dealId = $invoice->metadata['pipedrive_deal_id'] ?? null;
+                
                 if (!$dealId) {
-                    $this->logger->log('Deal non trouvé pour le devis', [
-                        'invoice_id' => $inv['id'],
-                        'estimate_id' => $estimateId
+                    $this->logger->log('Deal ID non trouvé dans les métadonnées de la facture', [
+                        'invoice_id' => $invoiceId
                     ]);
                     break;
                 }
-
-                // Mise à jour du deal avec les informations de la facture
-                $dealData = [
-                    'title' => 'Facture #' . $inv['number'],
-                    'value' => $inv['total'] * 100, // Conversion en centimes pour Pipedrive
-                    'currency' => $inv['currency'],
-                ];
-
-                // Ajout des champs personnalisés pour la facture
-                $dealData['custom_fields'] = [
-                    'invoiced_invoice_id' => (string)$inv['id'],
-                    'invoiced_invoice_url' => $inv['url'] ?? '',
-                    'invoiced_invoice_status' => $inv['status'] ?? '',
-                ];
-
-                try {
-                    $this->callPipedriveApi('PUT', '/deals/' . $dealId, $dealData);
-                    $this->logger->log('Deal mis à jour avec les informations de la facture', [
+                
+                // Si la facture n'est PAS entièrement payée, c'est un acompte
+                if ($invoice->status !== 'paid') {
+                    $this->logger->log('Acompte reçu sur facture', [
+                        'invoice_id' => $invoiceId,
                         'deal_id' => $dealId,
-                        'invoice_id' => $inv['id']
+                        'payment_amount' => $payment['amount'] ?? 0,
+                        'invoice_status' => $invoice->status,
+                        'invoice_balance' => $invoice->balance ?? 0
                     ]);
-
-                    // Stockage de l'ID du deal dans les métadonnées de la facture
-                    $this->inv->Invoice->update($inv['id'], [
-                        'metadata' => ['pipedrive_deal_id' => $dealId]
-                    ]);
-                } catch (\Exception $e) {
-                    $this->logger->logError('Erreur lors de la mise à jour du deal', $e);
+                    
+                    // Récupération des détails du deal pour déterminer le type de client
+                    $dealDetails = $this->callPipedriveApi('GET', '/deals/' . $dealId);
+                    $deal = $dealDetails->data;
+                    $orgId = $deal->org_id->value ?? $deal->org_id ?? null;
+                    
+                    if ($orgId && $this->isCompanyCustomer($orgId)) {
+                        // PROFESSIONNEL : Passage à "Paiement avant intervention"
+                        $this->logger->log('Acompte professionnel reçu - passage à paiement avant intervention', [
+                            'deal_id' => $dealId,
+                            'org_id' => $orgId
+                        ]);
+                        
+                        // Calcul et mise à jour de la date du solde
+                        $this->updateDateSolde($dealId, $invoice);
+                        
+                        $this->updateDealStage($dealId, 6); // Paiement avant intervention effectué
+                    }
+                    // Pour les particuliers, pas d'acompte normalement (paiement immédiat)
                 }
                 break;
 
@@ -785,6 +987,156 @@ class InvoicedHandler
         } catch (\Exception $e) {
             $this->logger->logError('Erreur lors de l\'extraction des catégories', $e);
             return '';
+        }
+    }
+
+    /**
+     * Met à jour l'étape d'un deal
+     */
+    private function updateDealStage(int $dealId, int $stageId): void
+    {
+        try {
+            $this->callPipedriveApi('PUT', '/deals/' . $dealId, [
+                'stage_id' => $stageId
+            ]);
+            
+            $this->logger->log('Étape du deal mise à jour', [
+                'deal_id' => (string)$dealId,
+                'stage_id' => (string)$stageId
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->logError('Erreur lors de la mise à jour de l\'étape du deal', $e);
+        }
+    }
+
+    /**
+     * Marque un deal comme gagné
+     */
+    private function markDealAsWon(int $dealId, array $invoice): void
+    {
+        try {
+            $this->callPipedriveApi('PUT', '/deals/' . $dealId, [
+                'status' => 'won'
+            ]);
+            
+            // Sécurisation de l'accès aux données de la facture
+            $invoiceId = isset($invoice['id']) ? (string)$invoice['id'] : 'unknown';
+            $invoiceTotal = isset($invoice['total']) ? (string)$invoice['total'] : '0';
+            
+            $this->logger->log('Deal marqué comme gagné', [
+                'deal_id' => (string)$dealId,
+                'invoice_id' => $invoiceId,
+                'invoice_total' => $invoiceTotal
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->logError('Erreur lors du marquage du deal comme gagné', $e);
+        }
+    }
+
+    /**
+     * Détermine si une organisation est une entreprise basé sur la présence du SIRET
+     */
+    private function isCompanyCustomer(int $orgId): bool
+    {
+        try {
+            $orgDetails = $this->callPipedriveApi('GET', '/organizations/' . $orgId);
+            
+            // Vérification dans custom_fields (ancien format)
+            $customFields = (array)($orgDetails->data->custom_fields ?? []);
+            $hasSirenInCustomFields = !empty($customFields) && isset($customFields[$this->siretFieldKey]) && !empty($customFields[$this->siretFieldKey]);
+            
+            // Vérification directe dans l'objet (nouveau format)
+            $orgData = (array)$orgDetails->data;
+            $hasSirenDirect = isset($orgData[$this->siretFieldKey]) && !empty($orgData[$this->siretFieldKey]);
+            
+            $hasSiren = $hasSirenInCustomFields || $hasSirenDirect;
+            
+            $this->logger->log('Résultat vérification type client', [
+                'org_id' => $orgId,
+                'is_company' => $hasSiren,
+                'custom_fields_count' => count($customFields),
+                'siret_in_custom_fields' => $hasSirenInCustomFields,
+                'siret_direct' => $hasSirenDirect,
+                'siret_value' => $orgData[$this->siretFieldKey] ?? 'non trouvé'
+            ]);
+            
+            return $hasSiren;
+        } catch (\Exception $e) {
+            $this->logger->logError('Erreur lors de la vérification du type de client', $e);
+            return false;
+        }
+    }
+
+    /**
+     * Calcule et met à jour la date du solde basée sur la date d'édition + délai de paiement
+     */
+    private function updateDateSolde(int $dealId, $invoice): void
+    {
+        try {
+            // Récupération de la facture Invoiced si ce n'est qu'un array
+            if (is_array($invoice)) {
+                $invoiceId = $invoice['id'] ?? null;
+                if ($invoiceId) {
+                    $invoice = $this->inv->Invoice->retrieve($invoiceId);
+                }
+            }
+            
+            // Date d'édition de la facture (date de création)
+            $invoiceDate = $invoice->date ?? $invoice->created_at ?? time();
+            if (is_string($invoiceDate)) {
+                $invoiceDate = strtotime($invoiceDate);
+            }
+            
+            // Délai de paiement (par défaut NET 30 pour les entreprises)
+            $paymentTerms = $invoice->payment_terms ?? 'NET_30';
+            
+            // Calcul de la date du solde
+            $dateSolde = $invoiceDate;
+            switch ($paymentTerms) {
+                case 'DUE_ON_RECEIPT':
+                    // Paiement immédiat - date du solde = date de la facture
+                    break;
+                case 'NET_7':
+                    $dateSolde = strtotime('+7 days', $invoiceDate);
+                    break;
+                case 'NET_15':
+                    $dateSolde = strtotime('+15 days', $invoiceDate);
+                    break;
+                case 'NET_30':
+                    $dateSolde = strtotime('+30 days', $invoiceDate);
+                    break;
+                case 'NET_45':
+                    $dateSolde = strtotime('+45 days', $invoiceDate);
+                    break;
+                case 'NET_60':
+                    $dateSolde = strtotime('+60 days', $invoiceDate);
+                    break;
+                case 'NET_90':
+                    $dateSolde = strtotime('+90 days', $invoiceDate);
+                    break;
+                default:
+                    // Par défaut NET 30
+                    $dateSolde = strtotime('+30 days', $invoiceDate);
+                    break;
+            }
+            
+            // Format pour Pipedrive (YYYY-MM-DD)
+            $dateSoldeFormatted = date('Y-m-d', $dateSolde);
+            
+            // Mise à jour du deal avec la date du solde
+            $this->callPipedriveApi('PUT', '/deals/' . $dealId, [
+                $this->dateSoldeFieldKey => $dateSoldeFormatted
+            ]);
+            
+            $this->logger->log('Date du solde calculée et mise à jour', [
+                'deal_id' => (string)$dealId,
+                'invoice_date' => date('Y-m-d', $invoiceDate),
+                'payment_terms' => $paymentTerms,
+                'date_solde' => $dateSoldeFormatted
+            ]);
+            
+        } catch (\Exception $e) {
+            $this->logger->logError('Erreur lors du calcul de la date du solde', $e);
         }
     }
 }
