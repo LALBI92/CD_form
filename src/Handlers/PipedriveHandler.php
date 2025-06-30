@@ -173,8 +173,8 @@ class PipedriveHandler
                 'from_stage' => $stageBefore,
                 'to_stage' => $stageAfter
             ]);
-        }
-        
+            }
+
         $this->logger->log('Gestion automatique changements d\'étape temporairement désactivée - traitement délai de paiement uniquement');
 
         // Si le délai de paiement vient d'être renseigné pour une entreprise
@@ -214,7 +214,7 @@ class PipedriveHandler
                         ]);
                         $this->logger->log('Traitement événement terminé');
                         return;
-                    }
+            }
                 }
                 
                 $this->logger->log('Délai de paiement détecté - déclenchement traitement', [
