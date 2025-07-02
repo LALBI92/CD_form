@@ -346,6 +346,15 @@ class InvoicedHandler
                     break;
                 }
 
+                // PROTECTION RACE CONDITION : Délai pour estimate.created
+                if ($event['type'] === 'estimate.created') {
+                    $this->logger->log('estimate.created détecté - application du délai de sécurité', [
+                        'estimate_id' => $est['id'],
+                        'type' => $event['type']
+                    ]);
+                    sleep(2); // Laisser le temps au customer.created de finir
+                }
+
                 $this->logger->log('Traitement devis', [
                     'estimate_id' => $est['id'],
                     'status' => $est['status'] ?? 'unknown'
@@ -515,9 +524,9 @@ class InvoicedHandler
 
                 if (!$dealId) {
                     // Création du deal si non trouvé
-                    $deal = $this->createDealFromEstimate($est);
+                    $deal = $this->createDealFromEstimate($est, $orgId, $personId);
                     $dealId = $deal->data->id ?? null;
-                    $this->logger->log('Deal créé dans Pipedrive', ['deal_id' => $dealId, 'estimate_id' => $est['id']]);
+                    $this->logger->log('Deal créé dans Pipedrive', ['deal_id' => $dealId, 'estimate_id' => $est['id'], 'org_id' => $orgId, 'person_id' => $personId]);
                     
                     // Stocker l'ID du deal dans les métadonnées du devis
                     $estimate = $this->inv->Estimate->retrieve($est['id']);
@@ -875,17 +884,17 @@ class InvoicedHandler
         throw $lastException;
     }
 
-    private function createDealFromEstimate(array $est): object
+    private function createDealFromEstimate(array $est, $orgId = null, $personId = null): object
     {
-        // Récupération des IDs Pipedrive depuis les métadonnées du client
-        $customerId = $est['customer']['id'] ?? null;
-        if (!$customerId) {
-            throw new \Exception('ID client non trouvé dans le devis');
+        // Si les IDs ne sont pas fournis, essayer de les récupérer depuis les métadonnées du client
+        if (!$orgId || !$personId) {
+            $customerId = $est['customer']['id'] ?? null;
+            if ($customerId) {
+                $customer = $this->inv->Customer->retrieve($customerId);
+                $orgId = $orgId ?: ($customer->metadata['pipedrive_org_id'] ?? null);
+                $personId = $personId ?: ($customer->metadata['pipedrive_person_id'] ?? null);
+            }
         }
-
-        $customer = $this->inv->Customer->retrieve($customerId);
-        $orgId = $customer->metadata['pipedrive_org_id'] ?? null;
-        $personId = $customer->metadata['pipedrive_person_id'] ?? null;
 
         // Création du deal dans Pipedrive
         $dealData = [
