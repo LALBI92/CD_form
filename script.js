@@ -532,10 +532,18 @@ function updateTotalVolume() {
     updateVehicleSuggestions();
 }
 
-// Ajouter les événements de clic pour les boutons "Choisir ce camion"
+// Ajouter les événements de clic pour les boutons "Choisir ce camion" avec protection anti-double clic
 const choisirButtons = document.querySelectorAll(".choisir-camion");
 choisirButtons.forEach(button => {
     button.addEventListener("click", function () {
+        // Protection anti-double clic
+        if (this.disabled) return;
+        
+        this.disabled = true;
+        setTimeout(() => {
+            this.disabled = false;
+        }, 1000);
+        
         const camionId = this.closest(".camion").id; // Trouver l'ID du camion parent
         selectCamion(camionId);
     });
@@ -559,13 +567,45 @@ if (professionSelect && siretBlock) {
     });
 }
 
-// Validation du formulaire
+// Validation du formulaire avec protection anti-double soumission
+let isSubmitting = false;
+
 document.getElementById("devisForm").addEventListener("submit", function(e) {
+    // Protection contre les double-soumissions
+    if (isSubmitting) {
+        e.preventDefault();
+        console.log("Soumission déjà en cours, ignorée");
+        return;
+    }
+    
+    // Validation SIRET pour les professionnels
     if (professionSelect.value === "2" && !siretInput.value.trim()) {
         e.preventDefault();
         alert("Le SIRET est obligatoire pour un professionnel");
         siretInput.focus();
+        return;
     }
+    
+    // Marquer comme en cours de soumission
+    isSubmitting = true;
+    
+    // Désactiver le bouton de soumission
+    const submitButton = this.querySelector('button[type="submit"], input[type="submit"]');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Envoi en cours...";
+    }
+    
+    console.log("Formulaire soumis - protection activée");
+    
+    // Réactiver après 10 secondes (sécurité)
+    setTimeout(() => {
+        isSubmitting = false;
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Envoyer ma demande";
+        }
+    }, 10000);
 });
 
 
@@ -612,10 +652,18 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         document.getElementById('step-1').style.display = 'block';
     });
 
-        // Ajout de la validation du bouton "Suivant"
+        // Ajout de la validation du bouton "Suivant" avec protection anti-double clic
         document.getElementById('next-step').addEventListener('click', function(event) {
             // Empêcher le comportement par défaut
             event.preventDefault();
+            
+            // Protection anti-double clic
+            if (this.disabled) return;
+            
+            this.disabled = true;
+            setTimeout(() => {
+                this.disabled = false;
+            }, 1000);
 
             // Vérification du type de besoin (déjà existant)
             const typeBesoin = document.getElementById('type_besoin');

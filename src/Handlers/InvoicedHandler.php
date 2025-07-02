@@ -432,6 +432,32 @@ class InvoicedHandler
                     ]);
                 }
 
+                // PROTECTION ANTI-DUPLICATION : Délai pour estimate.updated sans deal_id
+                if ($event['type'] === 'estimate.updated' && empty($est['metadata']['pipedrive_deal_id'])) {
+                    $this->logger->log('estimate.updated sans deal_id détecté - application du délai de 8 secondes', [
+                        'estimate_id' => $est['id'],
+                        'type' => $event['type']
+                    ]);
+                    sleep(8);
+                    
+                    // Re-vérifier si un deal a été créé entre temps par un autre webhook
+                    try {
+                        $updatedEstimate = $this->inv->Estimate->retrieve($est['id']);
+                        if (!empty($updatedEstimate->metadata['pipedrive_deal_id'])) {
+                            $this->logger->log('Deal créé par webhook concurrent - abandon du traitement', [
+                                'estimate_id' => $est['id'],
+                                'existing_deal_id' => $updatedEstimate->metadata['pipedrive_deal_id']
+                            ]);
+                            break; // Abandonner le traitement
+                        }
+                    } catch (\Exception $e) {
+                        $this->logger->log('Erreur lors de la re-vérification du devis', [
+                            'estimate_id' => $est['id'],
+                            'error' => $e->getMessage()
+                        ]);
+                    }
+                }
+
                 // Recherche du deal existant
                 $dealId = null;
                 
@@ -567,30 +593,6 @@ class InvoicedHandler
                     }
                 }
 
-                // Mise à jour des catégories du deal après ajout des produits
-                if ($dealId && $this->categoriesFieldKey) {
-                    $categories = $this->extractCategoriesFromDeal($dealId);
-                    if (!empty($categories)) {
-                        $updateData = [$this->categoriesFieldKey => $categories];
-                        
-                        // Ajout de l'URL du devis si disponible
-                        if ($this->devisInvoicedFieldKey && !empty($est['url'])) {
-                            $updateData[$this->devisInvoicedFieldKey] = $est['url'];
-                        }
-
-                        // Ajout de l'ID numérique du devis pour le PipedriveHandler
-                        $updateData['b8b55bcfd1cc07f3e577fb7a8d4fe498b435813a'] = (string)$est['id'];
-                        
-                        $this->callPipedriveApi('PUT', '/deals/' . $dealId, $updateData);
-                        $this->logger->log('Catégories, URL et ID devis mis à jour dans le deal', [
-                            'deal_id' => $dealId,
-                            'categories' => $categories,
-                            'url' => $est['url'] ?? 'non disponible',
-                            'estimate_id' => $est['id']
-                        ]);
-                    }
-                }
-
                 // Ajout des produits au deal (seulement si nouveau deal ou produits changés)
                 $shouldAddProducts = false;
                 
@@ -642,6 +644,35 @@ class InvoicedHandler
                     $this->logger->log('Ajout de produits ignoré - aucun changement détecté', [
                         'deal_id' => $dealId
                     ]);
+                }
+
+                // Mise à jour des catégories du deal APRÈS l'ajout des produits
+                if ($dealId && $this->categoriesFieldKey) {
+                    $categories = $this->extractCategoriesFromDeal($dealId);
+                    if (!empty($categories)) {
+                        $updateData = [$this->categoriesFieldKey => $categories];
+                        
+                        // Ajout de l'URL du devis si disponible
+                        if ($this->devisInvoicedFieldKey && !empty($est['url'])) {
+                            $updateData[$this->devisInvoicedFieldKey] = $est['url'];
+                        }
+
+                        // Ajout de l'ID numérique du devis pour le PipedriveHandler
+                        $updateData['b8b55bcfd1cc07f3e577fb7a8d4fe498b435813a'] = (string)$est['id'];
+                        
+                        $this->callPipedriveApi('PUT', '/deals/' . $dealId, $updateData);
+                        $this->logger->log('Catégories, URL et ID devis mis à jour dans le deal', [
+                            'deal_id' => $dealId,
+                            'categories' => $categories,
+                            'url' => $est['url'] ?? 'non disponible',
+                            'estimate_id' => $est['id']
+                        ]);
+                    } else {
+                        $this->logger->log('Aucune catégorie trouvée pour le deal', [
+                            'deal_id' => $dealId,
+                            'products_count' => 'à vérifier'
+                        ]);
+                    }
                 }
                 break;
 
