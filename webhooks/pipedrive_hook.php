@@ -9,7 +9,7 @@
  *   ➎ Toujours répondre 200 (ou 204 si on ignore)
  */
 
-require __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 Dotenv\Dotenv::createImmutable(__DIR__.'/..')->safeLoad();
 
 use Src\Handlers\PipedriveHandler;
