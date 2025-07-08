@@ -203,7 +203,7 @@ $paymentTerms = ($_POST['profession'] === "2") ? "NET 30" : "Due on Receipt";
 try {
     // Préparer les données du client
     $customerData = [
-        'name' => ($_POST['profession'] === "2") ? $raisonSociale : $nom,
+        'name' => ($_POST['profession'] === "2") ? (!empty($raisonSociale) ? $raisonSociale : $nom) : $nom,
         'email' => $email,
         'address1' => $adresse,
         'phone' => $telephone,
