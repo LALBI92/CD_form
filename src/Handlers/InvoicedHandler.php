@@ -200,6 +200,7 @@ class InvoicedHandler
                 // Pour tous les types de clients (company ou particulier), on crée une organisation
                 $orgData = [
                     'name' => $c['name'],
+                    'owner_id' => (int)($_ENV['PIPEDRIVE_COMMERCIAL_USER_ID'] ?? 25596699), // Attribution au commercial
                 ];
 
                 // Gestion de l'adresse pour tous les types
@@ -221,6 +222,7 @@ class InvoicedHandler
                 $personData = [
                     'name' => $c['attention_to'] ?? $c['name'], // Utilise le nom du contact si disponible
                     'org_id' => $org->data->id,
+                    'owner_id' => (int)($_ENV['PIPEDRIVE_COMMERCIAL_USER_ID'] ?? 25596699), // Attribution au commercial
                 ];
 
                 if (!empty($c['email'])) {
@@ -904,6 +906,7 @@ class InvoicedHandler
             'status' => 'open',
             'pipeline_id' => 1, // Pipeline Leads
             'stage_id' => 2, // Étape "Devis envoyé"
+            'user_id' => (int)($_ENV['PIPEDRIVE_COMMERCIAL_USER_ID'] ?? 25596699), // Attribution au commercial
         ];
 
         if ($orgId) {
