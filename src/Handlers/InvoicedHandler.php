@@ -332,15 +332,26 @@ class InvoicedHandler
                 $previous = $event['data']['previous'] ?? [];
                 
                 // Filtrer les mises à jour causées par nos propres modifications de métadonnées
+                // MAIS SEULEMENT si les autres métadonnées n'ont pas changé (pour éviter d'ignorer les vrais nouveaux devis)
                 if ($event['type'] === 'estimate.updated' && 
                     isset($previous['metadata']) && 
                     isset($est['metadata']['pipedrive_deal_id']) && 
                     !isset($previous['metadata']['pipedrive_deal_id'])) {
-                    $this->logger->log('Mise à jour devis ignorée - causée par synchronisation métadonnées', [
-                        'estimate_id' => $est['id'],
-                        'status' => $est['status'] ?? 'unknown'
-                    ]);
-                    break;
+                    
+                    // Vérifier si SEULE la métadonnée pipedrive_deal_id a été ajoutée
+                    $previousMeta = $previous['metadata'] ?? [];
+                    $currentMeta = $est['metadata'] ?? [];
+                    $metaDiff = array_diff_key($currentMeta, $previousMeta);
+                    
+                    // Si seul pipedrive_deal_id a été ajouté et aucun autre changement important
+                    if (count($metaDiff) === 1 && isset($metaDiff['pipedrive_deal_id']) && 
+                        !isset($previous['status']) && !isset($previous['items'])) {
+                        $this->logger->log('Mise à jour devis ignorée - causée par synchronisation métadonnées', [
+                            'estimate_id' => $est['id'],
+                            'status' => $est['status'] ?? 'unknown'
+                        ]);
+                        break;
+                    }
                 }
                 
                 if (($est['status'] ?? '') === 'draft') {
@@ -472,26 +483,8 @@ class InvoicedHandler
                 // Recherche du deal existant
                 $dealId = null;
                 
-                // 1. D'abord, vérifier si l'ID du deal est stocké dans les métadonnées du devis
-                if (!empty($est['metadata']['pipedrive_deal_id'])) {
-                    $dealId = $est['metadata']['pipedrive_deal_id'];
-                    $this->logger->log('Deal ID trouvé dans les métadonnées du devis', ['deal_id' => $dealId]);
-                    
-                    // Vérifier que le deal existe encore dans Pipedrive
-                    try {
-                        $dealCheck = $this->callPipedriveApi('GET', '/deals/' . $dealId);
-                        if (!isset($dealCheck->data)) {
-                            $this->logger->log('Deal inexistant dans Pipedrive, réinitialisation', ['deal_id' => $dealId]);
-                            $dealId = null;
-                        }
-                    } catch (\Exception $e) {
-                        $this->logger->log('Erreur lors de la vérification du deal, réinitialisation', ['deal_id' => $dealId]);
-                        $dealId = null;
-                    }
-                }
-                
-                // 2. Si pas trouvé dans les métadonnées, chercher par l'ID du devis dans les champs custom
-                if (!$dealId) {
+                // 1. D'ABORD, chercher si CE devis spécifique a déjà été traité (par estimate_id dans Pipedrive)
+                // Ceci évite de réutiliser un ancien deal d'un autre devis du même client
                     $estimateId = $est['id'] ?? null;
                     if ($estimateId) {
                         $search = $this->callPipedriveApi('GET', '/deals', [
@@ -521,6 +514,38 @@ class InvoicedHandler
                                 }
                             }
                         }
+                    }
+                
+                // 2. Si pas trouvé par estimate_id, vérifier les métadonnées héritées du client
+                // (mais seulement si c'est vraiment le même devis, pas un autre du même client)
+                if (!$dealId && !empty($est['metadata']['pipedrive_deal_id'])) {
+                    $potentialDealId = $est['metadata']['pipedrive_deal_id'];
+                    
+                    // Vérifier que ce deal correspond vraiment à CE devis
+                    try {
+                        $dealCheck = $this->callPipedriveApi('GET', '/deals/' . $potentialDealId);
+                        $dealCustomField = 'b8b55bcfd1cc07f3e577fb7a8d4fe498b435813a';
+                        
+                        // Seulement utiliser ce deal s'il a le même estimate_id que le devis actuel
+                        if (isset($dealCheck->data) && 
+                            isset($dealCheck->data->{$dealCustomField}) && 
+                            $dealCheck->data->{$dealCustomField} === (string)$est['id']) {
+                            $dealId = $potentialDealId;
+                            $this->logger->log('Deal validé via métadonnées du devis', [
+                                'deal_id' => $dealId,
+                                'estimate_id' => $est['id']
+                            ]);
+                        } else {
+                            $this->logger->log('Deal dans métadonnées ne correspond pas à ce devis, création d\'un nouveau deal', [
+                                'potential_deal_id' => $potentialDealId,
+                                'estimate_id' => $est['id']
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        $this->logger->log('Erreur lors de la vérification du deal via métadonnées', [
+                            'potential_deal_id' => $potentialDealId,
+                            'error' => $e->getMessage()
+                        ]);
                     }
                 }
 
