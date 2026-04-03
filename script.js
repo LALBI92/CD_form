@@ -449,6 +449,11 @@ qtyButtons.forEach(button => {
             input.value = currentValue - 1;
         }
 
+        // Animation micro-interaction sur le chiffre
+        input.classList.remove("qty-bump");
+        void input.offsetWidth; // force reflow
+        input.classList.add("qty-bump");
+
         // Si l'input concerné a la classe 'volume-control', on met à jour le volume total
         if (input.classList.contains("volume-control")) {
             updateTotalVolume();
@@ -577,7 +582,7 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         console.log("Soumission déjà en cours, ignorée");
         return;
     }
-    
+
     // Validation SIRET pour les professionnels
     if (professionSelect.value === "2" && !siretInput.value.trim()) {
         e.preventDefault();
@@ -585,25 +590,25 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         siretInput.focus();
         return;
     }
-    
+
     // Marquer comme en cours de soumission
     isSubmitting = true;
-    
+
     // Désactiver le bouton de soumission
-    const submitButton = this.querySelector('button[type="submit"], input[type="submit"]');
+    const submitButton = document.getElementById('submit-btn');
     if (submitButton) {
         submitButton.disabled = true;
         submitButton.textContent = "Envoi en cours...";
     }
-    
+
     console.log("Formulaire soumis - protection activée");
-    
+
     // Réactiver après 10 secondes (sécurité)
     setTimeout(() => {
         isSubmitting = false;
         if (submitButton) {
             submitButton.disabled = false;
-            submitButton.textContent = "Envoyer ma demande";
+            submitButton.textContent = "Confirmer et envoyer ma demande";
         }
     }, 10000);
 });
@@ -748,8 +753,192 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         }
     });
 
+    // ======== RÉCAPITULATIF - Event Listeners ========
+    document.getElementById('show-recap-btn').addEventListener('click', showRecap);
+    document.getElementById('recap-edit').addEventListener('click', hideRecap);
+    document.getElementById('recap-header').addEventListener('click', toggleRecap);
 
 
+// ======== FONCTIONS RÉCAPITULATIF ========
+
+function showRecap() {
+    // Vérification basique des champs requis avant d'afficher le récap
+    var name = document.getElementById('name').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var adresse = document.getElementById('adresse').value.trim();
+    var description = document.getElementById('description').value.trim();
+    var professionSelect = document.getElementById('profession');
+    var siretInput = document.getElementById('siret');
+
+    if (!name || !email || !phone || !adresse || !description) {
+        alert('Veuillez remplir tous les champs obligatoires avant de vérifier votre demande.');
+        return;
+    }
+
+    if (professionSelect.value === "2" && !siretInput.value.trim()) {
+        alert('Le SIREN est obligatoire pour un professionnel.');
+        siretInput.focus();
+        return;
+    }
+
+    // Remplir le récap
+    buildRecap();
+
+    // Afficher la section récap et le bouton confirmer
+    document.getElementById('recap-section').style.display = 'block';
+    document.getElementById('submit-btn').style.display = 'block';
+    document.getElementById('show-recap-btn').style.display = 'none';
+
+    // Scroll vers le récap
+    document.getElementById('recap-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function hideRecap() {
+    document.getElementById('recap-section').style.display = 'none';
+    document.getElementById('submit-btn').style.display = 'none';
+    document.getElementById('show-recap-btn').style.display = 'block';
+}
+
+function toggleRecap() {
+    var content = document.getElementById('recap-content');
+    var icon = document.getElementById('recap-toggle-icon');
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.classList.remove('collapsed');
+    } else {
+        content.style.display = 'none';
+        icon.classList.add('collapsed');
+    }
+}
+
+function buildRecap() {
+    // -- Besoin --
+    var typeBesoin = document.getElementById('type_besoin');
+    var jeRecycle = document.getElementById('je_recycle');
+    var besoinHtml = '';
+    besoinHtml += '<div class="recap-line"><span class="recap-label">Type :</span> <span class="recap-value">' + escapeHtml(typeBesoin.options[typeBesoin.selectedIndex].text) + '</span></div>';
+    besoinHtml += '<div class="recap-line"><span class="recap-label">Catégorie :</span> <span class="recap-value">' + escapeHtml(jeRecycle.options[jeRecycle.selectedIndex].text) + '</span></div>';
+    document.getElementById('recap-besoin-details').innerHTML = besoinHtml;
+
+    // -- Produits sélectionnés --
+    var produitsList = document.getElementById('recap-produits-list');
+    produitsList.innerHTML = '';
+    var hasProducts = false;
+
+    // Bennes/contenants avec quantité > 0
+    var qtyInputs = document.querySelectorAll('.benne input[type="number"]');
+    qtyInputs.forEach(function(input) {
+        var qty = parseInt(input.value, 10);
+        if (qty > 0) {
+            hasProducts = true;
+            var benneEl = input.closest('.benne');
+            var labelEl = benneEl.querySelector('label span') || benneEl.querySelector('span');
+            var productName = labelEl ? labelEl.textContent.trim() : input.id;
+            // Remonter pour trouver le wrapper parent et son label
+            var wrapper = benneEl.closest('[id$="_wrapper"]');
+            var category = '';
+            if (wrapper) {
+                var wrapperLabel = wrapper.querySelector(':scope > label');
+                if (wrapperLabel) category = wrapperLabel.textContent.trim() + ' — ';
+            }
+            var li = document.createElement('li');
+            li.innerHTML = '<span>' + escapeHtml(category + productName) + '</span><span class="recap-qty">x' + qty + '</span>';
+            produitsList.appendChild(li);
+        }
+    });
+
+    // Choix sélectionnés (choices avec classe .selected)
+    var selectedChoices = document.querySelectorAll('.choice.selected');
+    selectedChoices.forEach(function(choice) {
+        hasProducts = true;
+        var choiceText = choice.querySelector('span') ? choice.querySelector('span').textContent.trim() : choice.dataset.value;
+        var li = document.createElement('li');
+        li.innerHTML = '<span>' + escapeHtml(choiceText) + '</span>';
+        produitsList.appendChild(li);
+    });
+
+    // Mobilier avec quantité > 0
+    var furnitureInputs = document.querySelectorAll('.furniture-item input[type="number"]');
+    furnitureInputs.forEach(function(input) {
+        var qty = parseInt(input.value, 10);
+        if (qty > 0) {
+            hasProducts = true;
+            var row = input.closest('.furniture-item');
+            var nameEl = row.querySelector('span');
+            var productName = nameEl ? nameEl.textContent.trim() : input.id;
+            var li = document.createElement('li');
+            li.innerHTML = '<span>' + escapeHtml(productName) + '</span><span class="recap-qty">x' + qty + '</span>';
+            produitsList.appendChild(li);
+        }
+    });
+
+    if (!hasProducts) {
+        var li = document.createElement('li');
+        li.textContent = 'Aucun produit sélectionné';
+        produitsList.appendChild(li);
+    }
+
+    // -- Camion --
+    var camionValue = document.getElementById('camion_selectionne').value;
+    var recapCamionBlock = document.getElementById('recap-camion');
+    if (camionValue && camionValue !== 'none') {
+        recapCamionBlock.style.display = 'block';
+        var camionEl = document.getElementById(camionValue);
+        var camionName = camionEl ? camionEl.querySelector('h4').textContent : camionValue;
+        var camionVolume = camionEl ? camionEl.dataset.volume + 'm³' : '';
+        document.getElementById('recap-camion-details').innerHTML =
+            '<div class="recap-line"><span class="recap-label">' + escapeHtml(camionName) + '</span> <span class="recap-value">(' + escapeHtml(camionVolume) + ')</span></div>';
+    } else {
+        recapCamionBlock.style.display = 'none';
+    }
+
+    // -- Client --
+    var clientHtml = '';
+    var name = document.getElementById('name').value.trim();
+    var profession = document.getElementById('profession');
+    var profText = profession.options[profession.selectedIndex].text;
+    var email = document.getElementById('email').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var adresse = document.getElementById('adresse').value.trim();
+
+    clientHtml += '<div class="recap-line"><span class="recap-label">Nom :</span> <span class="recap-value">' + escapeHtml(name) + '</span></div>';
+    clientHtml += '<div class="recap-line"><span class="recap-label">Profil :</span> <span class="recap-value">' + escapeHtml(profText) + '</span></div>';
+
+    if (profession.value === "2") {
+        var raison = document.getElementById('raison').value.trim();
+        var siret = document.getElementById('siret').value.trim();
+        if (raison) clientHtml += '<div class="recap-line"><span class="recap-label">Raison sociale :</span> <span class="recap-value">' + escapeHtml(raison) + '</span></div>';
+        if (siret) clientHtml += '<div class="recap-line"><span class="recap-label">SIREN :</span> <span class="recap-value">' + escapeHtml(siret) + '</span></div>';
+    }
+
+    clientHtml += '<div class="recap-line"><span class="recap-label">Email :</span> <span class="recap-value">' + escapeHtml(email) + '</span></div>';
+    clientHtml += '<div class="recap-line"><span class="recap-label">Téléphone :</span> <span class="recap-value">' + escapeHtml(phone) + '</span></div>';
+    clientHtml += '<div class="recap-line"><span class="recap-label">Adresse :</span> <span class="recap-value">' + escapeHtml(adresse) + '</span></div>';
+
+    // Étage
+    var etage = document.getElementById('etage');
+    clientHtml += '<div class="recap-line"><span class="recap-label">Étage :</span> <span class="recap-value">' + escapeHtml(etage.options[etage.selectedIndex].text) + '</span></div>';
+
+    // Ascenseur (si visible)
+    var ascenseurBlock = document.getElementById('ascenseur-block');
+    if (ascenseurBlock && ascenseurBlock.style.display !== 'none') {
+        var ascenseur = document.getElementById('ascenseur');
+        clientHtml += '<div class="recap-line"><span class="recap-label">Ascenseur :</span> <span class="recap-value">' + (ascenseur.value === 'oui' ? 'Oui' : 'Non') + '</span></div>';
+    }
+
+    document.getElementById('recap-client-details').innerHTML = clientHtml;
+
+    // -- Description --
+    var description = document.getElementById('description').value.trim();
+    document.getElementById('recap-description-text').textContent = description;
+}
+
+function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML;
+}
 
 
 

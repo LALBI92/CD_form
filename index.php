@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devis City Debarras</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <?php
@@ -3439,9 +3442,40 @@
 
 <div id="preview"></div>
 
+    <!-- Récapitulatif avant soumission -->
+    <div id="recap-section" style="display: none;">
+        <div id="recap-header">
+            <h3>Récapitulatif de votre demande</h3>
+            <span id="recap-toggle-icon">▼</span>
+        </div>
+        <div id="recap-content">
+            <div id="recap-besoin" class="recap-block">
+                <h4>Votre besoin</h4>
+                <div id="recap-besoin-details"></div>
+            </div>
+            <div id="recap-produits" class="recap-block">
+                <h4>Produits / Services sélectionnés</h4>
+                <ul id="recap-produits-list"></ul>
+            </div>
+            <div id="recap-camion" class="recap-block" style="display: none;">
+                <h4>Camion sélectionné</h4>
+                <div id="recap-camion-details"></div>
+            </div>
+            <div id="recap-client" class="recap-block">
+                <h4>Vos informations</h4>
+                <div id="recap-client-details"></div>
+            </div>
+            <div id="recap-description-block" class="recap-block">
+                <h4>Description</h4>
+                <p id="recap-description-text"></p>
+            </div>
+            <button type="button" id="recap-edit">Modifier</button>
+        </div>
+    </div>
 
     <!-- Bouton Soumettre -->
-    <button type="submit">Soumettre</button>
+    <button type="button" id="show-recap-btn">Vérifier et soumettre</button>
+    <button type="submit" id="submit-btn" style="display: none;">Confirmer et envoyer ma demande</button>
   </div>
 </form>
 
