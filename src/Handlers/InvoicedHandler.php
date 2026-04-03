@@ -756,7 +756,35 @@ class InvoicedHandler
                 ]);
 
                 // Calculer et mettre à jour la date du solde pour les professionnels
-                $this->updateDateSolde($dealId, $invoice);
+                // Les particuliers ont un paiement à réception, pas de date d'échéance
+                $paymentTerms = $invoice['payment_terms'] ?? '';
+                $customerType = $invoice['customer']['type'] ?? 'person';
+                
+                // Pour les entreprises, calculer même si "Due on Receipt" (car c'est un professionnel)
+                // Pour les particuliers, ne calculer QUE si ce n'est pas "Due on Receipt"
+                $shouldCalculateDate = false;
+                if ($customerType === 'company') {
+                    // Entreprise : toujours calculer une échéance (même si Due on Receipt)
+                    $shouldCalculateDate = true;
+                } else {
+                    // Particulier : calculer seulement si ce n'est pas "Due on Receipt"
+                    $shouldCalculateDate = ($paymentTerms !== 'DUE_ON_RECEIPT' && $paymentTerms !== 'Due on Receipt');
+                }
+                
+                if ($shouldCalculateDate) {
+                    $this->updateDateSolde($dealId, $invoice);
+                    $this->logger->log('Date du solde calculée pour professionnel', [
+                        'deal_id' => $dealId,
+                        'payment_terms' => $paymentTerms
+                    ]);
+                } else {
+                    $this->logger->log('Pas de calcul de date du solde', [
+                        'deal_id' => $dealId,
+                        'customer_type' => $customerType,
+                        'payment_terms' => $paymentTerms,
+                        'reason' => $customerType === 'person' ? 'Particulier avec paiement à réception' : 'Conditions non remplies'
+                    ]);
+                }
                 break;
 
             /*────────────────────────────────────────────────────
