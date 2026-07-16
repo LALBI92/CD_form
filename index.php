@@ -1255,6 +1255,36 @@
     </div>
 </div>
 
+<!-- Champ Climatisation Chaud / Froid (choix multiples) -->
+<div id="climatisation_chaud_froid_domicile_wrapper" style="display: none;">
+    <label>Climatisation Chaud / Froid (choix multiples)</label>
+    <div class="choices-grid">
+        <div class="benne">
+            <img src="images/climatisation.png" alt="Climatisation">
+            <label for="climatisation_domicile">
+                <span>Climatisation</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="climatisation_domicile_qty">-</button>
+                <input type="number" id="climatisation_domicile_qty" name="climatisation_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="climatisation_domicile_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="images/chauffage.png" alt="Chauffage">
+            <label for="chauffage_domicile">
+                <span>Chauffage</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="chauffage_domicile_qty">-</button>
+                <input type="number" id="chauffage_domicile_qty" name="chauffage_domicile_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="chauffage_domicile_qty">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Champ Ampoules / Lampes / Néons (choix multiples) -->
 <div id="ampoules_domicile_wrapper" style="display: none;">
     <label>Ampoules / Lampes / Néons (choix multiples)</label>
@@ -1559,6 +1589,36 @@
                 <button type="button" class="qty-minus" data-target="cuisiniere_depot_qty">-</button>
                 <input type="number" id="cuisiniere_depot_qty" name="cuisiniere_depot_qty" value="0" min="0" readonly>
                 <button type="button" class="qty-plus" data-target="cuisiniere_depot_qty">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Champ Climatisation Chaud / Froid (choix multiples) -->
+<div id="climatisation_chaud_froid_depot_wrapper" style="display: none;">
+    <label>Climatisation Chaud / Froid (choix multiples)</label>
+    <div class="choices-grid">
+        <div class="benne">
+            <img src="images/climatisation.png" alt="Climatisation">
+            <label for="climatisation_depot">
+                <span>Climatisation</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="climatisation_depot_qty">-</button>
+                <input type="number" id="climatisation_depot_qty" name="climatisation_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="climatisation_depot_qty">+</button>
+            </div>
+        </div>
+
+        <div class="benne">
+            <img src="images/chauffage.png" alt="Chauffage">
+            <label for="chauffage_depot">
+                <span>Chauffage</span>
+            </label>
+            <div class="quantity-selector">
+                <button type="button" class="qty-minus" data-target="chauffage_depot_qty">-</button>
+                <input type="number" id="chauffage_depot_qty" name="chauffage_depot_qty" value="0" min="0" readonly>
+                <button type="button" class="qty-plus" data-target="chauffage_depot_qty">+</button>
             </div>
         </div>
     </div>

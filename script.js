@@ -181,11 +181,13 @@ document.addEventListener("DOMContentLoaded", function () {
         "cartouches_encres_toners_domicile": "cartouches_encres_domicile_wrapper",
         "accumulateurs_batteries_piles_domicile": "piles_domicile_wrapper",
         "electromenager_chaud_froid_domicile": "electromenager_domicile_wrapper",
+        "climatisation_chaud_froid_domicile": "climatisation_chaud_froid_domicile_wrapper",
         "ampoules_lampes_neons_domicile": "ampoules_domicile_wrapper",
         "informatiques_bureautiques_depot": "informatiques_bureautiques_depot_wrapper",
         "cartouches_encres_toners_depot": "cartouches_depot_encres_wrapper",
         "accumulateurs_batteries_piles_depot": "piles_depot_wrapper",
         "electromenager_chaud_froid_depot": "electromenager_depot_wrapper",
+        "climatisation_chaud_froid_depot": "climatisation_chaud_froid_depot_wrapper",
         "ampoules_lampes_neons_depot": "ampoules_depot_wrapper",
         // Destruction d'archives (sections supplémentaires déjà incluses ci-dessus)
         // Louer une benne

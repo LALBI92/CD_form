@@ -290,7 +290,7 @@ return [
         'bac_secure_550_ouvert_domicile' => 'field403',
         'congelateur_domicile' => 'field404',
         'climatisation_domicile' => 'field405',
-        'chauffage_domicile ' => 'field406',
+        'chauffage_domicile' => 'field406',
         'box_90L_archives_depot_2' => 'field407',
         'box_90L_archives_depot_3' => 'field408',
         'box_90L_archives_depot_4' => 'field409',
