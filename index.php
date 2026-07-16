@@ -3580,7 +3580,6 @@
 <script>
     async function getEntrepriseInfo() {
         const siretInput = document.getElementById("siret");
-        const apiKey = "d2f88b5bad910d64116d906bfd47d37fc8507b7cd8001a54"; // Remplacez par votre clé API Pappers
 
         if (siretInput) {
             let siret = siretInput.value;
@@ -3590,12 +3589,8 @@
 
             if (siret) {
                 try {
-                    // Requête à l'API Pappers
-                    const response = await fetch(`https://api.pappers.fr/v2/entreprise?siren=${siret}`, {
-                        headers: {
-                            "api-key": apiKey
-                        }
-                    });
+                    // Requête via pappers.php : la clé API reste côté serveur
+                    const response = await fetch(`pappers.php?siren=${encodeURIComponent(siret)}`);
 
                     if (response.ok) {
                         const data = await response.json();

@@ -17,6 +17,7 @@ logs/
 # Fichiers de cache
 *.cache
 .cache/
+/cache/
 
 # Fichiers de configuration locaux
 config.local.php
