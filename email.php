@@ -237,8 +237,10 @@ try {
     file_put_contents($logFile, "Mail envoyé avec succès.\n", FILE_APPEND);
 
 } catch (Exception $e) {
+    // Pas d'echo : une sortie avant header() casserait la redirection vers la page de remerciement,
+    // alors que le devis Invoiced est créé ensuite. L'échec est journalisé.
     file_put_contents($logFile, "Erreur : " . $e->getMessage() . "\n", FILE_APPEND);
-    echo "Une erreur est survenue : " . e($e->getMessage());
+    error_log("[email.php] " . $e->getMessage());
 }
 
 file_put_contents($logFile, "=== Fin du script PHP ===\n", FILE_APPEND);
