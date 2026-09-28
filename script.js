@@ -1,3 +1,18 @@
+// ======== SUIVI DU TUNNEL (dataLayer) ========
+// Pousse les étapes du devis dans window.dataLayer. Aucun conteneur GTM n'est chargé
+// ici : les événements ne seront exploités que si un conteneur est ajouté plus tard.
+function trackDevis(eventName, params) {
+    window.dataLayer = window.dataLayer || [];
+    var payload = { event: eventName };
+    for (var k in (params || {})) payload[k] = params[k];
+    window.dataLayer.push(payload);
+}
+
+function currentCategory() {
+    var jr = document.getElementById('je_recycle');
+    return jr ? (jr.value || '(aucune)') : '(aucune)';
+}
+
 function toggleAccordion(id) {
     console.log("ID passé à toggleAccordion :", id);
     const element = document.getElementById(id);
@@ -161,6 +176,9 @@ function goToStep2(via) {
 
     document.getElementById('step-2').style.display = 'block';
     document.getElementById('step-1').style.display = 'none';
+
+    trackDevis('devis_step1_complete', { category: currentCategory(), via: via || '' });
+    trackDevis('devis_step2_view', { category: currentCategory() });
 
     // Précharger Google Maps pour l'autocomplétion de l'adresse
     if (typeof loadGoogleMaps === 'function') loadGoogleMaps();
@@ -641,7 +659,9 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         return;
     }
 
-    if (!validateStep2()) {
+    var formValid = validateStep2();
+    trackDevis('devis_submit_click', { category: currentCategory(), valid: formValid });
+    if (!formValid) {
         e.preventDefault();
         return;
     }
@@ -738,6 +758,7 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
 
     // Pré-sélection depuis l'URL (?besoin=...), une fois tous les écouteurs posés
     applyUrlPreselection();
+    trackDevis('devis_view', { besoin: devisBesoin || '(aucun)' });
     });
 
 
