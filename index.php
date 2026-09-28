@@ -3576,6 +3576,19 @@
         new google.maps.places.Autocomplete(input, options);
     }
 
+    // Si la clé Google refuse le domaine (RefererNotAllowedMapError…), Google désactive le champ
+    // adresse : on le réactive pour que la saisie manuelle reste possible.
+    window.gm_authFailure = function () {
+        const input = document.getElementById('adresse');
+        if (!input) return;
+        input.disabled = false;
+        input.removeAttribute('style');
+        input.placeholder = 'Votre adresse';
+        const unlock = () => { input.disabled = false; };
+        setTimeout(unlock, 300);
+        setTimeout(unlock, 1500);
+    };
+
     // Google Maps n'est chargé qu'au besoin : affichage de l'étape 2 ou focus sur l'adresse
     // (le script pesait ~200 Ko bloquants dans le <head> pour un champ de l'étape 2).
     var mapsRequested = false;
