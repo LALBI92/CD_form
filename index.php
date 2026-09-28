@@ -1003,7 +1003,7 @@
 </div>
 
     <div id="type_deee_domicile_wrapper" style="display: none;">
-        <label for="type_deee_domicile">Type de D3E / DEEE (domicile)</label>
+        <label id="label_deee_domicile" for="deee_domicile_select">Quel type de DEEE ?</label>
         <select name="type_deee_domicile" id="deee_domicile_select">
             <option value="">Sélectionnez un type de D3E / DEEE</option>
             <option value="informatiques_bureautiques_domicile">Informatiques / Bureautiques</option>
@@ -1345,7 +1345,7 @@
 </div>
 
 <div id="type_deee_depot_wrapper" style="display: none;">
-    <label for="type_deee_depot">Type de D3E / DEEE (entrepôt) </label>
+    <label id="label_deee_depot" for="deee_depot_select">Quel type de DEEE ?</label>
         <select name="type_deee_depot" id="deee_depot_select">
             <option value="">Sélectionnez un type de D3E / DEEE</option>
             <option value="informatiques_bureautiques_depot">Informatiques / Bureautiques</option>
@@ -1869,7 +1869,7 @@
 
 <!-- Champ Louer une benne -->
 <div id="louer_benne_wrapper" style="display: none;">
-    <label for="type_benne">Type de benne à louer</label>
+    <label id="label_type_benne" for="type_benne">Quel type de benne ?</label>
     <select name="type_benne" id="type_benne">
         <option value="">Sélectionnez un type de benne</option>
         <option value="gravats_beton">GRAVATS, BÉTON, PARPAINGS, TUILES, TERRE, PIERRES</option>
