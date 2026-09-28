@@ -306,6 +306,8 @@ function resetDeeeSelectFields() {
 
     if (deeeDomicileSelect) deeeDomicileSelect.value = ""; // Réinitialiser à la valeur par défaut
     if (deeedepotSelect) deeedepotSelect.value = ""; // Réinitialiser à la valeur par défaut
+    syncTypeTiles(deeeDomicileSelect); // Les tuiles suivent la remise à zéro
+    syncTypeTiles(deeedepotSelect);
 }
 
 function hideAllDeeeSections() {
@@ -351,7 +353,8 @@ function hideDeeedepotSections() {
 
 // Fonction pour masquer uniquement les sections liées aux types de bennes
 function hideBenneSections() {
-    ["dib_chantier", "bois_chantier", /* autres sections pertinentes */].forEach(section => {
+    // gravats_beton / dnd_bennes : changer de type de benne masque les contenants de l'autre type
+    ["dib_chantier", "bois_chantier", "gravats_beton", "dnd_bennes"].forEach(section => {
         const sectionElement = document.getElementById(sectionsToShow[section]);
         if (sectionElement) {
             sectionElement.style.display = "none";
@@ -756,6 +759,9 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
             goToStep2('suivant');
         });
 
+    // Tuiles de sous-type à la place des listes déroulantes (DEEE, benne)
+    Object.keys(TYPE_TILES).forEach(buildTypeTiles);
+
     // Pré-sélection depuis l'URL (?besoin=...), une fois tous les écouteurs posés
     applyUrlPreselection();
     trackDevis('devis_view', { besoin: devisBesoin || '(aucun)' });
@@ -887,6 +893,79 @@ function escapeHtml(text) {
 
 
 
+
+// ======== TUILES DE SOUS-TYPE (remplacent visuellement un <select>) ========
+// Le <select> d'origine reste dans le DOM (masqué, même name) : le payload ne change pas.
+// Un clic sur une tuile positionne sa valeur et déclenche « change », donc toute la logique
+// existante (sections affichées, résumé, validation, dataLayer) s'exécute comme avant.
+var TYPE_TILES = {
+    deee_domicile_select: { labelId: 'label_deee_domicile', icons: {
+        informatiques_bureautiques_domicile: 'fa-laptop', cartouches_encres_toners_domicile: 'fa-print',
+        accumulateurs_batteries_piles_domicile: 'fa-car-battery', electromenager_chaud_froid_domicile: 'fa-blender',
+        climatisation_chaud_froid_domicile: 'fa-fan', ampoules_lampes_neons_domicile: 'fa-lightbulb' } },
+    deee_depot_select: { labelId: 'label_deee_depot', icons: {
+        informatiques_bureautiques_depot: 'fa-laptop', cartouches_encres_toners_depot: 'fa-print',
+        accumulateurs_batteries_piles_depot: 'fa-car-battery', electromenager_chaud_froid_depot: 'fa-blender',
+        climatisation_chaud_froid_depot: 'fa-fan', ampoules_lampes_neons_depot: 'fa-lightbulb' } },
+    type_benne: { labelId: 'label_type_benne',
+        icons: { gravats_beton: 'fa-cubes', dnd_bennes: 'fa-recycle' },
+        labels: { gravats_beton: 'Gravats, béton, parpaings, tuiles, terre, pierres',
+                  dnd_bennes: 'Déchets non dangereux : bois, plâtre, plastiques, cartons, métaux' } }
+};
+
+function syncTypeTiles(select) {
+    var group = select && select._typeTiles;
+    if (!group) return;
+    group.querySelectorAll('.type-tile').forEach(function (btn) {
+        var on = btn.dataset.value === select.value;
+        btn.classList.toggle('selected', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+}
+
+function buildTypeTiles(selectId) {
+    var conf = TYPE_TILES[selectId];
+    var select = document.getElementById(selectId);
+    if (!conf || !select || select._typeTiles) return;
+    var group = document.createElement('div');
+    group.className = 'type-tiles';
+    group.setAttribute('role', 'group');
+    if (conf.labelId) group.setAttribute('aria-labelledby', conf.labelId);
+    var count = 0;
+    Array.prototype.forEach.call(select.options, function (opt) {
+        if (!opt.value) return;
+        count++;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'type-tile';
+        btn.dataset.value = opt.value;
+        btn.setAttribute('aria-pressed', 'false');
+        var icon = conf.icons && conf.icons[opt.value];
+        if (icon) {
+            var i = document.createElement('i');
+            i.className = 'fa-solid ' + icon;
+            i.setAttribute('aria-hidden', 'true');
+            btn.appendChild(i);
+        }
+        var span = document.createElement('span');
+        span.textContent = (conf.labels && conf.labels[opt.value]) || opt.text.trim();
+        btn.appendChild(span);
+        btn.addEventListener('click', function () {
+            if (select.value === opt.value) return; // déjà choisi : rien ne change
+            select.value = opt.value;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        group.appendChild(btn);
+    });
+    if (count <= 2) group.classList.add('type-tiles--2');
+    select.insertAdjacentElement('afterend', group);
+    select.style.display = 'none';
+    select.setAttribute('aria-hidden', 'true');
+    select.tabIndex = -1;
+    select._typeTiles = group;
+    select.addEventListener('change', function () { syncTypeTiles(select); });
+    syncTypeTiles(select);
+}
 
 // ======== PRÉ-SÉLECTION PAR L'URL ========
 // ?besoin=  catégorie (deee, archives, ferraille, bureau, mobilier, debarras, benne, chantier…)
