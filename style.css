@@ -1001,9 +1001,28 @@ label[for="benne_10m3_cartons"] {
     font-weight: 700;
 }
 
+.optional {
+    color: #64748b;
+    font-weight: 400;
+    font-size: 0.9em;
+}
+
+/* Messages de validation en ligne */
+.field-error {
+    color: #C62828;
+    font-size: 0.875rem;
+    margin: 4px 0 10px;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+    border-color: #E53935 !important;
+}
+
 /* Récapitulatif */
 #recap-section {
-    margin-top: 28px;
+    margin-top: 20px;
     border: 2px solid #c8e6c9;
     border-radius: 16px;
     overflow: hidden;
@@ -1186,4 +1205,86 @@ label[for="benne_10m3_cartons"] {
 
 .recap-value {
     color: #4a5568;
+}
+/* ======== TUILES DE SOUS-TYPE (DEEE, benne) : choix unique, même look que .choice ======== */
+.type-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 10px 0 20px;
+}
+
+.type-tiles.type-tiles--2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.type-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 96px;
+    padding: 14px 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    background-color: #fff;
+    color: #4a5568;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.type-tile i {
+    font-size: 1.6rem;
+    color: #61A223;
+}
+
+.type-tile:hover {
+    border-color: #a5d6a7;
+    background-color: #f0fdf4;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(97, 162, 35, 0.12);
+}
+
+.type-tile:focus-visible {
+    outline: 3px solid #2e7d32;
+    outline-offset: 2px;
+}
+
+.type-tile.selected {
+    border-color: #61A223;
+    background: linear-gradient(135deg, #f0fdf4, #e8f5e9);
+    box-shadow: 0 0 0 3px rgba(97, 162, 35, 0.2), 0 4px 15px rgba(97, 162, 35, 0.15);
+    color: #2e7d32;
+    font-weight: 600;
+    animation: selectPop 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.type-tile.selected::after {
+    content: '\2713';
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: #61A223;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .type-tiles {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }

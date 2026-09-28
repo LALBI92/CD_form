@@ -1,3 +1,18 @@
+// ======== SUIVI DU TUNNEL (dataLayer) ========
+// Pousse les étapes du devis dans window.dataLayer. Aucun conteneur GTM n'est chargé
+// ici : les événements ne seront exploités que si un conteneur est ajouté plus tard.
+function trackDevis(eventName, params) {
+    window.dataLayer = window.dataLayer || [];
+    var payload = { event: eventName };
+    for (var k in (params || {})) payload[k] = params[k];
+    window.dataLayer.push(payload);
+}
+
+function currentCategory() {
+    var jr = document.getElementById('je_recycle');
+    return jr ? (jr.value || '(aucune)') : '(aucune)';
+}
+
 function toggleAccordion(id) {
     console.log("ID passé à toggleAccordion :", id);
     const element = document.getElementById(id);
@@ -93,6 +108,38 @@ document.addEventListener('DOMContentLoaded', function () {
     updateProduit();     // Générer le produit initial
 });
 
+// Étage / ascenseur : utiles seulement quand l'équipe monte chercher les déchets sur place.
+// Masqués pour les bennes (posées en pied d'immeuble) et le dépôt chez City Debarras ;
+// dans ce cas on remet les valeurs par défaut (RDC / non) pour garder le même payload.
+var CATEGORIES_SANS_ETAGE = ['louer_benne', 'dechets_chantiers', 'dechets_non_dangereux'];
+
+function updatePickupFields() {
+    var jeRecycle = document.getElementById('je_recycle');
+    var lieuDeee = document.getElementById('lieu_deee');
+    var lieuArchives = document.getElementById('lieu_archives');
+    var additionalFields = document.getElementById('additional-fields');
+    if (!jeRecycle || !additionalFields) return;
+    var cat = jeRecycle.value;
+    var hide = CATEGORIES_SANS_ETAGE.indexOf(cat) !== -1
+        || (cat === 'deee' && lieuDeee && lieuDeee.value === 'type_deee_depot')
+        || (cat === 'destruction_archives' && lieuArchives && lieuArchives.value === 'destruction_archives_depot');
+    if (hide) {
+        additionalFields.style.display = 'none';
+        document.getElementById('ascenseur-block').style.display = 'none';
+        etageSelect.value = 'RDC';
+        ascenseurSelect.value = 'non';
+        updateProduit();
+    } else {
+        additionalFields.style.display = 'block';
+        handleEtageChange();
+    }
+}
+
+['je_recycle', 'lieu_deee', 'lieu_archives'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('change', updatePickupFields);
+});
+
 // Gérer la sélection d'un camion
 let selectedCamion = null;
 
@@ -118,8 +165,23 @@ function selectCamion(camionId) {
     updateProduit();
 
     // Passer automatiquement à l'étape suivante
+    goToStep2('camion');
+}
+
+// Affichage de l'étape 2 (depuis « Suivant » ou le choix d'un camion)
+function goToStep2(via) {
+    // Résumé compact de la sélection au-dessus du bouton d'envoi (ancienne étape « récap »)
+    buildRecap();
+    updatePickupFields();
+
     document.getElementById('step-2').style.display = 'block';
     document.getElementById('step-1').style.display = 'none';
+
+    trackDevis('devis_step1_complete', { category: currentCategory(), via: via || '' });
+    trackDevis('devis_step2_view', { category: currentCategory() });
+
+    // Précharger Google Maps pour l'autocomplétion de l'adresse
+    if (typeof loadGoogleMaps === 'function') loadGoogleMaps();
 
     // Faire défiler la page vers le haut
     window.scrollTo({
@@ -128,14 +190,6 @@ function selectCamion(camionId) {
     });
 }
 
-// Ajoute l'événement au clic pour les camions
-const choisirButtons = document.querySelectorAll(".choisir-camion");
-choisirButtons.forEach(button => {
-    button.addEventListener("click", function () {
-        const camionId = this.closest(".camion").id;
-        selectCamion(camionId);
-    });
-});
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -246,25 +300,14 @@ function hideChoiceSections() {
     });
 }
 
-function hideAllDeeeSections() {
-    // Masquer les sections domicile et entrepôt
-    hideDeeeDomicileSections();
-    hideDeeedepotSections();
-
-    // Masquer les sélecteurs domicile et entrepôt eux-mêmes
-    const typeDeeeDomicileWrapper = document.getElementById("type_deee_domicile_wrapper");
-    const typeDeeedepotWrapper = document.getElementById("type_deee_depot_wrapper");
-
-    if (typeDeeeDomicileWrapper) typeDeeeDomicileWrapper.style.display = "none";
-    if (typeDeeedepotWrapper) typeDeeedepotWrapper.style.display = "none";
-}
-
 function resetDeeeSelectFields() {
     const deeeDomicileSelect = document.getElementById("deee_domicile_select");
     const deeedepotSelect = document.getElementById("deee_depot_select");
 
     if (deeeDomicileSelect) deeeDomicileSelect.value = ""; // Réinitialiser à la valeur par défaut
     if (deeedepotSelect) deeedepotSelect.value = ""; // Réinitialiser à la valeur par défaut
+    syncTypeTiles(deeeDomicileSelect); // Les tuiles suivent la remise à zéro
+    syncTypeTiles(deeedepotSelect);
 }
 
 function hideAllDeeeSections() {
@@ -310,7 +353,8 @@ function hideDeeedepotSections() {
 
 // Fonction pour masquer uniquement les sections liées aux types de bennes
 function hideBenneSections() {
-    ["dib_chantier", "bois_chantier", /* autres sections pertinentes */].forEach(section => {
+    // gravats_beton / dnd_bennes : changer de type de benne masque les contenants de l'autre type
+    ["dib_chantier", "bois_chantier", "gravats_beton", "dnd_bennes"].forEach(section => {
         const sectionElement = document.getElementById(sectionsToShow[section]);
         if (sectionElement) {
             sectionElement.style.display = "none";
@@ -414,22 +458,7 @@ if (lieuArchivesSelect) {
     });
 }
 
-     // Function to update the total volume
-function updateTotalVolume() {
-    let totalVolume = 0;
-    // Cibler uniquement les inputs avec la classe 'volume-control' et un attribut 'data-volume'
-    const volumeInputs = document.querySelectorAll("input.volume-control[data-volume]");
 
-    volumeInputs.forEach(input => {
-        const quantity = parseInt(input.value);
-        const volumePerItem = parseFloat(input.getAttribute("data-volume"));
-        if (!isNaN(quantity) && !isNaN(volumePerItem)) {
-            totalVolume += quantity * volumePerItem;
-        }
-    });
-
-    document.getElementById("volume-result").textContent = totalVolume.toFixed(2);
-}
 
 
     // Gérer les boutons + et - pour ajuster la quantité
@@ -539,22 +568,6 @@ function updateTotalVolume() {
     updateVehicleSuggestions();
 }
 
-// Ajouter les événements de clic pour les boutons "Choisir ce camion" avec protection anti-double clic
-const choisirButtons = document.querySelectorAll(".choisir-camion");
-choisirButtons.forEach(button => {
-    button.addEventListener("click", function () {
-        // Protection anti-double clic
-        if (this.disabled) return;
-        
-        this.disabled = true;
-        setTimeout(() => {
-            this.disabled = false;
-        }, 1000);
-        
-        const camionId = this.closest(".camion").id; // Trouver l'ID du camion parent
-        selectCamion(camionId);
-    });
-});
 
 
 // Gérer l'affichage conditionnel du SIRET et de la Raison Sociale
@@ -574,6 +587,70 @@ if (professionSelect && siretBlock) {
     });
 }
 
+// ======== VALIDATION EN LIGNE (remplace les alert()) ========
+function setFieldError(input, message) {
+    var id = 'err-' + input.id;
+    var msg = document.getElementById(id);
+    if (!msg) {
+        msg = document.createElement('div');
+        msg.id = id;
+        msg.className = 'field-error';
+        msg.setAttribute('role', 'alert');
+        input.insertAdjacentElement('afterend', msg);
+    }
+    if (!input.dataset.errorWired) {
+        // Le message disparaît dès que l'utilisateur corrige le champ
+        input.dataset.errorWired = '1';
+        input.addEventListener('input', function () { clearFieldError(input); });
+    }
+    msg.textContent = message;
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', id);
+}
+
+function clearFieldError(input) {
+    var msg = document.getElementById('err-' + input.id);
+    if (msg) msg.remove();
+    input.removeAttribute('aria-invalid');
+    input.removeAttribute('aria-describedby');
+}
+
+// Mêmes règles qu'avant (champs requis, format e-mail, SIREN pour un pro), messages sous chaque champ
+function validateStep2() {
+    var checks = [
+        ['name', 'Indiquez votre nom.'],
+        ['email', 'Indiquez votre e-mail.'],
+        ['phone', 'Indiquez votre numéro de téléphone.'],
+        ['adresse', "Indiquez l'adresse de l'intervention."]
+    ];
+    var firstInvalid = null;
+    checks.forEach(function (c) {
+        var el = document.getElementById(c[0]);
+        if (!el) return;
+        var message = '';
+        if (!el.value.trim()) message = c[1];
+        else if (el.type === 'email' && el.validity.typeMismatch) message = "Cette adresse e-mail n'est pas valide.";
+        if (message) { setFieldError(el, message); firstInvalid = firstInvalid || el; }
+        else clearFieldError(el);
+    });
+    var prof = document.getElementById('profession');
+    var siret = document.getElementById('siret');
+    if (prof && siret) {
+        if (prof.value === '2' && !siret.value.trim()) {
+            setFieldError(siret, 'Le SIREN est obligatoire pour un professionnel.');
+            firstInvalid = firstInvalid || siret;
+        } else {
+            clearFieldError(siret);
+        }
+    }
+    if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstInvalid.focus({ preventScroll: true });
+        return false;
+    }
+    return true;
+}
+
 // Validation du formulaire avec protection anti-double soumission
 let isSubmitting = false;
 
@@ -585,11 +662,10 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         return;
     }
 
-    // Validation SIRET pour les professionnels
-    if (professionSelect.value === "2" && !siretInput.value.trim()) {
+    var formValid = validateStep2();
+    trackDevis('devis_submit_click', { category: currentCategory(), valid: formValid });
+    if (!formValid) {
         e.preventDefault();
-        alert("Le SIRET est obligatoire pour un professionnel");
-        siretInput.focus();
         return;
     }
 
@@ -598,6 +674,7 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
 
     // Désactiver le bouton de soumission
     const submitButton = document.getElementById('submit-btn');
+    const submitLabel = submitButton ? submitButton.textContent : '';
     if (submitButton) {
         submitButton.disabled = true;
         submitButton.textContent = "Envoi en cours...";
@@ -610,47 +687,12 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         isSubmitting = false;
         if (submitButton) {
             submitButton.disabled = false;
-            submitButton.textContent = "Confirmer et envoyer ma demande";
+            submitButton.textContent = submitLabel;
         }
     }, 10000);
 });
 
 
-
-        // Gérer la sélection d'un camion
-        let selectedCamion = null;
-
-        function selectCamion(camionId) {
-            // Retirer la sélection précédente, s'il y en a une
-            if (selectedCamion) {
-                selectedCamion.classList.remove('selected');
-            }
-
-            // Sélectionner le nouveau camion et ajouter un effet visuel (bordure)
-            const camion = document.getElementById(camionId);
-            camion.classList.add('selected');
-            selectedCamion = camion;
-
-            // Mettre à jour le champ caché avec l'ID du camion sélectionné
-            document.getElementById('camion_selectionne').value = camionId;
-            console.log("Camion sélectionné : " + camionId);
-
-            // Afficher les champs supplémentaires pour l'étage et l'ascenseur
-            document.getElementById('additional-fields').style.display = 'block';
-
-            // Ajouter un écouteur pour l'étage afin de gérer l'affichage de l'ascenseur
-            etageSelect.addEventListener('change', function () {
-                const selectedEtage = etageSelect.value;
-                console.log("Étage sélectionné : " + selectedEtage);
-
-                // Si l'étage est supérieur ou égal à 1, afficher le champ ascenseur
-                if (parseInt(selectedEtage) >= 1) {
-                    ascenseurBlock.style.display = 'block';
-                } else {
-                    ascenseurBlock.style.display = 'none';
-                }
-            });
-        }
 
         // Bouton Retour (de Step 2 vers Step 1)
     document.getElementById('previous-step').addEventListener('click', function(event) {
@@ -671,24 +713,6 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
             setTimeout(() => {
                 this.disabled = false;
             }, 1000);
-
-            // Vérification du type de besoin (déjà existant)
-            const typeBesoin = document.getElementById('type_besoin');
-            let typeBesoinMessage = document.getElementById('type_besoin_message');
-
-            if (typeBesoin.value === "") {
-                if (!typeBesoinMessage) {
-                    typeBesoinMessage = document.createElement('div');
-                    typeBesoinMessage.id = 'type_besoin_message';
-                    typeBesoinMessage.style.color = 'red';
-                    typeBesoinMessage.style.marginTop = '5px';
-                    typeBesoinMessage.innerText = 'Veuillez sélectionner un type de besoin.';
-                    typeBesoin.parentElement.appendChild(typeBesoinMessage);
-                }
-                return;
-            } else if (typeBesoinMessage) {
-                typeBesoinMessage.remove();
-            }
 
             // Vérification de la sélection d'un camion
             const camionSelectionne = document.getElementById('camion_selectionne').value;
@@ -732,15 +756,15 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
             }
 
             // Toutes les conditions étant remplies, passez à l'étape suivante
-            document.getElementById('step-2').style.display = 'block';
-            document.getElementById('step-1').style.display = 'none';
-
-            // Faire défiler la page vers le haut
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            goToStep2('suivant');
         });
+
+    // Tuiles de sous-type à la place des listes déroulantes (DEEE, benne)
+    Object.keys(TYPE_TILES).forEach(buildTypeTiles);
+
+    // Pré-sélection depuis l'URL (?besoin=...), une fois tous les écouteurs posés
+    applyUrlPreselection();
+    trackDevis('devis_view', { besoin: devisBesoin || '(aucun)' });
     });
 
 
@@ -755,52 +779,15 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         }
     });
 
-    // ======== RÉCAPITULATIF - Event Listeners ========
-    document.getElementById('show-recap-btn').addEventListener('click', showRecap);
-    document.getElementById('recap-edit').addEventListener('click', hideRecap);
+    // ======== RÉSUMÉ (étape 2) - Event Listeners ========
+    // « Modifier ma sélection » ramène à l'étape 1, comme le bouton Retour
+    document.getElementById('recap-edit').addEventListener('click', function () {
+        document.getElementById('previous-step').click();
+    });
     document.getElementById('recap-header').addEventListener('click', toggleRecap);
 
 
 // ======== FONCTIONS RÉCAPITULATIF ========
-
-function showRecap() {
-    // Vérification basique des champs requis avant d'afficher le récap
-    var name = document.getElementById('name').value.trim();
-    var email = document.getElementById('email').value.trim();
-    var phone = document.getElementById('phone').value.trim();
-    var adresse = document.getElementById('adresse').value.trim();
-    var description = document.getElementById('description').value.trim();
-    var professionSelect = document.getElementById('profession');
-    var siretInput = document.getElementById('siret');
-
-    if (!name || !email || !phone || !adresse || !description) {
-        alert('Veuillez remplir tous les champs obligatoires avant de vérifier votre demande.');
-        return;
-    }
-
-    if (professionSelect.value === "2" && !siretInput.value.trim()) {
-        alert('Le SIREN est obligatoire pour un professionnel.');
-        siretInput.focus();
-        return;
-    }
-
-    // Remplir le récap
-    buildRecap();
-
-    // Afficher la section récap et le bouton confirmer
-    document.getElementById('recap-section').style.display = 'block';
-    document.getElementById('submit-btn').style.display = 'block';
-    document.getElementById('show-recap-btn').style.display = 'none';
-
-    // Scroll vers le récap
-    document.getElementById('recap-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function hideRecap() {
-    document.getElementById('recap-section').style.display = 'none';
-    document.getElementById('submit-btn').style.display = 'none';
-    document.getElementById('show-recap-btn').style.display = 'block';
-}
 
 function toggleRecap() {
     var content = document.getElementById('recap-content');
@@ -816,10 +803,8 @@ function toggleRecap() {
 
 function buildRecap() {
     // -- Besoin --
-    var typeBesoin = document.getElementById('type_besoin');
     var jeRecycle = document.getElementById('je_recycle');
     var besoinHtml = '';
-    besoinHtml += '<div class="recap-line"><span class="recap-label">Type :</span> <span class="recap-value">' + escapeHtml(typeBesoin.options[typeBesoin.selectedIndex].text) + '</span></div>';
     besoinHtml += '<div class="recap-line"><span class="recap-label">Catégorie :</span> <span class="recap-value">' + escapeHtml(jeRecycle.options[jeRecycle.selectedIndex].text) + '</span></div>';
     document.getElementById('recap-besoin-details').innerHTML = besoinHtml;
 
@@ -895,45 +880,6 @@ function buildRecap() {
         recapCamionBlock.style.display = 'none';
     }
 
-    // -- Client --
-    var clientHtml = '';
-    var name = document.getElementById('name').value.trim();
-    var profession = document.getElementById('profession');
-    var profText = profession.options[profession.selectedIndex].text;
-    var email = document.getElementById('email').value.trim();
-    var phone = document.getElementById('phone').value.trim();
-    var adresse = document.getElementById('adresse').value.trim();
-
-    clientHtml += '<div class="recap-line"><span class="recap-label">Nom :</span> <span class="recap-value">' + escapeHtml(name) + '</span></div>';
-    clientHtml += '<div class="recap-line"><span class="recap-label">Profil :</span> <span class="recap-value">' + escapeHtml(profText) + '</span></div>';
-
-    if (profession.value === "2") {
-        var raison = document.getElementById('raison').value.trim();
-        var siret = document.getElementById('siret').value.trim();
-        if (raison) clientHtml += '<div class="recap-line"><span class="recap-label">Raison sociale :</span> <span class="recap-value">' + escapeHtml(raison) + '</span></div>';
-        if (siret) clientHtml += '<div class="recap-line"><span class="recap-label">SIREN :</span> <span class="recap-value">' + escapeHtml(siret) + '</span></div>';
-    }
-
-    clientHtml += '<div class="recap-line"><span class="recap-label">Email :</span> <span class="recap-value">' + escapeHtml(email) + '</span></div>';
-    clientHtml += '<div class="recap-line"><span class="recap-label">Téléphone :</span> <span class="recap-value">' + escapeHtml(phone) + '</span></div>';
-    clientHtml += '<div class="recap-line"><span class="recap-label">Adresse :</span> <span class="recap-value">' + escapeHtml(adresse) + '</span></div>';
-
-    // Étage
-    var etage = document.getElementById('etage');
-    clientHtml += '<div class="recap-line"><span class="recap-label">Étage :</span> <span class="recap-value">' + escapeHtml(etage.options[etage.selectedIndex].text) + '</span></div>';
-
-    // Ascenseur (si visible)
-    var ascenseurBlock = document.getElementById('ascenseur-block');
-    if (ascenseurBlock && ascenseurBlock.style.display !== 'none') {
-        var ascenseur = document.getElementById('ascenseur');
-        clientHtml += '<div class="recap-line"><span class="recap-label">Ascenseur :</span> <span class="recap-value">' + (ascenseur.value === 'oui' ? 'Oui' : 'Non') + '</span></div>';
-    }
-
-    document.getElementById('recap-client-details').innerHTML = clientHtml;
-
-    // -- Description --
-    var description = document.getElementById('description').value.trim();
-    document.getElementById('recap-description-text').textContent = description;
 }
 
 function escapeHtml(text) {
@@ -947,3 +893,180 @@ function escapeHtml(text) {
 
 
 
+
+// ======== TUILES DE SOUS-TYPE (remplacent visuellement un <select>) ========
+// Le <select> d'origine reste dans le DOM (masqué, même name) : le payload ne change pas.
+// Un clic sur une tuile positionne sa valeur et déclenche « change », donc toute la logique
+// existante (sections affichées, résumé, validation, dataLayer) s'exécute comme avant.
+var TYPE_TILES = {
+    deee_domicile_select: { labelId: 'label_deee_domicile', icons: {
+        informatiques_bureautiques_domicile: 'fa-laptop', cartouches_encres_toners_domicile: 'fa-print',
+        accumulateurs_batteries_piles_domicile: 'fa-car-battery', electromenager_chaud_froid_domicile: 'fa-blender',
+        climatisation_chaud_froid_domicile: 'fa-fan', ampoules_lampes_neons_domicile: 'fa-lightbulb' } },
+    deee_depot_select: { labelId: 'label_deee_depot', icons: {
+        informatiques_bureautiques_depot: 'fa-laptop', cartouches_encres_toners_depot: 'fa-print',
+        accumulateurs_batteries_piles_depot: 'fa-car-battery', electromenager_chaud_froid_depot: 'fa-blender',
+        climatisation_chaud_froid_depot: 'fa-fan', ampoules_lampes_neons_depot: 'fa-lightbulb' } },
+    type_benne: { labelId: 'label_type_benne',
+        icons: { gravats_beton: 'fa-cubes', dnd_bennes: 'fa-recycle' },
+        labels: { gravats_beton: 'Gravats, béton, parpaings, tuiles, terre, pierres',
+                  dnd_bennes: 'Déchets non dangereux : bois, plâtre, plastiques, cartons, métaux' } }
+};
+
+function syncTypeTiles(select) {
+    var group = select && select._typeTiles;
+    if (!group) return;
+    group.querySelectorAll('.type-tile').forEach(function (btn) {
+        var on = btn.dataset.value === select.value;
+        btn.classList.toggle('selected', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+}
+
+function buildTypeTiles(selectId) {
+    var conf = TYPE_TILES[selectId];
+    var select = document.getElementById(selectId);
+    if (!conf || !select || select._typeTiles) return;
+    var group = document.createElement('div');
+    group.className = 'type-tiles';
+    group.setAttribute('role', 'group');
+    if (conf.labelId) group.setAttribute('aria-labelledby', conf.labelId);
+    var count = 0;
+    Array.prototype.forEach.call(select.options, function (opt) {
+        if (!opt.value) return;
+        count++;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'type-tile';
+        btn.dataset.value = opt.value;
+        btn.setAttribute('aria-pressed', 'false');
+        var icon = conf.icons && conf.icons[opt.value];
+        if (icon) {
+            var i = document.createElement('i');
+            i.className = 'fa-solid ' + icon;
+            i.setAttribute('aria-hidden', 'true');
+            btn.appendChild(i);
+        }
+        var span = document.createElement('span');
+        span.textContent = (conf.labels && conf.labels[opt.value]) || opt.text.trim();
+        btn.appendChild(span);
+        btn.addEventListener('click', function () {
+            if (select.value === opt.value) return; // déjà choisi : rien ne change
+            select.value = opt.value;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        group.appendChild(btn);
+    });
+    if (count <= 2) group.classList.add('type-tiles--2');
+    select.insertAdjacentElement('afterend', group);
+    select.style.display = 'none';
+    select.setAttribute('aria-hidden', 'true');
+    select.tabIndex = -1;
+    select._typeTiles = group;
+    select.addEventListener('change', function () { syncTypeTiles(select); });
+    syncTypeTiles(select);
+}
+
+// ======== PRÉ-SÉLECTION PAR L'URL ========
+// ?besoin=  catégorie (deee, archives, ferraille, bureau, mobilier, debarras, benne, chantier…)
+// ?lieu=    site | depot            (DEEE et archives : récupération sur place ou dépôt)
+// Le lien s'arrête à la catégorie : aucun sous-type (DEEE, benne, chantier) n'est présélectionné,
+// le visiteur choisit lui-même sa tuile. ?type= est ignoré. Voir docs/parametres-url.md
+// Exception : ferraille / cartons / papiers… sont des tuiles visibles de « déchets non dangereux »,
+// présélectionnées parmi les autres tuiles affichées (rien n'est masqué).
+var BESOIN_MAP = {
+    deee: { recycle: 'deee' },
+    d3e: { recycle: 'deee' },
+    informatique: { recycle: 'deee' },
+    cartouches: { recycle: 'deee' },
+    archives: { recycle: 'destruction_archives' },
+    ferraille: { recycle: 'dechets_non_dangereux', choice: 'ferrailles' },
+    ferrailles: { recycle: 'dechets_non_dangereux', choice: 'ferrailles' },
+    metaux: { recycle: 'dechets_non_dangereux', choice: 'ferrailles' },
+    bureau: { recycle: 'dechets_bureau' },
+    mobilier: { recycle: 'mobilier_bureau' },
+    debarras: { recycle: 'debarrasser_local' },
+    benne: { recycle: 'louer_benne' },
+    chantier: { recycle: 'dechets_chantiers' },
+    dnd: { recycle: 'dechets_non_dangereux' },
+    cartons: { recycle: 'dechets_non_dangereux', choice: 'cartons' },
+    papiers: { recycle: 'dechets_non_dangereux', choice: 'papiers' },
+    plastiques: { recycle: 'dechets_non_dangereux', choice: 'plastiques' },
+    palettes: { recycle: 'dechets_non_dangereux', choice: 'palettes' },
+    encombrants: { recycle: 'dechets_non_dangereux', choice: 'encombrants' },
+    bois: { recycle: 'dechets_non_dangereux', choice: 'bois' },
+    dib: { recycle: 'dechets_non_dangereux', choice: 'dib' },
+    dechets_verts: { recycle: 'dechets_non_dangereux', choice: 'dechets_vert' }
+};
+var LIEU_MAP = { site: 'domicile', sur_site: 'domicile', domicile: 'domicile', oui: 'domicile', depot: 'depot', non: 'depot' };
+
+function normalizeParam(v) {
+    return (v || '').toString().trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[\s-]+/g, '_');
+}
+
+// Positionne un <select> et déclenche « change » pour que la logique existante s'exécute
+function setSelectValue(id, value) {
+    var el = document.getElementById(id);
+    if (!el || !Array.prototype.some.call(el.options, function (o) { return o.value === value; })) return false;
+    el.value = value;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+}
+
+var devisBesoin = '';
+
+function applyUrlPreselection() {
+    var params = new URLSearchParams(window.location.search);
+    var besoin = normalizeParam(params.get('besoin'));
+    // Accepte aussi directement les valeurs internes de « Je recycle »
+    var conf = BESOIN_MAP[besoin];
+    if (!conf) {
+        var jr = document.getElementById('je_recycle');
+        var isInternal = jr && besoin && Array.prototype.some.call(jr.options, function (o) { return o.value === besoin; });
+        conf = isInternal ? { recycle: besoin } : null;
+    }
+    if (!conf) return; // valeur absente ou inconnue : comportement par défaut
+    devisBesoin = besoin;
+
+    var lieu = LIEU_MAP[normalizeParam(params.get('lieu'))] || '';
+    var target = null;
+
+    if (!setSelectValue('je_recycle', conf.recycle)) return;
+    target = document.getElementById({
+        deee: 'deee_wrapper', destruction_archives: 'destruction_archives_wrapper',
+        louer_benne: 'louer_benne_wrapper', dechets_chantiers: 'dechets_chantiers_wrapper',
+        dechets_non_dangereux: 'dechets_nd_wrapper', dechets_bureau: 'dechets_bureau_wrapper',
+        mobilier_bureau: 'volume-section', debarrasser_local: 'volume-section'
+    }[conf.recycle]);
+
+    // Lieu seulement s'il est donné explicitement ; le type reste au choix du visiteur
+    if (conf.recycle === 'deee' && lieu) {
+        setSelectValue('lieu_deee', 'type_deee_' + lieu);
+        target = document.getElementById('type_deee_' + lieu + '_wrapper') || target;
+    } else if (conf.recycle === 'destruction_archives' && lieu) {
+        setSelectValue('lieu_archives', 'destruction_archives_' + lieu);
+        target = document.getElementById('destruction_archives_' + lieu + '_wrapper') || target;
+    }
+
+    var choice = conf.choice;
+    if (choice) {
+        var choiceEl = document.querySelector('.choice[data-value="' + choice + '"]');
+        if (choiceEl) {
+            choiceEl.click();
+            var wrapper = document.getElementById({
+                ferrailles: 'dnd_ferrailles_wrapper', cartons: 'dnd_cartons_wrapper', papiers: 'dnd_papiers_wrapper',
+                plastiques: 'dnd_plastiques_wrapper', palettes: 'dnd_palettes_wrapper', encombrants: 'dnd_encombrants_wrapper',
+                dib: 'dnd_dib_wrapper', bois: 'dnd_bois_wrapper', dechets_vert: 'dnd_dechets_verts_wrapper'
+            }[choice]);
+            if (wrapper) target = wrapper;
+        }
+    }
+
+    if (target) {
+        setTimeout(function () {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+}
