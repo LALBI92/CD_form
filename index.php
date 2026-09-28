@@ -147,7 +147,7 @@
                 <span>Palette 660L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="palette_660l_carton_sqty">-</button>
+                <button type="button" class="qty-minus" data-target="palette_660l_cartons_qty">-</button>
                 <input type="number" id="palette_660l_cartons_qty" name="palette_660l_cartons_qty" value="0" min="0" readonly>
                 <button type="button" class="qty-plus" data-target="palette_660l_cartons_qty">+</button>
             </div>
@@ -211,7 +211,7 @@
                 <span>Palette 660L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="palette_660l_papiers_sqty">-</button>
+                <button type="button" class="qty-minus" data-target="palette_660l_papiers_qty">-</button>
                 <input type="number" id="palette_660l_papiers_qty" name="palette_660l_papiers_qty" value="0" min="0" readonly>
                 <button type="button" class="qty-plus" data-target="palette_660l_papiers_qty">+</button>
             </div>
@@ -274,7 +274,7 @@
                 <span>Palette 660L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="palette_660l_plastiques_sqty">-</button>
+                <button type="button" class="qty-minus" data-target="palette_660l_plastiques_qty">-</button>
                 <input type="number" id="palette_660l_plastiques_qty" name="palette_660l_plastiques_qty" value="0" min="0" readonly>
                 <button type="button" class="qty-plus" data-target="palette_660l_plastiques_qty">+</button>
             </div>
@@ -457,7 +457,7 @@
             <span>Palette 660L</span>
         </label>
         <div class="quantity-selector">
-            <button type="button" class="qty-minus" data-target="palette_660l_bois_sqty">-</button>
+            <button type="button" class="qty-minus" data-target="palette_660l_bois_qty">-</button>
             <input type="number" id="palette_660l_bois_qty" name="palette_660l_bois_qty" value="0" min="0" readonly>
             <button type="button" class="qty-plus" data-target="palette_660l_bois_qty">+</button>
         </div>
@@ -508,7 +508,7 @@
             <span>Palette 660L</span>
         </label>
         <div class="quantity-selector">
-            <button type="button" class="qty-minus" data-target="palette_660l_ferrailles_sqty">-</button>
+            <button type="button" class="qty-minus" data-target="palette_660l_ferrailles_qty">-</button>
             <input type="number" id="palette_660l_ferrailles_qty" name="palette_660l_ferrailles_qty" value="0" min="0" readonly>
             <button type="button" class="qty-plus" data-target="palette_660l_ferrailles_qty">+</button>
         </div>
@@ -1126,7 +1126,7 @@
                 <span>Box Cartouche 70L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_cartouche__domicileqty">-</button>
+                <button type="button" class="qty-minus" data-target="box_cartouche_domicile_qty">-</button>
                 <input type="number" id="box_cartouche_domicile_qty" name="box_cartouche_domicile_qty" value="0" min="0" readonly>
                 <button type="button" class="qty-plus" data-target="box_cartouche_domicile_qty">+</button>
             </div>
@@ -1466,7 +1466,7 @@
                 <span>Box Cartouche 70L</span>
             </label>
             <div class="quantity-selector">
-                <button type="button" class="qty-minus" data-target="box_cartouche__depotqty">-</button>
+                <button type="button" class="qty-minus" data-target="box_cartouche_depot_qty">-</button>
                 <input type="number" id="box_cartouche_depot_qty" name="box_cartouche_depot_qty" value="0" min="0" readonly>
                 <button type="button" class="qty-plus" data-target="box_cartouche_depot_qty">+</button>
             </div>
