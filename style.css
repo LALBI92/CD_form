@@ -1001,9 +1001,28 @@ label[for="benne_10m3_cartons"] {
     font-weight: 700;
 }
 
+.optional {
+    color: #64748b;
+    font-weight: 400;
+    font-size: 0.9em;
+}
+
+/* Messages de validation en ligne */
+.field-error {
+    color: #C62828;
+    font-size: 0.875rem;
+    margin: 4px 0 10px;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+    border-color: #E53935 !important;
+}
+
 /* Récapitulatif */
 #recap-section {
-    margin-top: 28px;
+    margin-top: 20px;
     border: 2px solid #c8e6c9;
     border-radius: 16px;
     overflow: hidden;

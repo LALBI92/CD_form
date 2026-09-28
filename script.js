@@ -93,6 +93,38 @@ document.addEventListener('DOMContentLoaded', function () {
     updateProduit();     // Générer le produit initial
 });
 
+// Étage / ascenseur : utiles seulement quand l'équipe monte chercher les déchets sur place.
+// Masqués pour les bennes (posées en pied d'immeuble) et le dépôt chez City Debarras ;
+// dans ce cas on remet les valeurs par défaut (RDC / non) pour garder le même payload.
+var CATEGORIES_SANS_ETAGE = ['louer_benne', 'dechets_chantiers', 'dechets_non_dangereux'];
+
+function updatePickupFields() {
+    var jeRecycle = document.getElementById('je_recycle');
+    var lieuDeee = document.getElementById('lieu_deee');
+    var lieuArchives = document.getElementById('lieu_archives');
+    var additionalFields = document.getElementById('additional-fields');
+    if (!jeRecycle || !additionalFields) return;
+    var cat = jeRecycle.value;
+    var hide = CATEGORIES_SANS_ETAGE.indexOf(cat) !== -1
+        || (cat === 'deee' && lieuDeee && lieuDeee.value === 'type_deee_depot')
+        || (cat === 'destruction_archives' && lieuArchives && lieuArchives.value === 'destruction_archives_depot');
+    if (hide) {
+        additionalFields.style.display = 'none';
+        document.getElementById('ascenseur-block').style.display = 'none';
+        etageSelect.value = 'RDC';
+        ascenseurSelect.value = 'non';
+        updateProduit();
+    } else {
+        additionalFields.style.display = 'block';
+        handleEtageChange();
+    }
+}
+
+['je_recycle', 'lieu_deee', 'lieu_archives'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('change', updatePickupFields);
+});
+
 // Gérer la sélection d'un camion
 let selectedCamion = null;
 
@@ -123,6 +155,10 @@ function selectCamion(camionId) {
 
 // Affichage de l'étape 2 (depuis « Suivant » ou le choix d'un camion)
 function goToStep2(via) {
+    // Résumé compact de la sélection au-dessus du bouton d'envoi (ancienne étape « récap »)
+    buildRecap();
+    updatePickupFields();
+
     document.getElementById('step-2').style.display = 'block';
     document.getElementById('step-1').style.display = 'none';
 
@@ -530,6 +566,70 @@ if (professionSelect && siretBlock) {
     });
 }
 
+// ======== VALIDATION EN LIGNE (remplace les alert()) ========
+function setFieldError(input, message) {
+    var id = 'err-' + input.id;
+    var msg = document.getElementById(id);
+    if (!msg) {
+        msg = document.createElement('div');
+        msg.id = id;
+        msg.className = 'field-error';
+        msg.setAttribute('role', 'alert');
+        input.insertAdjacentElement('afterend', msg);
+    }
+    if (!input.dataset.errorWired) {
+        // Le message disparaît dès que l'utilisateur corrige le champ
+        input.dataset.errorWired = '1';
+        input.addEventListener('input', function () { clearFieldError(input); });
+    }
+    msg.textContent = message;
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', id);
+}
+
+function clearFieldError(input) {
+    var msg = document.getElementById('err-' + input.id);
+    if (msg) msg.remove();
+    input.removeAttribute('aria-invalid');
+    input.removeAttribute('aria-describedby');
+}
+
+// Mêmes règles qu'avant (champs requis, format e-mail, SIREN pour un pro), messages sous chaque champ
+function validateStep2() {
+    var checks = [
+        ['name', 'Indiquez votre nom.'],
+        ['email', 'Indiquez votre e-mail.'],
+        ['phone', 'Indiquez votre numéro de téléphone.'],
+        ['adresse', "Indiquez l'adresse de l'intervention."]
+    ];
+    var firstInvalid = null;
+    checks.forEach(function (c) {
+        var el = document.getElementById(c[0]);
+        if (!el) return;
+        var message = '';
+        if (!el.value.trim()) message = c[1];
+        else if (el.type === 'email' && el.validity.typeMismatch) message = "Cette adresse e-mail n'est pas valide.";
+        if (message) { setFieldError(el, message); firstInvalid = firstInvalid || el; }
+        else clearFieldError(el);
+    });
+    var prof = document.getElementById('profession');
+    var siret = document.getElementById('siret');
+    if (prof && siret) {
+        if (prof.value === '2' && !siret.value.trim()) {
+            setFieldError(siret, 'Le SIREN est obligatoire pour un professionnel.');
+            firstInvalid = firstInvalid || siret;
+        } else {
+            clearFieldError(siret);
+        }
+    }
+    if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstInvalid.focus({ preventScroll: true });
+        return false;
+    }
+    return true;
+}
+
 // Validation du formulaire avec protection anti-double soumission
 let isSubmitting = false;
 
@@ -541,11 +641,8 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         return;
     }
 
-    // Validation SIRET pour les professionnels
-    if (professionSelect.value === "2" && !siretInput.value.trim()) {
+    if (!validateStep2()) {
         e.preventDefault();
-        alert("Le SIRET est obligatoire pour un professionnel");
-        siretInput.focus();
         return;
     }
 
@@ -554,6 +651,7 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
 
     // Désactiver le bouton de soumission
     const submitButton = document.getElementById('submit-btn');
+    const submitLabel = submitButton ? submitButton.textContent : '';
     if (submitButton) {
         submitButton.disabled = true;
         submitButton.textContent = "Envoi en cours...";
@@ -566,7 +664,7 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         isSubmitting = false;
         if (submitButton) {
             submitButton.disabled = false;
-            submitButton.textContent = "Confirmer et envoyer ma demande";
+            submitButton.textContent = submitLabel;
         }
     }, 10000);
 });
@@ -592,24 +690,6 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
             setTimeout(() => {
                 this.disabled = false;
             }, 1000);
-
-            // Vérification du type de besoin (déjà existant)
-            const typeBesoin = document.getElementById('type_besoin');
-            let typeBesoinMessage = document.getElementById('type_besoin_message');
-
-            if (typeBesoin.value === "") {
-                if (!typeBesoinMessage) {
-                    typeBesoinMessage = document.createElement('div');
-                    typeBesoinMessage.id = 'type_besoin_message';
-                    typeBesoinMessage.style.color = 'red';
-                    typeBesoinMessage.style.marginTop = '5px';
-                    typeBesoinMessage.innerText = 'Veuillez sélectionner un type de besoin.';
-                    typeBesoin.parentElement.appendChild(typeBesoinMessage);
-                }
-                return;
-            } else if (typeBesoinMessage) {
-                typeBesoinMessage.remove();
-            }
 
             // Vérification de la sélection d'un camion
             const camionSelectionne = document.getElementById('camion_selectionne').value;
@@ -672,52 +752,15 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
         }
     });
 
-    // ======== RÉCAPITULATIF - Event Listeners ========
-    document.getElementById('show-recap-btn').addEventListener('click', showRecap);
-    document.getElementById('recap-edit').addEventListener('click', hideRecap);
+    // ======== RÉSUMÉ (étape 2) - Event Listeners ========
+    // « Modifier ma sélection » ramène à l'étape 1, comme le bouton Retour
+    document.getElementById('recap-edit').addEventListener('click', function () {
+        document.getElementById('previous-step').click();
+    });
     document.getElementById('recap-header').addEventListener('click', toggleRecap);
 
 
 // ======== FONCTIONS RÉCAPITULATIF ========
-
-function showRecap() {
-    // Vérification basique des champs requis avant d'afficher le récap
-    var name = document.getElementById('name').value.trim();
-    var email = document.getElementById('email').value.trim();
-    var phone = document.getElementById('phone').value.trim();
-    var adresse = document.getElementById('adresse').value.trim();
-    var description = document.getElementById('description').value.trim();
-    var professionSelect = document.getElementById('profession');
-    var siretInput = document.getElementById('siret');
-
-    if (!name || !email || !phone || !adresse || !description) {
-        alert('Veuillez remplir tous les champs obligatoires avant de vérifier votre demande.');
-        return;
-    }
-
-    if (professionSelect.value === "2" && !siretInput.value.trim()) {
-        alert('Le SIREN est obligatoire pour un professionnel.');
-        siretInput.focus();
-        return;
-    }
-
-    // Remplir le récap
-    buildRecap();
-
-    // Afficher la section récap et le bouton confirmer
-    document.getElementById('recap-section').style.display = 'block';
-    document.getElementById('submit-btn').style.display = 'block';
-    document.getElementById('show-recap-btn').style.display = 'none';
-
-    // Scroll vers le récap
-    document.getElementById('recap-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function hideRecap() {
-    document.getElementById('recap-section').style.display = 'none';
-    document.getElementById('submit-btn').style.display = 'none';
-    document.getElementById('show-recap-btn').style.display = 'block';
-}
 
 function toggleRecap() {
     var content = document.getElementById('recap-content');
@@ -733,10 +776,8 @@ function toggleRecap() {
 
 function buildRecap() {
     // -- Besoin --
-    var typeBesoin = document.getElementById('type_besoin');
     var jeRecycle = document.getElementById('je_recycle');
     var besoinHtml = '';
-    besoinHtml += '<div class="recap-line"><span class="recap-label">Type :</span> <span class="recap-value">' + escapeHtml(typeBesoin.options[typeBesoin.selectedIndex].text) + '</span></div>';
     besoinHtml += '<div class="recap-line"><span class="recap-label">Catégorie :</span> <span class="recap-value">' + escapeHtml(jeRecycle.options[jeRecycle.selectedIndex].text) + '</span></div>';
     document.getElementById('recap-besoin-details').innerHTML = besoinHtml;
 
@@ -812,45 +853,6 @@ function buildRecap() {
         recapCamionBlock.style.display = 'none';
     }
 
-    // -- Client --
-    var clientHtml = '';
-    var name = document.getElementById('name').value.trim();
-    var profession = document.getElementById('profession');
-    var profText = profession.options[profession.selectedIndex].text;
-    var email = document.getElementById('email').value.trim();
-    var phone = document.getElementById('phone').value.trim();
-    var adresse = document.getElementById('adresse').value.trim();
-
-    clientHtml += '<div class="recap-line"><span class="recap-label">Nom :</span> <span class="recap-value">' + escapeHtml(name) + '</span></div>';
-    clientHtml += '<div class="recap-line"><span class="recap-label">Profil :</span> <span class="recap-value">' + escapeHtml(profText) + '</span></div>';
-
-    if (profession.value === "2") {
-        var raison = document.getElementById('raison').value.trim();
-        var siret = document.getElementById('siret').value.trim();
-        if (raison) clientHtml += '<div class="recap-line"><span class="recap-label">Raison sociale :</span> <span class="recap-value">' + escapeHtml(raison) + '</span></div>';
-        if (siret) clientHtml += '<div class="recap-line"><span class="recap-label">SIREN :</span> <span class="recap-value">' + escapeHtml(siret) + '</span></div>';
-    }
-
-    clientHtml += '<div class="recap-line"><span class="recap-label">Email :</span> <span class="recap-value">' + escapeHtml(email) + '</span></div>';
-    clientHtml += '<div class="recap-line"><span class="recap-label">Téléphone :</span> <span class="recap-value">' + escapeHtml(phone) + '</span></div>';
-    clientHtml += '<div class="recap-line"><span class="recap-label">Adresse :</span> <span class="recap-value">' + escapeHtml(adresse) + '</span></div>';
-
-    // Étage
-    var etage = document.getElementById('etage');
-    clientHtml += '<div class="recap-line"><span class="recap-label">Étage :</span> <span class="recap-value">' + escapeHtml(etage.options[etage.selectedIndex].text) + '</span></div>';
-
-    // Ascenseur (si visible)
-    var ascenseurBlock = document.getElementById('ascenseur-block');
-    if (ascenseurBlock && ascenseurBlock.style.display !== 'none') {
-        var ascenseur = document.getElementById('ascenseur');
-        clientHtml += '<div class="recap-line"><span class="recap-label">Ascenseur :</span> <span class="recap-value">' + (ascenseur.value === 'oui' ? 'Oui' : 'Non') + '</span></div>';
-    }
-
-    document.getElementById('recap-client-details').innerHTML = clientHtml;
-
-    // -- Description --
-    var description = document.getElementById('description').value.trim();
-    document.getElementById('recap-description-text').textContent = description;
 }
 
 function escapeHtml(text) {

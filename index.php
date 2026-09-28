@@ -32,7 +32,7 @@
 
 <h2>Recevez immédiatement votre devis en quelques clics</h2>
 
-<form action="invoiced.php" method="POST" enctype="multipart/form-data" id="devisForm">
+<form action="invoiced.php" method="POST" enctype="multipart/form-data" id="devisForm" novalidate>
     <?php
     // Attribution : paramètres de campagne transmis avec la demande (non exploités par
     // invoiced.php pour l'instant, visibles dans devis.log et le log de email.php)
@@ -45,16 +45,6 @@
     <!-- Step 1 -->
 <div id="step-1" class="form-step">
 
-
-    <!-- Champ Type de besoin -->
-    <div>
-        <label for="type_besoin">Type de besoin</label>
-        <select name="type_besoin" id="type_besoin" required>
-            <option value="">Choisir ponctuel ou régulier ?</option>
-            <option value="Ponctuel">Ponctuel</option>
-            <option value="Regulier">Régulier</option>
-        </select>
-    </div>
 
     <!-- Champ JE RECYCLE -->
     <div>
@@ -3502,9 +3492,16 @@
 
 
 
-    <!-- Description du besoin -->
-<label for="description">Décrivez votre besoin <span class="required">*</span></label>
-<textarea id="description" name="description" maxlength="500" placeholder="Merci de nous préciser les conditions d'accès : escaliers, ascenseur, étage..." required></textarea>
+    <!-- Type de besoin : ne bloque plus l'étape 1, « Ponctuel » par défaut (champ conservé pour le payload) -->
+    <label for="type_besoin">Besoin ponctuel ou régulier ?</label>
+    <select name="type_besoin" id="type_besoin">
+        <option value="Ponctuel" selected>Ponctuel</option>
+        <option value="Regulier">Régulier</option>
+    </select>
+
+    <!-- Description du besoin (facultative) -->
+<label for="description">Décrivez votre besoin <span class="optional">(facultatif)</span></label>
+<textarea id="description" name="description" maxlength="500" placeholder="Merci de nous préciser les conditions d'accès : escaliers, ascenseur, étage..."></textarea>
 
   <!-- Téléchargement de plusieurs fichiers -->
   <label for="file-upload">Afin de mieux appréhender votre demande, vous pouvez si vous le souhaitez nous fournir des photos (.jpg, .png, .tiff) ou autres fichiers (.pdf, .doc, .xls):</label><br><br>
@@ -3516,10 +3513,10 @@
 
 <div id="preview"></div>
 
-    <!-- Récapitulatif avant soumission -->
-    <div id="recap-section" style="display: none;">
+    <!-- Résumé de la sélection, affiché directement au-dessus du bouton d'envoi -->
+    <div id="recap-section">
         <div id="recap-header">
-            <h3>Récapitulatif de votre demande</h3>
+            <h3>Votre demande</h3>
             <span id="recap-toggle-icon">▼</span>
         </div>
         <div id="recap-content">
@@ -3535,21 +3532,12 @@
                 <h4>Camion sélectionné</h4>
                 <div id="recap-camion-details"></div>
             </div>
-            <div id="recap-client" class="recap-block">
-                <h4>Vos informations</h4>
-                <div id="recap-client-details"></div>
-            </div>
-            <div id="recap-description-block" class="recap-block">
-                <h4>Description</h4>
-                <p id="recap-description-text"></p>
-            </div>
-            <button type="button" id="recap-edit">Modifier</button>
+            <button type="button" id="recap-edit">Modifier ma sélection</button>
         </div>
     </div>
 
     <!-- Bouton Soumettre -->
-    <button type="button" id="show-recap-btn">Vérifier et soumettre</button>
-    <button type="submit" id="submit-btn" style="display: none;">Confirmer et envoyer ma demande</button>
+    <button type="submit" id="submit-btn">Envoyer ma demande de devis</button>
   </div>
 </form>
 
