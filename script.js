@@ -128,14 +128,6 @@ function selectCamion(camionId) {
     });
 }
 
-// Ajoute l'événement au clic pour les camions
-const choisirButtons = document.querySelectorAll(".choisir-camion");
-choisirButtons.forEach(button => {
-    button.addEventListener("click", function () {
-        const camionId = this.closest(".camion").id;
-        selectCamion(camionId);
-    });
-});
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -244,19 +236,6 @@ function hideChoiceSections() {
             sectionElement.style.display = "none";
         }
     });
-}
-
-function hideAllDeeeSections() {
-    // Masquer les sections domicile et entrepôt
-    hideDeeeDomicileSections();
-    hideDeeedepotSections();
-
-    // Masquer les sélecteurs domicile et entrepôt eux-mêmes
-    const typeDeeeDomicileWrapper = document.getElementById("type_deee_domicile_wrapper");
-    const typeDeeedepotWrapper = document.getElementById("type_deee_depot_wrapper");
-
-    if (typeDeeeDomicileWrapper) typeDeeeDomicileWrapper.style.display = "none";
-    if (typeDeeedepotWrapper) typeDeeedepotWrapper.style.display = "none";
 }
 
 function resetDeeeSelectFields() {
@@ -414,22 +393,7 @@ if (lieuArchivesSelect) {
     });
 }
 
-     // Function to update the total volume
-function updateTotalVolume() {
-    let totalVolume = 0;
-    // Cibler uniquement les inputs avec la classe 'volume-control' et un attribut 'data-volume'
-    const volumeInputs = document.querySelectorAll("input.volume-control[data-volume]");
 
-    volumeInputs.forEach(input => {
-        const quantity = parseInt(input.value);
-        const volumePerItem = parseFloat(input.getAttribute("data-volume"));
-        if (!isNaN(quantity) && !isNaN(volumePerItem)) {
-            totalVolume += quantity * volumePerItem;
-        }
-    });
-
-    document.getElementById("volume-result").textContent = totalVolume.toFixed(2);
-}
 
 
     // Gérer les boutons + et - pour ajuster la quantité
@@ -539,22 +503,6 @@ function updateTotalVolume() {
     updateVehicleSuggestions();
 }
 
-// Ajouter les événements de clic pour les boutons "Choisir ce camion" avec protection anti-double clic
-const choisirButtons = document.querySelectorAll(".choisir-camion");
-choisirButtons.forEach(button => {
-    button.addEventListener("click", function () {
-        // Protection anti-double clic
-        if (this.disabled) return;
-        
-        this.disabled = true;
-        setTimeout(() => {
-            this.disabled = false;
-        }, 1000);
-        
-        const camionId = this.closest(".camion").id; // Trouver l'ID du camion parent
-        selectCamion(camionId);
-    });
-});
 
 
 // Gérer l'affichage conditionnel du SIRET et de la Raison Sociale
@@ -616,41 +564,6 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
 });
 
 
-
-        // Gérer la sélection d'un camion
-        let selectedCamion = null;
-
-        function selectCamion(camionId) {
-            // Retirer la sélection précédente, s'il y en a une
-            if (selectedCamion) {
-                selectedCamion.classList.remove('selected');
-            }
-
-            // Sélectionner le nouveau camion et ajouter un effet visuel (bordure)
-            const camion = document.getElementById(camionId);
-            camion.classList.add('selected');
-            selectedCamion = camion;
-
-            // Mettre à jour le champ caché avec l'ID du camion sélectionné
-            document.getElementById('camion_selectionne').value = camionId;
-            console.log("Camion sélectionné : " + camionId);
-
-            // Afficher les champs supplémentaires pour l'étage et l'ascenseur
-            document.getElementById('additional-fields').style.display = 'block';
-
-            // Ajouter un écouteur pour l'étage afin de gérer l'affichage de l'ascenseur
-            etageSelect.addEventListener('change', function () {
-                const selectedEtage = etageSelect.value;
-                console.log("Étage sélectionné : " + selectedEtage);
-
-                // Si l'étage est supérieur ou égal à 1, afficher le champ ascenseur
-                if (parseInt(selectedEtage) >= 1) {
-                    ascenseurBlock.style.display = 'block';
-                } else {
-                    ascenseurBlock.style.display = 'none';
-                }
-            });
-        }
 
         // Bouton Retour (de Step 2 vers Step 1)
     document.getElementById('previous-step').addEventListener('click', function(event) {
