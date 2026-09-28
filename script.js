@@ -655,6 +655,9 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
             // Toutes les conditions étant remplies, passez à l'étape suivante
             goToStep2('suivant');
         });
+
+    // Pré-sélection depuis l'URL (?besoin=...), une fois tous les écouteurs posés
+    applyUrlPreselection();
     });
 
 
@@ -861,3 +864,137 @@ function escapeHtml(text) {
 
 
 
+
+// ======== PRÉ-SÉLECTION PAR L'URL ========
+// ?besoin=  catégorie (deee, archives, ferraille, bureau, mobilier, debarras, benne, chantier…)
+// ?lieu=    site | depot            (DEEE et archives : récupération sur place ou dépôt)
+// ?type=    sous-catégorie          (DEEE : informatique, cartouches… ; benne : gravats, dnd ;
+//                                    chantier : dib, bois, platre, gravats_melanges, gravats_propres)
+// Valeur inconnue = comportement par défaut (rien de présélectionné). Voir docs/parametres-url.md
+var BESOIN_MAP = {
+    deee: { recycle: 'deee' },
+    d3e: { recycle: 'deee' },
+    informatique: { recycle: 'deee', type: 'informatique' },
+    cartouches: { recycle: 'deee', type: 'cartouches' },
+    archives: { recycle: 'destruction_archives' },
+    ferraille: { recycle: 'dechets_non_dangereux', choice: 'ferrailles' },
+    ferrailles: { recycle: 'dechets_non_dangereux', choice: 'ferrailles' },
+    metaux: { recycle: 'dechets_non_dangereux', choice: 'ferrailles' },
+    bureau: { recycle: 'dechets_bureau' },
+    mobilier: { recycle: 'mobilier_bureau' },
+    debarras: { recycle: 'debarrasser_local' },
+    benne: { recycle: 'louer_benne' },
+    chantier: { recycle: 'dechets_chantiers' },
+    dnd: { recycle: 'dechets_non_dangereux' },
+    cartons: { recycle: 'dechets_non_dangereux', choice: 'cartons' },
+    papiers: { recycle: 'dechets_non_dangereux', choice: 'papiers' },
+    plastiques: { recycle: 'dechets_non_dangereux', choice: 'plastiques' },
+    palettes: { recycle: 'dechets_non_dangereux', choice: 'palettes' },
+    encombrants: { recycle: 'dechets_non_dangereux', choice: 'encombrants' },
+    bois: { recycle: 'dechets_non_dangereux', choice: 'bois' },
+    dib: { recycle: 'dechets_non_dangereux', choice: 'dib' },
+    dechets_verts: { recycle: 'dechets_non_dangereux', choice: 'dechets_vert' }
+};
+var LIEU_MAP = { site: 'domicile', sur_site: 'domicile', domicile: 'domicile', oui: 'domicile', depot: 'depot', non: 'depot' };
+var DEEE_TYPE_MAP = {
+    informatique: 'informatiques_bureautiques', cartouches: 'cartouches_encres_toners',
+    piles: 'accumulateurs_batteries_piles', batteries: 'accumulateurs_batteries_piles',
+    electromenager: 'electromenager_chaud_froid', climatisation: 'climatisation_chaud_froid',
+    ampoules: 'ampoules_lampes_neons', neons: 'ampoules_lampes_neons'
+};
+var BENNE_TYPE_MAP = { gravats: 'gravats_beton', dnd: 'dnd_bennes' };
+var CHANTIER_TYPE_MAP = {
+    dib: 'dib_chantier', bois: 'bois_chantier', platre: 'platre_chantier',
+    gravats_melanges: 'gravats_melange_chantier', gravats_propres: 'gravats_propres_chantier'
+};
+
+function normalizeParam(v) {
+    return (v || '').toString().trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[\s-]+/g, '_');
+}
+
+// Positionne un <select> et déclenche « change » pour que la logique existante s'exécute
+function setSelectValue(id, value) {
+    var el = document.getElementById(id);
+    if (!el || !Array.prototype.some.call(el.options, function (o) { return o.value === value; })) return false;
+    el.value = value;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+}
+
+var devisBesoin = '';
+
+function applyUrlPreselection() {
+    var params = new URLSearchParams(window.location.search);
+    var besoin = normalizeParam(params.get('besoin'));
+    // Accepte aussi directement les valeurs internes de « Je recycle »
+    var conf = BESOIN_MAP[besoin];
+    if (!conf) {
+        var jr = document.getElementById('je_recycle');
+        var isInternal = jr && besoin && Array.prototype.some.call(jr.options, function (o) { return o.value === besoin; });
+        conf = isInternal ? { recycle: besoin } : null;
+    }
+    if (!conf) return; // valeur absente ou inconnue : comportement par défaut
+    devisBesoin = besoin;
+
+    var lieu = LIEU_MAP[normalizeParam(params.get('lieu'))] || '';
+    var type = normalizeParam(params.get('type')) || conf.type || '';
+    var target = null;
+
+    if (!setSelectValue('je_recycle', conf.recycle)) return;
+    target = document.getElementById({
+        deee: 'deee_wrapper', destruction_archives: 'destruction_archives_wrapper',
+        louer_benne: 'louer_benne_wrapper', dechets_chantiers: 'dechets_chantiers_wrapper',
+        dechets_non_dangereux: 'dechets_nd_wrapper', dechets_bureau: 'dechets_bureau_wrapper',
+        mobilier_bureau: 'volume-section', debarrasser_local: 'volume-section'
+    }[conf.recycle]);
+
+    if (conf.recycle === 'deee') {
+        var deeeBase = DEEE_TYPE_MAP[type];
+        var applyDeeeType = function (l) {
+            if (!deeeBase) return null;
+            var selectId = l === 'domicile' ? 'deee_domicile_select' : 'deee_depot_select';
+            if (!setSelectValue(selectId, deeeBase + '_' + (l === 'domicile' ? 'domicile' : 'depot'))) return null;
+            return document.getElementById(selectId).closest('[id$="_wrapper"]');
+        };
+        if (lieu) {
+            setSelectValue('lieu_deee', 'type_deee_' + lieu);
+            target = document.getElementById('type_deee_' + lieu + '_wrapper') || target;
+            var sub = applyDeeeType(lieu);
+            if (sub) target = sub;
+        } else if (deeeBase) {
+            // Lieu non précisé : le sous-type sera appliqué dès que l'utilisateur choisit le lieu
+            document.getElementById('lieu_deee').addEventListener('change', function onLieu() {
+                var l = this.value === 'type_deee_domicile' ? 'domicile' : (this.value === 'type_deee_depot' ? 'depot' : '');
+                if (l) { applyDeeeType(l); this.removeEventListener('change', onLieu); }
+            });
+        }
+    } else if (conf.recycle === 'destruction_archives' && lieu) {
+        setSelectValue('lieu_archives', 'destruction_archives_' + lieu);
+        target = document.getElementById('destruction_archives_' + lieu + '_wrapper') || target;
+    } else if (conf.recycle === 'louer_benne' && BENNE_TYPE_MAP[type]) {
+        setSelectValue('type_benne', BENNE_TYPE_MAP[type]);
+        target = document.getElementById(BENNE_TYPE_MAP[type] === 'gravats_beton' ? 'gravats_propres_wrapper' : 'dechets_non_dangereux_wrapper') || target;
+    }
+
+    var choice = conf.choice || (conf.recycle === 'dechets_chantiers' ? CHANTIER_TYPE_MAP[type] : null);
+    if (choice) {
+        var choiceEl = document.querySelector('.choice[data-value="' + choice + '"]');
+        if (choiceEl) {
+            choiceEl.click();
+            var wrapper = document.getElementById({
+                ferrailles: 'dnd_ferrailles_wrapper', cartons: 'dnd_cartons_wrapper', papiers: 'dnd_papiers_wrapper',
+                plastiques: 'dnd_plastiques_wrapper', palettes: 'dnd_palettes_wrapper', encombrants: 'dnd_encombrants_wrapper',
+                dib: 'dnd_dib_wrapper', bois: 'dnd_bois_wrapper', dechets_vert: 'dnd_dechets_verts_wrapper'
+            }[choice] || (choice + '_wrapper'));
+            if (wrapper) target = wrapper;
+        }
+    }
+
+    if (target) {
+        setTimeout(function () {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+}

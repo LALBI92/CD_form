@@ -33,6 +33,15 @@
 <h2>Recevez immédiatement votre devis en quelques clics</h2>
 
 <form action="invoiced.php" method="POST" enctype="multipart/form-data" id="devisForm">
+    <?php
+    // Attribution : paramètres de campagne transmis avec la demande (non exploités par
+    // invoiced.php pour l'instant, visibles dans devis.log et le log de email.php)
+    foreach (['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'besoin'] as $trackingParam) {
+        $trackingValue = isset($_GET[$trackingParam]) && is_string($_GET[$trackingParam]) ? substr($_GET[$trackingParam], 0, 200) : '';
+        $trackingName = $trackingParam === 'besoin' ? 'landing_besoin' : $trackingParam;
+        echo '<input type="hidden" name="' . $trackingName . '" id="trk_' . $trackingName . '" value="' . htmlspecialchars($trackingValue, ENT_QUOTES, 'UTF-8') . '">' . "\n    ";
+    }
+    ?>
     <!-- Step 1 -->
 <div id="step-1" class="form-step">
 
