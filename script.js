@@ -118,8 +118,16 @@ function selectCamion(camionId) {
     updateProduit();
 
     // Passer automatiquement à l'étape suivante
+    goToStep2('camion');
+}
+
+// Affichage de l'étape 2 (depuis « Suivant » ou le choix d'un camion)
+function goToStep2(via) {
     document.getElementById('step-2').style.display = 'block';
     document.getElementById('step-1').style.display = 'none';
+
+    // Précharger Google Maps pour l'autocomplétion de l'adresse
+    if (typeof loadGoogleMaps === 'function') loadGoogleMaps();
 
     // Faire défiler la page vers le haut
     window.scrollTo({
@@ -645,14 +653,7 @@ document.getElementById("devisForm").addEventListener("submit", function(e) {
             }
 
             // Toutes les conditions étant remplies, passez à l'étape suivante
-            document.getElementById('step-2').style.display = 'block';
-            document.getElementById('step-1').style.display = 'none';
-
-            // Faire défiler la page vers le haut
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            goToStep2('suivant');
         });
     });
 
