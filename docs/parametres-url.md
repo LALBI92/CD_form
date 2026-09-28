@@ -2,6 +2,9 @@
 
 Le formulaire (`https://devis.cityrecyclage.com/`) accepte des paramètres qui
 présélectionnent la catégorie et ouvrent directement la bonne section.
+Le lien s'arrête à la **catégorie** : aucun sous-type (DEEE, benne, chantier)
+n'est présélectionné, le visiteur choisit lui-même sa tuile avant de voir les
+contenants.
 Une valeur absente ou inconnue laisse le formulaire dans son état par défaut.
 Majuscules, accents et tirets sont tolérés (`Ferrailles`, `dechets-verts`).
 
@@ -10,10 +13,9 @@ Majuscules, accents et tirets sont tolérés (`Ferrailles`, `dechets-verts`).
 | Valeur | « Je recycle » | Section ouverte |
 |---|---|---|
 | `deee` (alias `d3e`) | DEEE / D3E | choix du lieu de récupération |
-| `informatique` | DEEE, sous-type Informatiques / Bureautiques | lieu, puis produits |
-| `cartouches` | DEEE, sous-type Cartouches / Toners | lieu, puis produits |
+| `informatique`, `cartouches` | DEEE / D3E (alias conservés, **sans** sous-type) | choix du lieu de récupération |
 | `archives` | Destruction d'archives | choix du lieu |
-| `ferraille` (alias `ferrailles`, `metaux`) | Déchets non dangereux + tuile Ferrailles | contenants ferrailles |
+| `ferraille` (alias `ferrailles`, `metaux`) | Déchets non dangereux + tuile Ferrailles | contenants ferrailles (les autres tuiles restent visibles) |
 | `bureau` | Déchets de bureau / 5 flux | contenants bureau |
 | `mobilier` | Mobilier de bureau / DEA | estimation du volume + camions |
 | `debarras` | Débarrasser tous types de local | estimation du volume + camions |
@@ -33,13 +35,12 @@ Les valeurs internes du select (`destruction_archives`, `dechets_bureau`,
 
 Pour le dépôt, les champs étage / ascenseur sont masqués (inutiles).
 
-## `?type=` — sous-catégorie
+## `?type=` — ignoré
 
-- avec `besoin=deee` : `informatique`, `cartouches`, `piles` (`batteries`),
-  `electromenager`, `climatisation`, `ampoules` (`neons`). Sans `lieu`, le
-  sous-type s'applique dès que le visiteur choisit le lieu.
-- avec `besoin=benne` : `gravats`, `dnd`
-- avec `besoin=chantier` : `dib`, `bois`, `platre`, `gravats_melanges`, `gravats_propres`
+Depuis septembre 2026, `?type=` n'a plus aucun effet (DEEE, benne, chantier) :
+un sous-type présélectionné faisait apparaître des contenants que le visiteur
+n'avait pas choisis. Les anciens liens avec `type=` continuent de fonctionner
+et s'arrêtent à la catégorie.
 
 ## Paramètres de campagne transmis
 
@@ -58,14 +59,14 @@ citydebarras.fr, pas sur devis.cityrecyclage.com).
 | Landing | Lien du bouton « Devis » |
 |---|---|
 | https://citydebarras.fr/destruction-archives-lp | `https://devis.cityrecyclage.com/?besoin=archives` |
-| https://citydebarras.fr/materiels-informatiques-lp | `https://devis.cityrecyclage.com/?besoin=deee&type=informatique` |
+| https://citydebarras.fr/materiels-informatiques-lp | `https://devis.cityrecyclage.com/?besoin=deee` |
 | https://citydebarras.fr/ferrailles-lp | `https://devis.cityrecyclage.com/?besoin=ferraille` |
 | https://citydebarras.fr/dechets-bureau-lp | `https://devis.cityrecyclage.com/?besoin=bureau` |
 
 Variantes un clic plus courtes, si la landing ne vise que la collecte sur place :
 
 - `https://devis.cityrecyclage.com/?besoin=archives&lieu=site`
-- `https://devis.cityrecyclage.com/?besoin=deee&lieu=site&type=informatique`
+- `https://devis.cityrecyclage.com/?besoin=deee&lieu=site` (affiche directement les tuiles de type DEEE)
 
 Avec les paramètres de campagne (exemple) :
 `https://devis.cityrecyclage.com/?besoin=ferraille&utm_source=google&utm_medium=cpc&utm_campaign=ferrailles`
