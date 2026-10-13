@@ -729,9 +729,19 @@ class InvoicedHandler
                     'deal_id' => $dealId
                 ]);
 
-                $this->callPipedriveApi('PUT', '/deals/'.$dealId, [
+                $updateData = [
                     'stage_id' => (int)$_ENV['PIPEDRIVE_STAGE_DEVIS_VALIDE'],
-                ]);
+                ];
+
+                // Un devis ancien peut être accepté après que son deal a été classé « Perdu »
+                // (nettoyage du pipeline) : on le rouvre pour que la commerciale le voie.
+                $dealDetails = $this->callPipedriveApi('GET', '/deals/'.$dealId);
+                if (($dealDetails->data->status ?? null) === 'lost') {
+                    $updateData['status'] = 'open';
+                    $this->logger->log('Deal perdu rouvert suite à acceptation du devis', ['deal_id' => $dealId]);
+                }
+
+                $this->callPipedriveApi('PUT', '/deals/'.$dealId, $updateData);
                 break;
 
             /*────────────────────────────────────────────────────
